@@ -1,0 +1,158 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+/* Questionnaire-only app: light shell matching onboarding */
+.proedge-app-body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+  background-color: #faf7f3;
+  color: #3d3835;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+/* Onboarding — warm questionnaire aesthetic */
+.onboarding-shell {
+  font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
+  color: #3d3835;
+  background: linear-gradient(
+    165deg,
+    #faf7f3 0%,
+    #f5ebe3 42%,
+    #f8f0ea 100%
+  );
+}
+
+.onboarding-serif {
+  font-family: 'Fraunces', 'Georgia', serif;
+  font-optical-sizing: auto;
+}
+
+.onboarding-input {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid #e8dfd4;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.875rem 1.125rem;
+  font-size: 1.05rem;
+  font-family: inherit;
+  color: #3d3835;
+  box-shadow: 0 1px 2px rgba(62, 47, 35, 0.04);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.onboarding-input:focus {
+  outline: none;
+  border-color: #c4a882;
+  box-shadow:
+    0 0 0 3px rgba(196, 168, 130, 0.25),
+    0 1px 2px rgba(62, 47, 35, 0.06);
+}
+
+.onboarding-input::placeholder {
+  color: #a8988c;
+}
+
+.onboarding-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #e8dfd4;
+}
+
+.onboarding-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #5f7f6a;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(95, 127, 106, 0.45);
+  cursor: pointer;
+}
+
+.onboarding-range::-moz-range-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #5f7f6a;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(95, 127, 106, 0.45);
+  cursor: pointer;
+}
+
+.onboarding-shell button[type='button'] {
+  color: #1a1816 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-segment-muted {
+  color: #6b5e54 !important;
+}
+
+.onboarding-shell button.onboarding-footer-cta,
+.onboarding-shell button.onboarding-day-selected {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-nav-next {
+  color: #faf7f3 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-nav-next:disabled {
+  opacity: 0.4;
+}
+
+.onboarding-shell button.onboarding-nav-back {
+  color: #2c2825 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-nav-back:hover {
+  opacity: 0.72;
+}
+
+.onboarding-shell button.onboarding-cal-add {
+  color: #ffffff !important;
+  background-color: #007aff !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-cal-add:hover:not(:disabled) {
+  background-color: #0066d6 !important;
+}
+
+.onboarding-shell button.onboarding-cal-add:disabled {
+  background-color: #94a3b8 !important;
+}
+
+.onboarding-shell button.onboarding-chip-sage-on {
+  color: #0c1a10 !important;
+  background-color: #cfe5d6 !important;
+  border-color: #3d5c46 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-chip-terra-on {
+  color: #2c1408 !important;
+  background-color: #fcd8c8 !important;
+  border-color: #9d5a36 !important;
+  -webkit-text-fill-color: currentColor;
+}
