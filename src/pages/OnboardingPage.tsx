@@ -262,6 +262,7 @@ export function OnboardingPage() {
       ...extraProfile,
     }
     setProfile(synced)
+<<<<<<< Updated upstream
     setDiagnosticsChoiceOpen(false)
     setImportPdfError('')
     navigate(to, { replace: true })
@@ -288,6 +289,9 @@ export function OnboardingPage() {
     commitProfileAndNavigate('/diagnostics?flow=import', {
       diagnosticReportPdfName: file.name,
     })
+=======
+    navigate('/post-questionnaire', { replace: true })
+>>>>>>> Stashed changes
   }
 
   const goBack = () => {
