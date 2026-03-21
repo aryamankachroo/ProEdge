@@ -108,9 +108,18 @@
   -webkit-text-fill-color: currentColor;
 }
 
-.onboarding-shell button.onboarding-nav-next {
+.onboarding-shell button.onboarding-nav-next,
+.onboarding-shell button.onboarding-diagnostics-modal-primary {
   color: #faf7f3 !important;
   -webkit-text-fill-color: currentColor;
+}
+
+.onboarding-shell button.onboarding-diagnostics-modal-muted {
+  color: #7a6e66 !important;
+  -webkit-text-fill-color: currentColor;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .onboarding-shell button.onboarding-nav-next:disabled {

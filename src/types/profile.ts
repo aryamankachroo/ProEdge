@@ -35,6 +35,8 @@ export interface UserProfile {
   resourceOtherDetail: string
   ankiDecks: string[]
   weakSections: string[]
+  /** Set when user imports a diagnostic report PDF from onboarding */
+  diagnosticReportPdfName: string
 }
 
 export const defaultProfile: UserProfile = {
@@ -51,6 +53,7 @@ export const defaultProfile: UserProfile = {
   resourceOtherDetail: '',
   ankiDecks: [],
   weakSections: [],
+  diagnosticReportPdfName: '',
 }
 
 export function studyDaysFromCalendarEvents(

@@ -1,4 +1,10 @@
-import { useState, type ReactNode } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type ReactNode,
+} from 'react'
 import { useNavigate } from 'react-router-dom'
 import { OnboardingMonthCalendar } from '../components/OnboardingMonthCalendar'
 import { OnboardingSideStepper } from '../components/OnboardingSideStepper'
@@ -132,11 +138,98 @@ function ArrowRightSm({ className }: { className?: string }) {
   )
 }
 
+function DiagnosticsChoiceModal({
+  open,
+  onClose,
+  onChooseTake,
+  onChooseImport,
+  importFileError,
+}: {
+  open: boolean
+  onClose: () => void
+  onChooseTake: () => void
+  onChooseImport: () => void
+  importFileError: string
+}) {
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, onClose])
+
+  if (!open) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-end justify-center p-4 sm:items-center sm:p-6"
+      role="presentation"
+    >
+      <button
+        type="button"
+        aria-label="Close dialog"
+        className="absolute inset-0 bg-[#2c2825]/35 backdrop-blur-[2px]"
+        onClick={onClose}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="diagnostics-choice-title"
+        className="relative z-10 w-full max-w-md rounded-[1.5rem] border border-white/80 bg-[#faf7f3] p-6 shadow-[0_24px_64px_-20px_rgba(44,40,37,0.35)] sm:p-7"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2
+          id="diagnostics-choice-title"
+          className="onboarding-serif text-xl font-semibold tracking-tight text-[#2c2825] sm:text-2xl"
+        >
+          Diagnostics next
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66]">
+          Choose how you want to continue — you can always switch later.
+        </p>
+        <div className="mt-6 flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={onChooseTake}
+            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-5 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a]"
+          >
+            Take a diagnostics test
+          </button>
+          <button
+            type="button"
+            onClick={onChooseImport}
+            className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white"
+          >
+            Import diagnostics test score
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="onboarding-diagnostics-modal-muted mt-1 py-2 text-center text-sm font-semibold underline-offset-4 hover:underline"
+          >
+            Not now — stay on this step
+          </button>
+          {importFileError ? (
+            <p className="mt-2 text-center text-xs text-[#9d4e36]" role="alert">
+              {importFileError}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function OnboardingPage() {
   const navigate = useNavigate()
   const { profile, setProfile } = useProfile()
   const [step, setStep] = useState(0)
   const [local, setLocal] = useState<UserProfile>(profile)
+  const [diagnosticsChoiceOpen, setDiagnosticsChoiceOpen] = useState(false)
+  const [importPdfError, setImportPdfError] = useState('')
+  const diagnosticPdfInputRef = useRef<HTMLInputElement>(null)
 
   const update = (p: Partial<UserProfile>) =>
     setLocal((prev) => ({ ...prev, ...p }))
@@ -159,13 +252,42 @@ export function OnboardingPage() {
           (!local.resources.includes('Other') ||
             local.resourceOtherDetail.trim().length > 0)
 
-  const finish = () => {
+  const commitProfileAndNavigate = (
+    to: string,
+    extraProfile?: Partial<UserProfile>,
+  ) => {
     const synced = {
       ...local,
       studyDays: studyDaysFromCalendarEvents(local.studyCalendarEvents),
+      ...extraProfile,
     }
     setProfile(synced)
-    navigate('/', { replace: true })
+    setDiagnosticsChoiceOpen(false)
+    setImportPdfError('')
+    navigate(to, { replace: true })
+  }
+
+  const openDiagnosticPdfPicker = () => {
+    setImportPdfError('')
+    const el = diagnosticPdfInputRef.current
+    if (el) el.value = ''
+    el?.click()
+  }
+
+  const onDiagnosticPdfSelected = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const isPdf =
+      file.type === 'application/pdf' ||
+      file.name.toLowerCase().endsWith('.pdf')
+    if (!isPdf) {
+      setImportPdfError('Please choose a PDF file.')
+      e.target.value = ''
+      return
+    }
+    commitProfileAndNavigate('/diagnostics?flow=import', {
+      diagnosticReportPdfName: file.name,
+    })
   }
 
   const goBack = () => {
@@ -177,6 +299,29 @@ export function OnboardingPage() {
 
   return (
     <div className="onboarding-shell relative min-h-dvh">
+      <input
+        ref={diagnosticPdfInputRef}
+        type="file"
+        accept="application/pdf,.pdf"
+        className="sr-only"
+        tabIndex={-1}
+        aria-hidden
+        onChange={onDiagnosticPdfSelected}
+      />
+      <DiagnosticsChoiceModal
+        open={diagnosticsChoiceOpen}
+        importFileError={importPdfError}
+        onClose={() => {
+          setImportPdfError('')
+          setDiagnosticsChoiceOpen(false)
+        }}
+        onChooseTake={() =>
+          commitProfileAndNavigate('/diagnostics?flow=take', {
+            diagnosticReportPdfName: '',
+          })
+        }
+        onChooseImport={openDiagnosticPdfPicker}
+      />
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden
@@ -617,7 +762,10 @@ export function OnboardingPage() {
                 <button
                   type="button"
                   disabled={!canNext}
-                  onClick={finish}
+                  onClick={() => {
+                    setImportPdfError('')
+                    setDiagnosticsChoiceOpen(true)
+                  }}
                   className="onboarding-nav-next inline-flex items-center gap-2 rounded-full bg-[#2c2825] px-5 py-2.5 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] disabled:cursor-not-allowed"
                 >
                   Start my plan
