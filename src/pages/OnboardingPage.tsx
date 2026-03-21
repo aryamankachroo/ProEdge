@@ -579,6 +579,13 @@ export function OnboardingPage() {
                   })}
                 </div>
               </SoftPanel>
+
+              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] sm:text-sm">
+                <span className="font-semibold text-[#7a6e66]">Disclaimer:</span>{' '}
+                After completing the questionnaire, take a diagnostics test — or,
+                if you&apos;ve already taken one, import your diagnostics test
+                score and report.
+              </p>
             </>
           )}
             </div>
