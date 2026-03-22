@@ -3,8 +3,8 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type ReactNode,
 } from 'react'
-import ReactMarkdown from 'react-markdown'
 import {
   isGeminiChatAvailable,
   isRemoteChatApiConfigured,
@@ -24,6 +24,63 @@ function normalizeAssistantMarkdown(raw: string): string {
   return raw.replace(/\\([*#`])/g, '$1')
 }
 
+/** Lightweight formatting — no extra npm deps (avoids missing react-markdown after pull). */
+function renderInlineMarkdown(line: string): ReactNode[] {
+  const s = normalizeAssistantMarkdown(line)
+  const parts = s.split(/(\*\*[^*]+\*\*|`[^`]+`)/g)
+  return parts.map((part, j) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+      return (
+        <strong key={j} className="font-semibold text-[#2c2825]">
+          {part.slice(2, -2)}
+        </strong>
+      )
+    }
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+      return (
+        <code
+          key={j}
+          className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825]"
+        >
+          {part.slice(1, -1)}
+        </code>
+      )
+    }
+    return part
+  })
+}
+
+function AssistantFormattedText({ content }: { content: string }) {
+  const lines = normalizeAssistantMarkdown(content).split('\n')
+  return (
+    <div className="max-w-full text-sm leading-snug text-[#3d3835]">
+      {lines.map((line, i) => {
+        const bullet = /^(\s*)[-*]\s+(.+)$/.exec(line)
+        if (bullet) {
+          return (
+            <div key={i} className="mb-1 flex gap-2 pl-0.5">
+              <span className="shrink-0 text-[#5f7f6a]" aria-hidden>
+                •
+              </span>
+              <span className="min-w-0 break-words">
+                {renderInlineMarkdown(bullet[2])}
+              </span>
+            </div>
+          )
+        }
+        if (line.trim() === '') {
+          return <div key={i} className="h-2" aria-hidden />
+        }
+        return (
+          <p key={i} className="mb-2 last:mb-0 break-words">
+            {renderInlineMarkdown(line)}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
 function ChatBubbleContent({
   role,
   content,
@@ -34,44 +91,7 @@ function ChatBubbleContent({
   if (role === 'user') {
     return <p className="whitespace-pre-wrap break-words">{content}</p>
   }
-  return (
-    <div className="max-w-full text-sm leading-snug text-[#3d3835] [&_a]:text-[#2563eb] [&_a]:underline">
-      <ReactMarkdown
-        components={{
-          p: ({ children }) => (
-            <p className="mb-2 last:mb-0 whitespace-pre-wrap">{children}</p>
-          ),
-          ul: ({ children }) => (
-            <ul className="mb-2 list-disc space-y-1 pl-4 last:mb-0">{children}</ul>
-          ),
-          ol: ({ children }) => (
-            <ol className="mb-2 list-decimal space-y-1 pl-4 last:mb-0">{children}</ol>
-          ),
-          li: ({ children }) => <li className="leading-snug">{children}</li>,
-          strong: ({ children }) => (
-            <strong className="font-semibold text-[#2c2825]">{children}</strong>
-          ),
-          em: ({ children }) => <em className="italic">{children}</em>,
-          h1: ({ children }) => (
-            <p className="mb-2 font-semibold text-[#2c2825]">{children}</p>
-          ),
-          h2: ({ children }) => (
-            <p className="mb-2 font-semibold text-[#2c2825]">{children}</p>
-          ),
-          h3: ({ children }) => (
-            <p className="mb-1.5 font-semibold">{children}</p>
-          ),
-          code: ({ children }) => (
-            <code className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825]">
-              {children}
-            </code>
-          ),
-        }}
-      >
-        {normalizeAssistantMarkdown(content)}
-      </ReactMarkdown>
-    </div>
-  )
+  return <AssistantFormattedText content={content} />
 }
 
 export function ChatAssistantWidget() {
