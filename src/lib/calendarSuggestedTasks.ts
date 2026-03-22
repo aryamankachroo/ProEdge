@@ -2,6 +2,7 @@ import {
   DIAGNOSTIC_SECTION_LABELS,
   DIAGNOSTIC_SECTION_SHORT,
   DIAGNOSTIC_WEAK_HINTS,
+  type CalendarRecommendationKind,
   type DiagnosticSectionKey,
   type DiagnosticSummary,
   type UserProfile,
@@ -13,6 +14,11 @@ const SECTION_ORDER: DiagnosticSectionKey[] = [
   'bioBiochem',
   'psychSoc',
 ]
+
+export type SuggestedTask = {
+  title: string
+  kind: CalendarRecommendationKind
+}
 
 function pct(correct: number, total: number) {
   if (total <= 0) return 0
@@ -38,66 +44,158 @@ function strongestWeakest(summary: DiagnosticSummary) {
   return { best, worst, bestP, worstP }
 }
 
-/** Generic placeholder day — used when no diagnostic or weak sections. */
-const GENERIC_PLACEHOLDER_TASKS: string[] = [
-  'Anki — new & review cards',
-  'CARS — 1–2 timed passages',
-  'Science question block (timed)',
-  'Weak-topic notes or video',
-  'Equation / flashcard drill',
-  'Evening recap — plan tomorrow',
-]
+function sectionToScienceKind(k: DiagnosticSectionKey): CalendarRecommendationKind {
+  if (k === 'cars') return 'cars'
+  return 'science'
+}
 
-function tasksFromDiagnostic(summary: DiagnosticSummary): string[] {
-  const { best, worst } = strongestWeakest(summary)
+/** Sections where the learner missed at least one question, weakest first. */
+function missedSectionsOrdered(summary: DiagnosticSummary): DiagnosticSectionKey[] {
+  const missed = SECTION_ORDER.filter(
+    (k) => summary.sections[k].correct < summary.sections[k].total,
+  )
+  if (missed.length === 0) {
+    return [...SECTION_ORDER].sort(
+      (a, b) =>
+        pct(summary.sections[a].correct, summary.sections[a].total) -
+        pct(summary.sections[b].correct, summary.sections[b].total),
+    )
+  }
+  return missed.sort(
+    (a, b) =>
+      pct(summary.sections[a].correct, summary.sections[a].total) -
+      pct(summary.sections[b].correct, summary.sections[b].total),
+  )
+}
+
+function tasksFromDiagnostic(summary: DiagnosticSummary): SuggestedTask[] {
+  const { best } = strongestWeakest(summary)
+  const ordered = missedSectionsOrdered(summary)
+  const worst = ordered[0]!
+  const second = ordered[1] ?? best
   const wShort = DIAGNOSTIC_SECTION_SHORT[worst]
   const wLong = DIAGNOSTIC_SECTION_LABELS[worst]
   const bShort = DIAGNOSTIC_SECTION_SHORT[best]
+  const sShort = DIAGNOSTIC_SECTION_SHORT[second]
   const hint = DIAGNOSTIC_WEAK_HINTS[worst]
   const hintFirst = hint.split(',')[0]?.trim() ?? hint
+  const hadMisses = SECTION_ORDER.some(
+    (k) => summary.sections[k].correct < summary.sections[k].total,
+  )
+  const missLabel = hadMisses ? 'topics you missed' : 'lowest section this run'
 
-  const carsLine =
-    worst === 'cars'
-      ? 'CARS — 2 passages, strict timing (diagnostic focus)'
-      : 'CARS — 1 passage + review every answer'
+  const carsLine: SuggestedTask =
+    worst === 'cars' ?
+      {
+        title: 'CARS — 2 passages, strict timing (diagnostic focus)',
+        kind: 'cars',
+      }
+    : {
+        title: 'CARS — 1 passage + review every answer',
+        kind: 'cars',
+      }
 
   return [
-    `${wShort} — 20 timed questions (priority from diagnostic)`,
-    `${wLong}: review ${hintFirst}`,
-    `Anki — drill misses; tag deck: ${wShort}`,
+    {
+      title: `${wShort} — 20 timed questions (${missLabel})`,
+      kind: sectionToScienceKind(worst),
+    },
+    {
+      title: `${wLong}: review ${hintFirst}`,
+      kind: 'weak_section',
+    },
+    {
+      title: `Anki — drill misses; tag deck: ${wShort}`,
+      kind: 'anki',
+    },
     carsLine,
-    `Mixed block — 15 Q including ${wShort} + other sciences`,
-    `Recap — log ${wShort} errors; maintain ${bShort} with 5 Q warm-up`,
+    {
+      title:
+        second !== worst ?
+          `Mixed block — 15 Q (${wShort} + ${sShort})`
+        : `Mixed block — 15 Q including ${wShort} + other sciences`,
+      kind: 'mixed',
+    },
+    {
+      title: `Recap — log ${wShort} errors; maintain ${bShort} with 5 Q warm-up`,
+      kind: 'recap',
+    },
   ]
 }
 
-function tasksFromQuestionnaireWeak(weakSections: string[], hoursPerDay: number): string[] {
-  const primary = weakSections[0] ?? 'Weakest section'
-  const secondary = weakSections[1] ?? 'Second focus area'
+/** Questionnaire-driven mix: weak sections, CARS, Anki, named resources, recap. */
+function tasksFromQuestionnaire(
+  profile: UserProfile,
+  hoursPerDay: number,
+): SuggestedTask[] {
+  const weak = profile.weakSections
+  const primary = weak[0] ?? 'Weakest section'
+  const secondary = weak[1] ?? primary
   const h = Math.max(1, Math.min(12, hoursPerDay))
+  const namedResources = profile.resources.filter((r) => r !== 'Other')
+  const resourceLabel =
+    namedResources[0] ??
+    (profile.resourceOtherDetail.trim() || 'your main prep resource')
+  const ankiLabel = profile.ankiDecks[0] ?? 'Anki'
 
   return [
-    `${primary} — ${h * 3} min timed practice (placeholder)`,
-    `${primary} — review one chapter / video set (placeholder)`,
-    `${secondary} — light practice block (placeholder)`,
-    'CARS — 1 passage under test conditions',
-    'Anki — catch up on due cards',
-    'Evening recap — adjust tomorrow’s focus (placeholder)',
+    {
+      title: `${primary} — ${h * 3} min timed practice (questionnaire focus)`,
+      kind: 'weak_section',
+    },
+    {
+      title: `${secondary} — review one chapter / video set + notes`,
+      kind: 'weak_section',
+    },
+    {
+      title: 'CARS — 1 passage under test conditions',
+      kind: 'cars',
+    },
+    {
+      title: `${ankiLabel} — due cards + 20 new (keep streak)`,
+      kind: 'anki',
+    },
+    {
+      title: `${resourceLabel} — reading + practice set aligned to weak sections`,
+      kind: 'resource',
+    },
+    {
+      title:
+        profile.fullTimeStudying ?
+          'Evening recap — error log + preview tomorrow (full-time pace)'
+        : 'Light recap — adjust tomorrow around school/work blocks',
+      kind: 'recap',
+    },
+  ]
+}
+
+function genericPlaceholderTasks(): SuggestedTask[] {
+  return [
+    { title: 'Anki — new & review cards', kind: 'anki' },
+    { title: 'CARS — 1–2 timed passages', kind: 'cars' },
+    { title: 'Science question block (timed)', kind: 'science' },
+    { title: 'Weak-topic notes or video', kind: 'weak_section' },
+    { title: 'Equation / flashcard drill', kind: 'science' },
+    { title: 'Evening recap — plan tomorrow', kind: 'recap' },
   ]
 }
 
 /**
- * Suggested copy for the calendar (client-only until backend).
- * Order: diagnostic summary → questionnaire weak sections → generic dummy list.
+ * Typed recommendations from diagnostic → questionnaire weak sections → generic template.
  */
-export function getSuggestedDailyTaskTitles(profile: UserProfile): string[] {
+export function getSuggestedDailyTasks(profile: UserProfile): SuggestedTask[] {
   if (profile.diagnosticSummary) {
     return tasksFromDiagnostic(profile.diagnosticSummary)
   }
   if (profile.weakSections.length > 0) {
-    return tasksFromQuestionnaireWeak(profile.weakSections, profile.hoursPerDay)
+    return tasksFromQuestionnaire(profile, profile.hoursPerDay)
   }
-  return [...GENERIC_PLACEHOLDER_TASKS]
+  return genericPlaceholderTasks()
+}
+
+/** @deprecated Use getSuggestedDailyTasks for `kind`; kept for callers that only need titles. */
+export function getSuggestedDailyTaskTitles(profile: UserProfile): string[] {
+  return getSuggestedDailyTasks(profile).map((s) => s.title)
 }
 
 export function suggestedTasksAreFromDiagnostic(profile: UserProfile): boolean {

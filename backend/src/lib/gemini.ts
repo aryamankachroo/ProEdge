@@ -4,6 +4,9 @@ import { UserProfile, StudyPlan } from '../types'
 
 const genAI = new GoogleGenerativeAI(config.gemini.apiKey)
 
+/** https://ai.google.dev/gemini-api/docs/models/gemini */
+const GEMINI_MODEL = 'gemini-2.5-flash'
+
 function buildStudyPlanPrompt(profile: UserProfile): string {
   const today = new Date()
   const examDate = new Date(profile.examDate)
@@ -87,7 +90,7 @@ Rules:
 
 export async function generateStudyPlan(profile: UserProfile): Promise<StudyPlan> {
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
+    model: GEMINI_MODEL,
     generationConfig: {
       responseMimeType: 'application/json',
       temperature: 0.7,
@@ -107,7 +110,7 @@ export async function generateStudyTip(
   weakSection: string,
   recentProgress: string
 ): Promise<string> {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = genAI.getGenerativeModel({ model: GEMINI_MODEL })
 
   const prompt = `You are an MCAT tutor. Give one concise, actionable study tip (2-3 sentences) for a student struggling with ${weakSection}. Their recent progress: ${recentProgress}. Be specific and practical.`
 
