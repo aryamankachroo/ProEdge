@@ -1,7 +1,14 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { STUDY_STATUS_LABELS } from '../types/profile'
 import { useProfile } from '../context/useProfile'
+import {
+  fetchActivePlan,
+  generatePlan,
+  type GeneratedPlan,
+  type PlanPhase,
+  type PlanWeek,
+} from '../lib/api'
 
 function daysUntilExam(examDateIso: string): number | null {
   if (!examDateIso) return null
@@ -33,12 +40,55 @@ function Panel({
   return (
     <section className="rounded-[1.5rem] border border-white/70 bg-white/80 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.12)] backdrop-blur-md sm:p-7">
       {title ? (
-        <h2 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] uppercase">
+        <h2 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e]">
           {title}
         </h2>
       ) : null}
       {children}
     </section>
+  )
+}
+
+function PhaseCard({ phase }: { phase: PlanPhase }) {
+  return (
+    <div className="rounded-xl border border-[#e8dfd4] bg-[#faf7f3] p-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="font-semibold text-[#2c2825]">{phase.name}</span>
+        <span className="text-xs text-[#9a8b7e]">{phase.weeks}</span>
+      </div>
+      <p className="mt-1 text-sm font-medium text-[#5f7f6a]">{phase.focus}</p>
+      {phase.description ? (
+        <p className="mt-1 text-xs leading-relaxed text-[#7a6e66]">
+          {phase.description}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
+function WeekCard({ week }: { week: PlanWeek }) {
+  return (
+    <div className="rounded-xl border border-[#e8dfd4] bg-white/80 p-4">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#9a8b7e]">
+        Week {week.week}
+        {week.theme ? ` · ${week.theme}` : ''}
+      </p>
+      {week.days && week.days.length > 0 ? (
+        <ul className="mt-3 space-y-2">
+          {week.days.slice(0, 4).map((day, i) => (
+            <li key={i} className="text-sm">
+              <span className="font-medium text-[#3d3835]">{day.day}:</span>{' '}
+              <span className="text-[#5a4f47]">{day.tasks.join(', ')}</span>
+            </li>
+          ))}
+          {week.days.length > 4 ? (
+            <li className="text-xs text-[#9a8b7e]">
+              +{week.days.length - 4} more days…
+            </li>
+          ) : null}
+        </ul>
+      ) : null}
+    </div>
   )
 }
 
@@ -55,6 +105,41 @@ export function StudyPlanPage() {
     fullTimeStudying,
     weakSections,
   } = profile
+
+  const [aiPlan, setAiPlan] = useState<GeneratedPlan | null>(null)
+  const [planLoading, setPlanLoading] = useState(false)
+  const [planError, setPlanError] = useState<string | null>(null)
+  const [generatedAt, setGeneratedAt] = useState<string | null>(null)
+
+  // On mount: check if a saved plan exists
+  useEffect(() => {
+    fetchActivePlan()
+      .then((saved) => {
+        if (saved) {
+          setAiPlan(saved.plan)
+          setGeneratedAt(saved.generatedAt)
+        }
+      })
+      .catch(() => {
+        // Backend unavailable — no plan shown, user can generate one
+      })
+  }, [])
+
+  const handleGeneratePlan = async () => {
+    setPlanLoading(true)
+    setPlanError(null)
+    try {
+      const plan = await generatePlan()
+      setAiPlan(plan)
+      setGeneratedAt(new Date().toISOString())
+    } catch (err) {
+      setPlanError(
+        err instanceof Error ? err.message : 'Failed to generate plan. Please try again.',
+      )
+    } finally {
+      setPlanLoading(false)
+    }
+  }
 
   const daysLeft = daysUntilExam(examDate)
   const weeksLeft =
@@ -73,6 +158,10 @@ export function StudyPlanPage() {
   const weak = weakSections.length
   const share = weak > 0 ? Math.round(100 / weak) : 0
 
+  const phases = aiPlan?.phases ?? []
+  const weeks = aiPlan?.weeklySchedule ?? []
+  const tips = aiPlan?.tips ?? []
+
   return (
     <div className="onboarding-shell relative min-h-dvh pb-32 sm:pb-28">
       <div
@@ -83,7 +172,7 @@ export function StudyPlanPage() {
         <div className="absolute -left-20 top-[28%] h-72 w-72 rounded-full bg-[#a8c5b4]/40 blur-[72px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-lg px-5 py-8 sm:px-6 sm:py-10">
+      <div className="relative z-10 mx-auto max-w-2xl px-5 py-8 sm:px-6 sm:py-10">
         <button
           type="button"
           onClick={() => navigate('/')}
@@ -142,6 +231,107 @@ export function StudyPlanPage() {
                   </li>
                 ))}
               </ul>
+            )}
+          </Panel>
+
+          {/* AI Plan section */}
+          <Panel title="AI-generated plan">
+            {aiPlan ? (
+              <div className="mt-2 space-y-4">
+                {generatedAt ? (
+                  <p className="text-xs text-[#9a8b7e]">
+                    Generated {new Date(generatedAt).toLocaleDateString()}
+                  </p>
+                ) : null}
+
+                {aiPlan.overview ? (
+                  <p className="text-sm leading-relaxed text-[#3d3835]">
+                    {aiPlan.overview}
+                  </p>
+                ) : null}
+
+                {phases.length > 0 ? (
+                  <div>
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+                      Study phases
+                    </p>
+                    <div className="space-y-3">
+                      {phases.map((phase, i) => (
+                        <PhaseCard key={i} phase={phase} />
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {weeks.length > 0 ? (
+                  <div>
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+                      Weekly schedule (first {Math.min(weeks.length, 4)} weeks)
+                    </p>
+                    <div className="space-y-3">
+                      {weeks.slice(0, 4).map((week, i) => (
+                        <WeekCard key={i} week={week} />
+                      ))}
+                      {weeks.length > 4 ? (
+                        <p className="text-xs text-[#9a8b7e]">
+                          +{weeks.length - 4} more weeks in your full plan.
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
+                {tips.length > 0 ? (
+                  <div>
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+                      Tips
+                    </p>
+                    <ul className="space-y-2">
+                      {tips.map((tip, i) => (
+                        <li key={i} className="flex gap-2 text-sm text-[#3d3835]">
+                          <span className="mt-0.5 text-[#5f7f6a]">•</span>
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={handleGeneratePlan}
+                  disabled={planLoading}
+                  className="mt-2 w-full rounded-full border border-[#d4c9be] bg-white px-5 py-2.5 text-sm font-semibold text-[#2c2825] transition hover:bg-[#faf7f3] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {planLoading ? 'Regenerating…' : 'Regenerate plan'}
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4">
+                <p className="text-sm leading-relaxed text-[#7a6e66]">
+                  Let Gemini AI build a personalised week-by-week study plan
+                  from your hours, exam date, weak sections, and resources.
+                </p>
+                {planError ? (
+                  <p className="mt-3 rounded-xl bg-[#fff0ee] px-4 py-3 text-sm text-[#9d4e36]">
+                    {planError}
+                  </p>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={handleGeneratePlan}
+                  disabled={planLoading}
+                  className="mt-4 w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1f1c1a] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {planLoading ? 'Generating your plan…' : 'Generate AI study plan'}
+                </button>
+                {planLoading ? (
+                  <p className="mt-2 text-center text-xs text-[#9a8b7e]">
+                    This takes about 10–15 seconds — Gemini is mapping your full
+                    schedule.
+                  </p>
+                ) : null}
+              </div>
             )}
           </Panel>
         </div>

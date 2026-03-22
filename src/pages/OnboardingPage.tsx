@@ -15,6 +15,7 @@ import {
   type StudyStatus,
   type UserProfile,
 } from '../types/profile'
+import { saveProfile } from '../lib/api'
 
 const STUDY_STATUSES: StudyStatus[] = [
   'full-time-student',
@@ -266,7 +267,7 @@ export function OnboardingPage() {
     to: string,
     extraProfile?: Partial<UserProfile>,
   ) => {
-    const synced = {
+    const synced: UserProfile = {
       ...local,
       studyDays: studyDaysFromCalendarEvents(local.studyCalendarEvents),
       ...extraProfile,
@@ -274,6 +275,12 @@ export function OnboardingPage() {
     setProfile(synced)
     setDiagnosticsChoiceOpen(false)
     setImportPdfError('')
+
+    // Persist to backend (fire-and-forget — don't block navigation on network)
+    saveProfile(synced).catch((err) =>
+      console.warn('[ProEdge] Failed to save profile to backend:', err),
+    )
+
     navigate(to, { replace: true })
   }
 

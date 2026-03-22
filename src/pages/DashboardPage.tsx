@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import {
   DIAGNOSTIC_SECTION_LABELS,
   DIAGNOSTIC_SECTION_SHORT,
@@ -8,6 +9,16 @@ import {
   type DiagnosticSummary,
 } from '../types/profile'
 import { useProfile } from '../context/useProfile'
+import {
+  fetchAnalyticsSummary,
+  fetchSectionBreakdown,
+  fetchScoreTrend,
+  fetchStudyStreak,
+  type AnalyticsSummary,
+  type SectionBreakdown,
+  type ScoreTrend,
+  type StudyStreak,
+} from '../lib/api'
 
 const SECTION_ORDER: DiagnosticSectionKey[] = [
   'chemPhys',
@@ -218,6 +229,20 @@ export function DashboardPage() {
     hoursPerDay,
   } = profile
 
+  // Backend analytics state — fetched on mount, used to enrich the dashboard
+  const [analyticsSummary, setAnalyticsSummary] = useState<AnalyticsSummary | null>(null)
+  const [sectionBreakdown, setSectionBreakdown] = useState<SectionBreakdown | null>(null)
+  const [scoreTrend, setScoreTrend] = useState<ScoreTrend[]>([])
+  const [streak, setStreak] = useState<StudyStreak | null>(null)
+
+  useEffect(() => {
+    // Fetch all analytics in parallel; failures are non-fatal (dashboard works from localStorage too)
+    fetchAnalyticsSummary().then(setAnalyticsSummary).catch(() => {})
+    fetchSectionBreakdown().then(setSectionBreakdown).catch(() => {})
+    fetchScoreTrend().then((r) => setScoreTrend(r.trend)).catch(() => {})
+    fetchStudyStreak().then(setStreak).catch(() => {})
+  }, [])
+
   const daysLeft = daysUntilExam(examDate)
   const overallPct = diagnosticSummary
     ? pct(
@@ -373,16 +398,22 @@ export function DashboardPage() {
           <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
             <div className="flex items-start justify-between gap-2">
               <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
-                Study context
+                Study streak
               </span>
               <span className="text-lg text-[#7c6bcf]" aria-hidden>
-                ▤
+                🔥
               </span>
             </div>
             <p className="onboarding-serif mt-2 text-xl font-semibold leading-snug text-[#7c6bcf]">
-              {studyLabel}
+              {streak ? `${streak.streak} day${streak.streak === 1 ? '' : 's'}` : studyLabel}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">From questionnaire</p>
+            <p className="mt-1 text-xs text-[#7a6e66]">
+              {streak
+                ? streak.lastStudyDate
+                  ? `Last: ${streak.lastStudyDate}`
+                  : 'No sessions logged yet'
+                : 'From questionnaire'}
+            </p>
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
             <div className="flex items-start justify-between gap-2">
@@ -394,15 +425,25 @@ export function DashboardPage() {
               </span>
             </div>
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#db2777]">
-              {overallPct !== null ? `${overallPct}%` : '—'}
+              {analyticsSummary?.scores.totalTests
+                ? `${Math.round((analyticsSummary.scores.avgScore ?? 0))} avg`
+                : overallPct !== null
+                  ? `${overallPct}%`
+                  : '—'}
             </p>
             <p className="mt-1 text-xs text-[#7a6e66]">
-              {diagnosticSummary
-                ? `${diagnosticSummary.overallCorrect}/${diagnosticSummary.overallTotal} mini quiz`
-                : 'No run yet'}
+              {analyticsSummary?.scores.totalTests
+                ? `${analyticsSummary.scores.totalTests} test${analyticsSummary.scores.totalTests === 1 ? '' : 's'} · high ${analyticsSummary.scores.highestScore ?? '—'}`
+                : diagnosticSummary
+                  ? `${diagnosticSummary.overallCorrect}/${diagnosticSummary.overallTotal} mini quiz`
+                  : 'No run yet'}
             </p>
             <Sparkline
-              values={sparkScore}
+              values={
+                scoreTrend.length >= 2
+                  ? scoreTrend.map((t) => t.totalScore)
+                  : sparkScore
+              }
               color={overallPct !== null ? '#db2777' : '#cbd5e1'}
             />
           </div>
@@ -494,20 +535,28 @@ export function DashboardPage() {
           <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
             <div className="flex justify-between">
               <span className="text-xs font-semibold uppercase text-[#9a8b7e]">
-                Questions (preview)
+                Total sessions
               </span>
               <span className="text-[#3b82f6]">◇</span>
             </div>
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816]">
-              {diagnosticSummary?.overallTotal ?? 0}
+              {analyticsSummary ? analyticsSummary.study.totalSessions : (diagnosticSummary?.overallTotal ?? 0)}
             </p>
             <p className="mt-1 text-xs text-[#7a6e66]">
-              Last run:{' '}
-              {diagnosticSummary
-                ? `${diagnosticSummary.overallCorrect} correct`
-                : '—'}
+              {analyticsSummary
+                ? `${Math.round((analyticsSummary.study.totalHours ?? 0) * 10) / 10} hrs total`
+                : diagnosticSummary
+                  ? `${diagnosticSummary.overallCorrect} correct`
+                  : '—'}
             </p>
-            <Sparkline values={sparkQuestions} color="#3b82f6" />
+            <Sparkline
+              values={
+                analyticsSummary?.weeklyActivity.length
+                  ? analyticsSummary.weeklyActivity.map((w) => w.sessions)
+                  : sparkQuestions
+              }
+              color="#3b82f6"
+            />
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
             <div className="flex justify-between">
@@ -517,28 +566,49 @@ export function DashboardPage() {
               <span className="text-[#5f7f6a]">◇</span>
             </div>
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816]">
-              {overallPct !== null ? `${overallPct}%` : '—'}
+              {analyticsSummary?.scores.avgScore
+                ? Math.round(analyticsSummary.scores.avgScore)
+                : overallPct !== null
+                  ? `${overallPct}%`
+                  : '—'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">Mini diagnostic</p>
-            <Sparkline values={sparkScore} color="#5f7f6a" />
+            <p className="mt-1 text-xs text-[#7a6e66]">
+              {analyticsSummary?.scores.totalTests
+                ? `Across ${analyticsSummary.scores.totalTests} test${analyticsSummary.scores.totalTests === 1 ? '' : 's'}`
+                : 'Mini diagnostic'}
+            </p>
+            <Sparkline
+              values={
+                scoreTrend.length >= 2
+                  ? scoreTrend.map((t) => t.totalScore)
+                  : sparkScore
+              }
+              color="#5f7f6a"
+            />
           </div>
           <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
             <div className="flex justify-between">
               <span className="text-xs font-semibold uppercase text-[#9a8b7e]">
-                Session
+                Anki cards
               </span>
               <span className="text-[#ea8c55]">◇</span>
             </div>
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816]">
-              {diagnosticSummary ? 'Complete' : '—'}
+              {analyticsSummary?.study.totalAnkiCards ?? (diagnosticSummary ? 'Complete' : '—')}
             </p>
             <p className="mt-1 text-xs text-[#7a6e66]">
-              {diagnosticSummary
-                ? new Date(diagnosticSummary.completedAt).toLocaleString()
-                : 'No session yet'}
+              {analyticsSummary
+                ? analyticsSummary.study.lastStudyDate
+                  ? `Last: ${analyticsSummary.study.lastStudyDate}`
+                  : 'No sessions yet'
+                : diagnosticSummary
+                  ? new Date(diagnosticSummary.completedAt).toLocaleString()
+                  : 'No session yet'}
             </p>
             <p className="mt-3 text-xs italic text-[#9a8b7e]">
-              Trend lines are illustrative until more sessions exist.
+              {analyticsSummary
+                ? 'Logged via progress tracker'
+                : 'Trend lines are illustrative until more sessions exist.'}
             </p>
           </div>
         </div>
@@ -549,14 +619,39 @@ export function DashboardPage() {
             Diagnostic results summary
           </h2>
           <p className="mt-1 text-sm text-[#7a6e66]">
-            Baseline performance from your last mini diagnostic.
+            {sectionBreakdown
+              ? 'Average scores across all your diagnostics.'
+              : 'Baseline performance from your last mini diagnostic.'}
           </p>
-          {diagnosticSummary ? (
+          {diagnosticSummary || sectionBreakdown ? (
             <ul className="mt-6 space-y-5">
               {SECTION_ORDER.map((key) => {
-                const { correct, total } = diagnosticSummary.sections[key]
-                const p = pct(correct, total)
-                const weak = p < 50 && total > 0
+                // Use Snowflake averages when available, fall back to local mini-quiz
+                const backendAvg =
+                  key === 'cars'
+                    ? sectionBreakdown?.averages.cars
+                    : key === 'bioBiochem'
+                      ? sectionBreakdown?.averages.bioBiochem
+                      : key === 'chemPhys'
+                        ? sectionBreakdown?.averages.chemPhys
+                        : sectionBreakdown?.averages.psychSoc
+
+                const localPct = diagnosticSummary
+                  ? pct(
+                      diagnosticSummary.sections[key].correct,
+                      diagnosticSummary.sections[key].total,
+                    )
+                  : null
+
+                const displayPct =
+                  backendAvg != null
+                    ? Math.round(((backendAvg - 118) / (132 - 118)) * 100)
+                    : localPct
+
+                const correct = diagnosticSummary?.sections[key].correct
+                const total = diagnosticSummary?.sections[key].total
+                const weak = displayPct !== null && displayPct < 50
+
                 return (
                   <li key={key}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -564,13 +659,17 @@ export function DashboardPage() {
                         {DIAGNOSTIC_SECTION_LABELS[key]}
                       </span>
                       <span className="text-sm font-semibold text-[#5c534c]">
-                        {correct}/{total} ({p}%)
+                        {backendAvg != null
+                          ? `avg ${Math.round(backendAvg)} scaled`
+                          : correct !== undefined && total !== undefined
+                            ? `${correct}/${total} (${displayPct}%)`
+                            : '—'}
                       </span>
                     </div>
                     <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e8dfd4]">
                       <div
                         className="h-full rounded-full bg-[#5f7f6a] transition-[width]"
-                        style={{ width: `${p}%` }}
+                        style={{ width: `${displayPct ?? 0}%` }}
                       />
                     </div>
                     {weak ? (

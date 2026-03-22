@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import { extractMcatTotalFromPdfFile } from '../utils/mcatPdfScore'
+import { saveManualScore, uploadDiagnosticPdf } from '../lib/api'
 
 function ImportPdfIcon({ className }: { className?: string }) {
   return (
@@ -76,18 +77,28 @@ export function PostQuestionnairePage() {
     setExtractedScore(null)
     setPdfName(file.name)
     try {
-      const { score } = await extractMcatTotalFromPdfFile(file)
+      // Try server-side parsing first (saves all 4 section scores to Snowflake)
+      let score: number | null = null
+      try {
+        const serverScores = await uploadDiagnosticPdf(file)
+        score = serverScores.totalScore
+      } catch {
+        // Server unavailable — fall back to client-side PDF.js extraction
+        const result = await extractMcatTotalFromPdfFile(file)
+        score = result.score
+      }
+
       if (score != null) {
         setExtractedScore(score)
         setManualScore(String(score))
       } else {
         setParseError(
-          'We couldn’t find a total score (472–528) in that PDF. Try another export, or enter your score below and continue.',
+          "We couldn't find a total score (472-528) in that PDF. Try another export, or enter your score below and continue.",
         )
       }
     } catch {
       setParseError(
-        'Could not read that PDF. It may be encrypted or image-only; try a text-based export from AAMC.',
+        "Could not read that PDF. It may be encrypted or image-only; try a text-based export from AAMC.",
       )
     } finally {
       setLoading(false)
@@ -110,6 +121,10 @@ export function PostQuestionnairePage() {
   const applyBaseline = (score: number) => {
     const n = Math.min(528, Math.max(472, Math.round(score)))
     setProfile({ baselineScore: n })
+    // Persist manual score to backend (fire-and-forget)
+    saveManualScore(n).catch((err) =>
+      console.warn('[ProEdge] Failed to save manual score:', err),
+    )
   }
 
   const applyExtractedOrManual = () => {

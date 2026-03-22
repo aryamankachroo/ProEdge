@@ -6,6 +6,7 @@ import {
   DIAGNOSTIC_QUESTIONS,
   DIAGNOSTIC_TOTAL,
 } from '../data/diagnosticQuestions'
+import { saveDiagnosticScores } from '../lib/api'
 
 export function DiagnosticTestPage() {
   const navigate = useNavigate()
@@ -33,9 +34,14 @@ export function DiagnosticTestPage() {
   const goNext = () => {
     if (!canNext) return
     if (isLast) {
-      setProfile({
-        diagnosticSummary: buildDiagnosticSummary(answers as number[]),
-      })
+      const summary = buildDiagnosticSummary(answers as number[])
+      setProfile({ diagnosticSummary: summary })
+
+      // Persist scores to backend (fire-and-forget)
+      saveDiagnosticScores(summary).catch((err) =>
+        console.warn('[ProEdge] Failed to save diagnostic scores:', err),
+      )
+
       navigate('/dashboard', { replace: true })
       return
     }
