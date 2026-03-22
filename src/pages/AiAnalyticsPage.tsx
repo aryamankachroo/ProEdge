@@ -113,13 +113,9 @@ export function AiAnalyticsPage() {
 
   return (
     <div className="onboarding-shell min-h-dvh pb-20">
-      <header className="sticky top-0 z-10 border-b border-[#e8dfd4]/80 bg-[#faf7f3]/90 px-4 py-3 backdrop-blur-md sm:px-8">
+      <header className="app-shell-header">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <Link
-            to="/"
-            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf7f3] rounded-sm"
-            aria-label="ProEdge home"
-          >
+          <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
             ProEdge
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
@@ -164,13 +160,13 @@ export function AiAnalyticsPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
           AI analytics
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
           Import a <strong>practice MCAT</strong> or score-report PDF. Text is
           extracted in the browser; with{' '}
-          <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px]">
+          <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px] dark:bg-[#383633] dark:text-[#e8e6e1]">
             VITE_GEMINI_API_KEY
           </code>{' '}
           we use <strong>Gemini</strong> to read section scores and strengths /
@@ -199,34 +195,34 @@ export function AiAnalyticsPage() {
           onDrop={onDrop}
           className={`mt-8 flex w-full max-w-xl flex-col items-center rounded-2xl border-2 border-dashed px-6 py-12 transition ${
             dragOver
-              ? 'border-[#5f7f6a] bg-[#f0f6f2]'
-              : 'border-[#d4c9be] bg-white/80 hover:border-[#b8a99a]'
+              ? 'border-[#5f7f6a] bg-[#f0f6f2] dark:bg-[#243529]/55'
+              : 'border-[#d4c9be] bg-white/80 hover:border-[#b8a99a] dark:border-[#5c5a56] dark:bg-[#2c2b29]/96 dark:hover:border-[#7a7268]'
           } disabled:cursor-not-allowed disabled:opacity-50`}
         >
-          <PdfIcon className="text-[#5f7f6a]" />
-          <span className="mt-4 text-sm font-semibold text-[#2c2825]">
+          <PdfIcon className="text-[#5f7f6a] dark:text-[#9bc4a8]" />
+          <span className="mt-4 text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
             {loading ? 'Analyzing PDF…' : 'Drop a report PDF here or click to browse'}
           </span>
-          <span className="mt-2 text-center text-xs text-[#7a6e66]">
+          <span className="mt-2 text-center text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
             Works best with text-based exports (AAMC, Blueprint, UWorld summaries,
             etc.)
           </span>
         </button>
 
         {error ? (
-          <p className="mt-4 max-w-xl text-sm text-[#b91c1c]" role="alert">
+          <p className="mt-4 max-w-xl text-sm text-[#b91c1c] dark:text-[#fca5a5]" role="alert">
             {error}
           </p>
         ) : null}
 
         {snapshot ? (
           <div className="mt-12 space-y-8">
-            <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[#ebe5dc] pb-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[#ebe5dc] pb-4 dark:border-[#454440]">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#c4bdb4]">
                   Last analysis
                   {snapshot.engine === 'gemini_v1' ? (
-                    <span className="ml-2 rounded-full bg-[#e8f0fe] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1a73e8]">
+                    <span className="ml-2 rounded-full bg-[#e8f0fe] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1a73e8] dark:bg-[#1e3a5f] dark:text-[#93c5fd]">
                       Gemini
                     </span>
                   ) : snapshot.engine === 'demo_v1' ? (
@@ -235,9 +231,9 @@ export function AiAnalyticsPage() {
                     </span>
                   ) : null}
                 </p>
-                <p className="mt-1 text-sm text-[#3d3835]">
+                <p className="mt-1 text-sm text-[#3d3835] dark:text-[#eae8e4]">
                   <span className="font-medium">{snapshot.sourceFileName}</span>
-                  <span className="text-[#7a6e66]">
+                  <span className="text-[#7a6e66] dark:text-[#b8b0a6]">
                     {' '}
                     ·{' '}
                     {new Date(snapshot.analyzedAt).toLocaleString(undefined, {
@@ -271,47 +267,47 @@ export function AiAnalyticsPage() {
                 {snapshot.sections.map((row) => (
                   <li
                     key={row.label}
-                    className="rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3"
+                    className="rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3 dark:border-[#454440] dark:bg-[#2c2b29]/96"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-semibold text-[#2c2825]">
+                      <span className="font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
                         {row.label}
                       </span>
-                      <span className="onboarding-serif text-lg tabular-nums text-[#5f7f6a]">
+                      <span className="onboarding-serif text-lg tabular-nums text-[#5f7f6a] dark:text-[#9bc4a8]">
                         {row.scaledScore ?? '—'}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-[#7a6e66]">{row.detail}</p>
+                    <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#c4bdb4]">{row.detail}</p>
                   </li>
                 ))}
               </ul>
             </section>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <section className="rounded-2xl border border-[#cfe5d6] bg-[#f4faf6] p-5 sm:p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#166534]">
+              <section className="rounded-2xl border border-[#cfe5d6] bg-[#f4faf6] p-5 dark:border-[#3d5244]/90 dark:bg-[#2c2b29]/96 sm:p-6">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#166534] dark:text-[#86efac]">
                   Where you showed strength
                 </h2>
                 <ul className="mt-4 space-y-4">
                   {snapshot.strengths.map((s) => (
                     <li key={s.title}>
-                      <p className="font-semibold text-[#14532d]">{s.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835]">
+                      <p className="font-semibold text-[#14532d] dark:text-[#bbf7d0]">{s.title}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#e8e6e1]">
                         {s.description}
                       </p>
                     </li>
                   ))}
                 </ul>
               </section>
-              <section className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-5 sm:p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c]">
+              <section className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-5 dark:border-[#6b3a3a]/90 dark:bg-[#2c2b29]/96 sm:p-6">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c] dark:text-[#fca5a5]">
                   Topics to tighten
                 </h2>
                 <ul className="mt-4 space-y-4">
                   {snapshot.weaknesses.map((s) => (
                     <li key={s.title}>
-                      <p className="font-semibold text-[#7f1d1d]">{s.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835]">
+                      <p className="font-semibold text-[#7f1d1d] dark:text-[#fecaca]">{s.title}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#e8e6e1]">
                         {s.description}
                       </p>
                     </li>
@@ -320,18 +316,18 @@ export function AiAnalyticsPage() {
               </section>
             </div>
 
-            <details className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-sm">
-              <summary className="cursor-pointer font-semibold text-[#5c534c]">
+            <details className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-sm dark:border-[#454440] dark:bg-[#2c2b29]/96">
+              <summary className="cursor-pointer font-semibold text-[#5c534c] dark:text-[#c4bdb4]">
                 Extracted text preview (debug)
               </summary>
-              <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-relaxed text-[#7a6e66]">
+              <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-relaxed text-[#7a6e66] dark:text-[#9a928a]">
                 {snapshot.excerpt}
                 {snapshot.excerpt.length >= 720 ? '…' : ''}
               </p>
             </details>
           </div>
         ) : (
-          <p className="mt-10 text-sm text-[#9a8b7e]">
+          <p className="mt-10 text-sm text-[#9a8b7e] dark:text-[#a89e94]">
             No report analyzed yet — upload a PDF to generate your first insight
             sheet.
           </p>

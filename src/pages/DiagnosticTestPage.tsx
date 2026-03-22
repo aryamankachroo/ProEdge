@@ -59,21 +59,17 @@ export function DiagnosticTestPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[#fdf9f3] font-[Nunito,'DM_Sans',system-ui,sans-serif] text-[#2c2825]">
-      <header className="border-b border-[#e8dfd4]/90 bg-[#fdf9f3]/95 px-4 py-4 backdrop-blur-sm sm:px-8">
+    <div className="onboarding-shell min-h-dvh font-[Nunito,'DM_Sans',system-ui,sans-serif]">
+      <header className="app-shell-header py-4">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
-          <Link
-            to="/"
-            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fdf9f3] rounded-sm"
-            aria-label="ProEdge home"
-          >
+          <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
             ProEdge
           </Link>
-          <span className="text-sm font-medium text-[#7a6e66]">
+          <span className="text-sm font-medium text-[#7a6e66] dark:text-[#a89e94]">
             Question {index + 1} of {DIAGNOSTIC_TOTAL}
           </span>
         </div>
-        <div className="mx-auto mt-3 h-1 max-w-3xl overflow-hidden rounded-full bg-[#e8dfd4]">
+        <div className="mx-auto mt-3 h-1 max-w-3xl overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]">
           <div
             className="h-full rounded-full bg-[#5f7f6a] transition-[width] duration-300 ease-out"
             style={{ width: `${progressPct}%` }}
@@ -82,19 +78,19 @@ export function DiagnosticTestPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-8 sm:py-10 sm:pb-32">
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e]">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#8a8278]">
           Section {q.sectionNumber} of 4 · {q.sectionShort}
         </p>
-        <h1 className="onboarding-serif mt-2 text-2xl font-semibold leading-tight tracking-tight text-[#1a1816] sm:text-[1.65rem]">
+        <h1 className="onboarding-serif mt-2 text-2xl font-semibold leading-tight tracking-tight text-[#1a1816] dark:text-[#f0ebe4] sm:text-[1.65rem]">
           {q.sectionTitle}
         </h1>
-        <p className="mt-2 text-sm text-[#7a6e66]">
+        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#a89e94]">
           Question {q.questionInSection} of {q.sectionQuestionCount} in this
           section
         </p>
 
-        <div className="mt-8 rounded-[1.35rem] border border-white/80 bg-white p-6 shadow-[0_16px_48px_-20px_rgba(90,70,55,0.18)] sm:p-8">
-          <p className="text-[0.95rem] leading-relaxed text-[#3d3835] sm:text-base">
+        <div className="mt-8 rounded-[1.35rem] border border-white/80 bg-white p-6 shadow-[0_16px_48px_-20px_rgba(90,70,55,0.18)] dark:border-[#3d3c38]/90 dark:bg-[#262523] dark:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.45)] sm:p-8">
+          <p className="text-[0.95rem] leading-relaxed text-[#3d3835] dark:text-[#e8e6e1] sm:text-base">
             {q.prompt}
           </p>
           <div className="mt-6 flex flex-col gap-3">
@@ -105,22 +101,22 @@ export function DiagnosticTestPage() {
                   key={i}
                   type="button"
                   onClick={() => setChoice(i)}
-                  className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3.5 text-left text-sm leading-snug transition sm:gap-4 sm:py-4 ${
+                  className={`diagnostic-mcq-option flex w-full items-start gap-3 rounded-xl border px-4 py-3.5 text-left text-sm leading-snug transition sm:gap-4 sm:py-4 ${
                     isOn
-                      ? 'border-[#5f7f6a] bg-[#f0f6f2] ring-1 ring-[#5f7f6a]/35'
-                      : 'border-[#e0d6cc] bg-[#faf9f7] hover:border-[#c9bfb4]'
+                      ? 'diagnostic-mcq-option--selected border-[#5f7f6a] bg-[#f0f6f2] text-[#142018] ring-1 ring-[#5f7f6a]/35 dark:bg-[#243d30] dark:ring-[#5f7f6a]/50'
+                      : 'border-[#e0d6cc] bg-[#faf9f7] text-[#2c2825] hover:border-[#c9bfb4] dark:border-[#454440] dark:bg-[#32312f] dark:hover:border-[#5f7f6a]/45'
                   }`}
                 >
                   <span
                     className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
                       isOn
                         ? 'border-[#5f7f6a] bg-[#5f7f6a] text-white'
-                        : 'border-[#c9bfb4] bg-white text-[#5c534c]'
+                        : 'border-[#c9bfb4] bg-white text-[#5c534c] dark:border-[#5c5a56] dark:bg-[#454440] dark:text-[#f5f2ed]'
                     }`}
                   >
                     {(['A', 'B', 'C', 'D'] as const)[i]}
                   </span>
-                  <span className="pt-1 text-[#2c2825]">{label}</span>
+                  <span className="pt-1">{label}</span>
                 </button>
               )
             })}
@@ -128,12 +124,12 @@ export function DiagnosticTestPage() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-[#e8dfd4]/80 bg-[#fdf9f3]/92 px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-md sm:px-8">
+      <footer className="fixed bottom-0 left-0 right-0 border-t border-[#e8dfd4]/80 bg-[#fdf9f3]/92 px-4 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-md dark:border-[#3a3836]/85 dark:bg-[#1f1f1d]/95 sm:px-8">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
           <button
             type="button"
             onClick={goBack}
-            className="py-2 text-sm font-semibold text-[#5c534c] hover:text-[#2c2825]"
+            className="py-2 text-sm font-semibold text-[#5c534c] hover:text-[#2c2825] dark:text-[#a89e94] dark:hover:text-[#f0ebe4]"
           >
             Back
           </button>
@@ -141,7 +137,7 @@ export function DiagnosticTestPage() {
             type="button"
             disabled={!canNext}
             onClick={goNext}
-            className="rounded-full bg-[#5f7f6a] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#536b5d] disabled:cursor-not-allowed disabled:opacity-45"
+            className="journal-btn-on-dark rounded-full bg-[#5f7f6a] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#536b5d] disabled:cursor-not-allowed disabled:opacity-45"
           >
             {isLast ? 'View dashboard' : 'Next'}
           </button>

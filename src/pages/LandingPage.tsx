@@ -21,11 +21,11 @@ export function LandingPage() {
               ProEdge
             </span>
           </span>
-          <span className="landing-hero-sub max-w-md text-sm font-medium leading-snug text-[#7a6e66] sm:text-base md:text-lg">
+          <span className="landing-hero-sub max-w-md text-sm font-medium leading-snug text-[#7a6e66] dark:text-[#a89e94] sm:text-base md:text-lg">
             Your Companion for MCAT prep.
           </span>
         </h1>
-        <p className="landing-hero-body mb-10 max-w-xs text-xs leading-relaxed text-[#9a8f86] sm:max-w-sm sm:text-sm md:max-w-md">
+        <p className="landing-hero-body mb-10 max-w-xs text-xs leading-relaxed text-[#9a8f86] dark:text-[#8a8278] sm:max-w-sm sm:text-sm md:max-w-md">
           Built for humans, not machines — pacing, pulse checks, and plans that
           respect burnout as much as content gaps.
         </p>

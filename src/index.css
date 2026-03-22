@@ -1,8 +1,52 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-display: 'Outfit', system-ui, sans-serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+/* Theme tokens — toggled via `html.dark` (see ThemeProvider + index.html script). */
+:root {
+  --pe-app-bg: #faf7f3;
+  --pe-app-fg: #3d3835;
+  --pe-shell-1: #faf7f3;
+  --pe-shell-2: #f5ebe3;
+  --pe-shell-3: #f8f0ea;
+  --pe-input-border: #e8dfd4;
+  --pe-input-bg: rgba(255, 255, 255, 0.92);
+  --pe-input-fg: #3d3835;
+  --pe-placeholder: #a8988c;
+  --pe-range-track: #e8dfd4;
+  --pe-range-thumb-ring: #ffffff;
+  --pe-onboarding-btn-default: #1a1816;
+  --pe-header-solid: #faf7f3;
+  --pe-header-border: #e8dfd4;
+  --pe-focus-ring-offset: #faf7f3;
+  --pe-input-focus-border: #c4a882;
+  --pe-input-focus-ring: rgba(196, 168, 130, 0.25);
+}
+
+html.dark {
+  --pe-app-bg: #1a1918;
+  --pe-app-fg: #e8e6e1;
+  --pe-shell-1: #1c1b19;
+  --pe-shell-2: #232220;
+  --pe-shell-3: #1a1917;
+  --pe-input-border: #40403c;
+  --pe-input-bg: rgba(38, 37, 35, 0.92);
+  --pe-input-fg: #e8e6e1;
+  --pe-placeholder: #8a8580;
+  --pe-range-track: #3a3936;
+  --pe-range-thumb-ring: #2a2927;
+  /* Dark text so light-surface pills (white/sage) stay readable; scope light labels below. */
+  --pe-onboarding-btn-default: #2c2825;
+  --pe-header-solid: #1f1f1d;
+  --pe-header-border: #3a3836;
+  --pe-focus-ring-offset: #1f1f1d;
+  --pe-input-focus-border: #7a9b82;
+  --pe-input-focus-ring: rgba(122, 155, 130, 0.28);
 }
 
 /* Questionnaire-only app: light shell matching onboarding */
@@ -10,8 +54,8 @@
   margin: 0;
   min-height: 100dvh;
   font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
-  background-color: #faf7f3;
-  color: #3d3835;
+  background-color: var(--pe-app-bg);
+  color: var(--pe-app-fg);
 }
 
 #root {
@@ -30,12 +74,12 @@
 /* Onboarding — warm questionnaire aesthetic */
 .onboarding-shell {
   font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
-  color: #3d3835;
+  color: var(--pe-app-fg);
   background: linear-gradient(
     165deg,
-    #faf7f3 0%,
-    #f5ebe3 42%,
-    #f8f0ea 100%
+    var(--pe-shell-1) 0%,
+    var(--pe-shell-2) 42%,
+    var(--pe-shell-3) 100%
   );
 }
 
@@ -47,28 +91,38 @@
 .onboarding-input {
   width: 100%;
   border-radius: 1rem;
-  border: 1px solid #e8dfd4;
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--pe-input-border);
+  background: var(--pe-input-bg);
   padding: 0.875rem 1.125rem;
   font-size: 1.05rem;
   font-family: inherit;
-  color: #3d3835;
+  color: var(--pe-input-fg);
   box-shadow: 0 1px 2px rgba(62, 47, 35, 0.04);
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
 }
 
+html.dark .onboarding-input {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
 .onboarding-input:focus {
   outline: none;
-  border-color: #c4a882;
+  border-color: var(--pe-input-focus-border);
   box-shadow:
-    0 0 0 3px rgba(196, 168, 130, 0.25),
+    0 0 0 3px var(--pe-input-focus-ring),
     0 1px 2px rgba(62, 47, 35, 0.06);
 }
 
+html.dark .onboarding-input:focus {
+  box-shadow:
+    0 0 0 3px var(--pe-input-focus-ring),
+    0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
 .onboarding-input::placeholder {
-  color: #a8988c;
+  color: var(--pe-placeholder);
 }
 
 .onboarding-range {
@@ -77,7 +131,7 @@
   width: 100%;
   height: 0.5rem;
   border-radius: 999px;
-  background: #e8dfd4;
+  background: var(--pe-range-track);
 }
 
 .onboarding-range::-webkit-slider-thumb {
@@ -87,7 +141,7 @@
   height: 1.5rem;
   border-radius: 50%;
   background: #5f7f6a;
-  border: 3px solid #fff;
+  border: 3px solid var(--pe-range-thumb-ring);
   box-shadow: 0 2px 8px rgba(95, 127, 106, 0.45);
   cursor: pointer;
 }
@@ -97,13 +151,13 @@
   height: 1.5rem;
   border-radius: 50%;
   background: #5f7f6a;
-  border: 3px solid #fff;
+  border: 3px solid var(--pe-range-thumb-ring);
   box-shadow: 0 2px 8px rgba(95, 127, 106, 0.45);
   cursor: pointer;
 }
 
 .onboarding-shell button[type='button'] {
-  color: #1a1816 !important;
+  color: var(--pe-onboarding-btn-default) !important;
   -webkit-text-fill-color: currentColor;
 }
 
@@ -153,6 +207,68 @@
   opacity: 0.72;
 }
 
+/* Back control on dark footer bar only — calendar/header nav backs stay dark-on-light via default token. */
+html.dark .onboarding-shell .onboard-enter-bar button.onboarding-nav-back {
+  color: #eae8e4 !important;
+}
+
+html.dark .onboarding-shell button.onboarding-score-step {
+  color: #f0ebe4 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Month calendar toolbar on dark card — light control labels */
+html.dark .onboarding-shell .onboarding-cal-toolbar button[type='button'] {
+  color: #f0ebe4 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell [data-onboarding-cal-dialog] button.onboarding-nav-back {
+  color: #eae8e4 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Mini / full diagnostic MCQ — light answer copy on charcoal & sage rows */
+html.dark .onboarding-shell button.diagnostic-mcq-option:not(.diagnostic-mcq-option--selected) {
+  color: #eae8e4 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell button.diagnostic-mcq-option--selected {
+  color: #e8f4ec !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Study status cards — near-black row + subtle lift when selected (dark only; light uses Tailwind above). */
+html.dark .onboarding-shell button.onboarding-study-status-option {
+  color: #d8d4ce !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell button.onboarding-study-status-option--selected {
+  color: #f5f2ed !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell button.onboarding-segment-muted {
+  color: #4a423c !important;
+}
+
+/* Study load shape — readable unselected copy; selected pill is charcoal (not white). */
+html.dark .onboarding-shell .onboarding-load-shape button.onboarding-segment-muted {
+  color: #c9c4bd !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell .onboarding-load-shape button:not(.onboarding-segment-muted) {
+  color: #f5f2ed !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell button.onboarding-diagnostics-modal-muted {
+  color: #5c534c !important;
+}
+
 .onboarding-shell button.onboarding-cal-add {
   color: #ffffff !important;
   background-color: #007aff !important;
@@ -178,6 +294,44 @@
   color: #2c1408 !important;
   background-color: #fcd8c8 !important;
   border-color: #9d5a36 !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Step 2 setup chips — dark: charcoal pills/cards; selected = subtle lift + accent border */
+html.dark .onboarding-shell .onboarding-setup-pills button:not(.onboarding-chip-sage-on) {
+  background-color: #2c2b29 !important;
+  border-color: #3e3d3b !important;
+  color: #c9c4bd !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell .onboarding-setup-pills button:not(.onboarding-chip-sage-on):hover {
+  border-color: #4e4c48 !important;
+}
+
+html.dark .onboarding-shell button.onboarding-chip-sage-on {
+  color: #f5f2ed !important;
+  background-color: #383633 !important;
+  border-color: #5f7f6a !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell .onboarding-setup-weak-grid button:not(.onboarding-chip-terra-on) {
+  background-color: #2c2b29 !important;
+  border-color: #3e3d3b !important;
+  color: #c9c4bd !important;
+  box-shadow: none !important;
+  -webkit-text-fill-color: currentColor;
+}
+
+html.dark .onboarding-shell .onboarding-setup-weak-grid button:not(.onboarding-chip-terra-on):hover {
+  border-color: #4e4c48 !important;
+}
+
+html.dark .onboarding-shell button.onboarding-chip-terra-on {
+  color: #f5f2ed !important;
+  background-color: #3a3532 !important;
+  border-color: #8b6048 !important;
   -webkit-text-fill-color: currentColor;
 }
 
@@ -338,6 +492,22 @@
     color: transparent;
     animation: landing-shine 12s ease-in-out infinite;
   }
+
+  html.dark .landing-logo-word {
+    background: linear-gradient(
+      120deg,
+      #f8f4ef 0%,
+      #e8e4dd 35%,
+      #d4cfc6 50%,
+      #e8e4dd 65%,
+      #f8f4ef 100%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: landing-shine 12s ease-in-out infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -351,6 +521,13 @@
 
   .landing-logo-word {
     color: #2c2825;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+
+  html.dark .landing-logo-word {
+    color: #f0ebe4;
     background: none;
     -webkit-background-clip: unset;
     background-clip: unset;
@@ -441,6 +618,53 @@
 
 /* ─── App shell top nav (Dashboard, Calendar, …) — subtle iOS-like hover ─── */
 
+.app-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid color-mix(in srgb, var(--pe-header-border) 80%, transparent);
+  background: color-mix(in srgb, var(--pe-header-solid) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .app-shell-header {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+a.app-shell-brand {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #1a1816;
+  text-decoration: none;
+  border-radius: 0.125rem;
+}
+
+a.app-shell-brand:hover {
+  opacity: 0.8;
+}
+
+a.app-shell-brand:focus {
+  outline: none;
+}
+
+a.app-shell-brand:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px rgba(95, 127, 106, 0.65),
+    0 0 0 4px var(--pe-focus-ring-offset);
+}
+
+html.dark a.app-shell-brand {
+  color: #f5f2ed;
+}
+
 .onboarding-shell button.shell-nav-btn {
   margin: 0;
   appearance: none;
@@ -487,7 +711,36 @@
   outline: none;
   box-shadow:
     0 0 0 2px rgba(95, 127, 106, 0.4),
-    0 0 0 4px rgba(250, 247, 243, 1);
+    0 0 0 4px var(--pe-focus-ring-offset);
+}
+
+html.dark .onboarding-shell button.shell-nav-btn {
+  color: #9bc4a8 !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.dark .onboarding-shell button.shell-nav-btn:hover {
+    transform: translateY(-1px);
+    color: #f5f2ed !important;
+    border-color: #454440;
+    background-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 5px 18px -5px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.dark .onboarding-shell button.shell-nav-btn:hover {
+    transform: none;
+  }
+}
+
+html.dark .onboarding-shell button.shell-nav-btn:focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(155, 196, 168, 0.55),
+    0 0 0 4px var(--pe-focus-ring-offset);
 }
 
 .shell-nav-btn-active {
@@ -500,4 +753,9 @@
   color: #2c2825;
   background: rgba(0, 0, 0, 0.04);
   cursor: default;
+}
+
+html.dark .shell-nav-btn-active {
+  color: #f5f2ed !important;
+  background: rgba(255, 255, 255, 0.08);
 }

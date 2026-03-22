@@ -27,6 +27,13 @@ const SECTION_ORDER: DiagnosticSectionKey[] = [
   'psychSoc',
 ]
 
+/** Light + dark surfaces for KPI / chart cards (charcoal in dark mode, not pure black). */
+const dashCardSm =
+  'rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)] dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:shadow-[0_8px_32px_-14px_rgba(0,0,0,0.4)]'
+
+const dashCardLg =
+  'rounded-2xl border border-white/80 bg-white/90 p-6 shadow-[0_12px_40px_-16px_rgba(90,70,55,0.14)] dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:shadow-[0_12px_40px_-18px_rgba(0,0,0,0.42)] sm:p-7'
+
 function pct(correct: number, total: number) {
   if (total <= 0) return 0
   return Math.round((correct / total) * 100)
@@ -47,7 +54,16 @@ function timeGreeting() {
   return 'Good evening'
 }
 
-function Sparkline({ values, color }: { values: number[]; color: string }) {
+function Sparkline({
+  values,
+  color,
+  darkStroke,
+}: {
+  values: number[]
+  color: string
+  /** Stroke on dark cards; defaults to `color` if omitted. */
+  darkStroke?: string
+}) {
   const w = 120
   const h = 36
   const min = Math.min(...values)
@@ -58,17 +74,23 @@ function Sparkline({ values, color }: { values: number[]; color: string }) {
     const y = h - ((v - min) / span) * (h - 4) - 2
     return `${x},${y}`
   })
+  const d = darkStroke ?? color
   return (
     <svg
       width={w}
       height={h}
       viewBox={`0 0 ${w} ${h}`}
-      className="mt-2 overflow-visible"
+      className="mt-2 overflow-visible [&>polyline]:stroke-[var(--spark-light)] dark:[&>polyline]:stroke-[var(--spark-dark)]"
+      style={
+        {
+          '--spark-light': color,
+          '--spark-dark': d,
+        } as React.CSSProperties
+      }
       aria-hidden
     >
       <polyline
         fill="none"
-        stroke={color}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -90,13 +112,18 @@ function DonutRing({
   const c = 2 * Math.PI * r
   const dash = (pctValue / 100) * c
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="[&>circle:first-of-type]:stroke-[#e8dfd4] dark:[&>circle:first-of-type]:stroke-[#454440] [&>circle:nth-of-type(2)]:stroke-[#3b82f6] dark:[&>circle:nth-of-type(2)]:stroke-[#60a5fa]"
+      aria-hidden
+    >
       <circle
         cx={size / 2}
         cy={size / 2}
         r={r}
         fill="none"
-        stroke="#e8dfd4"
         strokeWidth={stroke}
       />
       <circle
@@ -104,7 +131,6 @@ function DonutRing({
         cy={size / 2}
         r={r}
         fill="none"
-        stroke="#3b82f6"
         strokeWidth={stroke}
         strokeDasharray={`${dash} ${c}`}
         strokeLinecap="round"
@@ -139,7 +165,7 @@ function SectionRadar({ summary }: { summary: DiagnosticSummary }) {
         cy={cy}
         r={rr}
         fill="none"
-        stroke="#e8dfd4"
+        className="stroke-[#e8dfd4] dark:stroke-[#454440]"
         strokeWidth="0.35"
       />
     )
@@ -156,7 +182,7 @@ function SectionRadar({ summary }: { summary: DiagnosticSummary }) {
         y1={cy}
         x2={x2}
         y2={y2}
-        stroke="#e8dfd4"
+        className="stroke-[#e8dfd4] dark:stroke-[#454440]"
         strokeWidth="0.4"
       />
     )
@@ -174,7 +200,7 @@ function SectionRadar({ summary }: { summary: DiagnosticSummary }) {
         y={y}
         textAnchor="middle"
         dominantBaseline="middle"
-        className="fill-[#7a6e66] text-[2.8px] font-medium"
+        className="fill-[#7a6e66] text-[2.8px] font-medium dark:fill-[#c4bdb4]"
         style={{ fontSize: '2.8px' }}
       >
         {DIAGNOSTIC_SECTION_SHORT[k]}
@@ -188,8 +214,7 @@ function SectionRadar({ summary }: { summary: DiagnosticSummary }) {
       {axes}
       <polygon
         points={points}
-        fill="rgba(59, 130, 246, 0.18)"
-        stroke="#3b82f6"
+        className="fill-[rgba(59,130,246,0.18)] stroke-[#3b82f6] dark:fill-[rgba(96,165,250,0.22)] dark:stroke-[#60a5fa]"
         strokeWidth="0.8"
         strokeLinejoin="round"
       />
@@ -285,13 +310,9 @@ export function DashboardPage() {
 
   return (
     <div className="onboarding-shell min-h-dvh pb-16">
-      <header className="sticky top-0 z-10 border-b border-[#e8dfd4]/80 bg-[#faf7f3]/90 px-4 py-3 backdrop-blur-md sm:px-8">
+      <header className="app-shell-header">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <Link
-            to="/"
-            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf7f3] rounded-sm"
-            aria-label="ProEdge home"
-          >
+          <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
             ProEdge
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
@@ -336,23 +357,23 @@ export function DashboardPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
           Welcome back, {displayName}
         </h1>
-        <p className="mt-2 text-sm text-[#7a6e66] sm:text-base">
+        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
           Here&apos;s your MCAT prep dashboard — goals, diagnostic snapshot, and
           where to focus next.
         </p>
 
         {/* Hero banner */}
-        <section className="mt-8 overflow-hidden rounded-2xl bg-gradient-to-br from-[#c5d9f5] via-[#d4e4f9] to-[#e8d4f0] p-6 shadow-[0_16px_48px_-24px_rgba(80,100,140,0.35)] sm:p-8">
-          <p className="text-lg font-semibold text-[#1e3a5f] sm:text-xl">
+        <section className="mt-8 overflow-hidden rounded-2xl bg-gradient-to-br from-[#c5d9f5] via-[#d4e4f9] to-[#e8d4f0] p-6 shadow-[0_16px_48px_-24px_rgba(80,100,140,0.35)] dark:from-[#1a2744] dark:via-[#1e2d42] dark:to-[#2a1f38] dark:shadow-[0_16px_48px_-24px_rgba(0,0,0,0.45)] sm:p-8">
+          <p className="text-lg font-semibold text-[#1e3a5f] dark:text-[#bfdbfe] sm:text-xl">
             {timeGreeting()}!{' '}
             {diagnosticSummary
               ? `Your last diagnostic was ${overallPct}% — stack short review blocks on weak topics.`
               : 'Take the mini diagnostic to unlock section-level insights.'}
           </p>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#2c4a6e]/90">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#2c4a6e]/90 dark:text-[#cbd5e1]/95">
             {diagnosticSummary
               ? `Aim for ${hoursPerDay} hr study days and steady weekly volume — small sessions beat rare marathons.`
               : 'Complete the 10-question preview to see strongest and weakest sections on this dashboard.'}
@@ -365,7 +386,7 @@ export function DashboardPage() {
               Target focus
             </span>
           </div>
-          <p className="mt-4 text-xs leading-relaxed text-[#1e3a5f]/75">
+          <p className="mt-4 text-xs leading-relaxed text-[#1e3a5f]/75 dark:text-[#94a3b8]">
             Tip: tie each study block to one weak topic from your diagnostic —
             specificity beats vague &quot;review science.&quot;
           </p>
@@ -373,9 +394,9 @@ export function DashboardPage() {
 
         {/* KPI row */}
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                 Goal score
               </span>
               <span className="text-lg text-[#3b82f6]" aria-hidden>
@@ -385,11 +406,11 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#3b82f6]">
               {targetScore >= 472 ? targetScore : 'Not set'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">MCAT target</p>
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">MCAT target</p>
           </div>
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                 Days until exam
               </span>
               <span className="text-lg text-[#3b82f6]" aria-hidden>
@@ -399,13 +420,13 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#3b82f6]">
               {daysLeft !== null && daysLeft > 0 ? daysLeft : 'Not set'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
               {examDate ? `Exam ${examDate}` : 'Add a date in onboarding'}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                 Study streak
               </span>
               <span className="text-lg text-[#7c6bcf]" aria-hidden>
@@ -415,7 +436,7 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-xl font-semibold leading-snug text-[#7c6bcf]">
               {streak ? `${streak.streak} day${streak.streak === 1 ? '' : 's'}` : studyLabel}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
               {streak
                 ? streak.lastStudyDate
                   ? `Last: ${streak.lastStudyDate}`
@@ -423,9 +444,9 @@ export function DashboardPage() {
                 : 'From questionnaire'}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                 Diagnostic accuracy
               </span>
               <span className="text-lg text-[#db2777]" aria-hidden>
@@ -459,11 +480,11 @@ export function DashboardPage() {
 
         {/* Second row: performance + CTA */}
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-6 shadow-[0_12px_40px_-16px_rgba(90,70,55,0.14)] sm:p-7">
-            <h2 className="text-sm font-semibold text-[#2c2825]">
+          <div className={dashCardLg}>
+            <h2 className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
               Performance overview
             </h2>
-            <p className="mt-1 text-xs text-[#7a6e66]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
               Overall accuracy and balance across sections.
             </p>
             {diagnosticSummary ? (
@@ -471,11 +492,11 @@ export function DashboardPage() {
                 <div className="flex flex-col items-center">
                   <div className="relative h-[120px] w-[120px] shrink-0">
                     <DonutRing pctValue={overallPct ?? 0} />
-                    <span className="onboarding-serif absolute inset-0 flex items-center justify-center text-xl font-semibold text-[#1a1816]">
+                    <span className="onboarding-serif absolute inset-0 flex items-center justify-center text-xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
                       {overallPct}%
                     </span>
                   </div>
-                  <p className="mt-2 text-center text-sm font-medium text-[#3b82f6]">
+                  <p className="mt-2 text-center text-sm font-medium text-[#3b82f6] dark:text-[#93c5fd]">
                     Target: {targetScore >= 472 ? `${targetScore}+` : 'set goal'}
                   </p>
                 </div>
@@ -484,12 +505,12 @@ export function DashboardPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-8 rounded-xl border border-dashed border-[#d4c9be] bg-[#faf9f7] p-8 text-center text-sm text-[#7a6e66]">
+              <div className="mt-8 rounded-xl border border-dashed border-[#d4c9be] bg-[#faf9f7] p-8 text-center text-sm text-[#7a6e66] dark:border-[#5c5a56] dark:bg-[#1f1e1c] dark:text-[#c4bdb4]">
                 Run the mini diagnostic to see your donut and radar charts.
                 <button
                   type="button"
                   onClick={() => navigate('/diagnostics/test')}
-                  className="mt-4 block w-full rounded-full bg-[#5f7f6a] py-2.5 text-sm font-semibold text-white"
+                  className="journal-btn-on-dark mt-4 block w-full rounded-full bg-[#5f7f6a] py-2.5 text-sm font-semibold text-white"
                 >
                   Start diagnostic
                 </button>
@@ -533,7 +554,7 @@ export function DashboardPage() {
             <button
               type="button"
               onClick={() => navigate('/practice/cars')}
-              className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[#3b82f6] py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#2563eb]"
+              className="journal-btn-on-dark mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[#3b82f6] py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#2563eb]"
             >
               <span aria-hidden>▶</span>
               Practice CARS (5 questions)
@@ -544,17 +565,17 @@ export function DashboardPage() {
 
         {/* KPI-style questions card (matches reference dashboard) */}
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
                 Total sessions
               </span>
               <span className="text-[#3b82f6]">◇</span>
             </div>
-            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816]">
+            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
               {analyticsSummary ? analyticsSummary.study.totalSessions : (diagnosticSummary?.overallTotal ?? 0)}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
               {analyticsSummary
                 ? `${Math.round((analyticsSummary.study.totalHours ?? 0) * 10) / 10} hrs total`
                 : diagnosticSummary
@@ -568,23 +589,24 @@ export function DashboardPage() {
                   : sparkQuestions
               }
               color="#3b82f6"
+              darkStroke="#60a5fa"
             />
           </div>
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
                 Average score
               </span>
               <span className="text-[#5f7f6a]">◇</span>
             </div>
-            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816]">
+            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
               {analyticsSummary?.scores.avgScore
                 ? Math.round(analyticsSummary.scores.avgScore)
                 : overallPct !== null
                   ? `${overallPct}%`
                   : '—'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
               {analyticsSummary?.scores.totalTests
                 ? `Across ${analyticsSummary.scores.totalTests} test${analyticsSummary.scores.totalTests === 1 ? '' : 's'}`
                 : 'Mini diagnostic'}
@@ -596,11 +618,12 @@ export function DashboardPage() {
                   : sparkScore
               }
               color="#5f7f6a"
+              darkStroke="#9bc4a8"
             />
           </div>
-          <div className="rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
                 Anki cards
               </span>
               <span className="text-[#ea8c55]">◇</span>
@@ -626,11 +649,11 @@ export function DashboardPage() {
         </div>
 
         {/* Diagnostic breakdown */}
-        <section className="mt-10 rounded-2xl border border-[#e8dfd4] bg-[rgba(44,40,37,0.03)] p-6 sm:p-8">
-          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825]">
+        <section className="mt-10 rounded-2xl border border-[#e8dfd4] bg-[rgba(44,40,37,0.03)] p-6 dark:border-[#454440] dark:bg-[#262523]/80 sm:p-8">
+          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
             Diagnostic results summary
           </h2>
-          <p className="mt-1 text-sm text-[#7a6e66]">
+          <p className="mt-1 text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
             {sectionBreakdown
               ? 'Average scores across all your diagnostics.'
               : 'Baseline performance from your last mini diagnostic.'}
@@ -667,10 +690,10 @@ export function DashboardPage() {
                 return (
                   <li key={key}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-medium text-[#2c2825]">
+                      <span className="font-medium text-[#2c2825] dark:text-[#eae8e4]">
                         {DIAGNOSTIC_SECTION_LABELS[key]}
                       </span>
-                      <span className="text-sm font-semibold text-[#5c534c]">
+                      <span className="text-sm font-semibold text-[#5c534c] dark:text-[#d4ccc4]">
                         {backendAvg != null
                           ? `avg ${Math.round(backendAvg)} scaled`
                           : correct !== undefined && total !== undefined
@@ -678,14 +701,14 @@ export function DashboardPage() {
                             : '—'}
                       </span>
                     </div>
-                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e8dfd4]">
+                    <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]">
                       <div
                         className="h-full rounded-full bg-[#5f7f6a] transition-[width]"
                         style={{ width: `${displayPct ?? 0}%` }}
                       />
                     </div>
                     {weak ? (
-                      <p className="mt-2 text-xs text-[#b91c1c]">
+                      <p className="mt-2 text-xs text-[#b91c1c] dark:text-[#fca5a5]">
                         Weak topics: {DIAGNOSTIC_WEAK_HINTS[key]}
                       </p>
                     ) : null}
@@ -694,7 +717,7 @@ export function DashboardPage() {
               })}
             </ul>
           ) : (
-            <p className="mt-6 text-sm text-[#7a6e66]">
+            <p className="mt-6 text-sm text-[#7a6e66] dark:text-[#b8b0a6]">
               No diagnostic yet — your section breakdown will appear here.
             </p>
           )}
@@ -703,42 +726,42 @@ export function DashboardPage() {
         {/* Strongest / weakest */}
         {diagnosticSummary ? (
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-[#cfe5d6] bg-[#f4faf6] p-6">
-              <div className="flex items-center gap-2 text-[#166534]">
+            <div className="rounded-2xl border border-[#cfe5d6] bg-[#f4faf6] p-6 dark:border-[#3d5244]/90 dark:bg-[#2c2b29]/96">
+              <div className="flex items-center gap-2 text-[#166534] dark:text-[#86efac]">
                 <span aria-hidden>↗</span>
                 <span className="text-xs font-bold uppercase tracking-wide">
                   Strongest section
                 </span>
               </div>
-              <p className="mt-1 text-xs text-[#3d3835]/80">Based on accuracy</p>
-              <p className="onboarding-serif mt-4 text-xl font-semibold text-[#14532d]">
+              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#b8b0a6]">Based on accuracy</p>
+              <p className="onboarding-serif mt-4 text-xl font-semibold text-[#14532d] dark:text-[#bbf7d0]">
                 {DIAGNOSTIC_SECTION_LABELS[best].replace(
                   'Critical Analysis & Reasoning (CARS)',
                   'CARS',
                 )}
               </p>
-              <p className="mt-3 text-sm text-[#166534]">
+              <p className="mt-3 text-sm text-[#166534] dark:text-[#bbf7d0]">
                 Accuracy: {bestP}% · Attempted:{' '}
                 {diagnosticSummary.sections[best].total}
               </p>
             </div>
-            <div className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-6">
-              <div className="flex items-center gap-2 text-[#b91c1c]">
+            <div className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-6 dark:border-[#6b3a3a]/90 dark:bg-[#2c2b29]/96">
+              <div className="flex items-center gap-2 text-[#b91c1c] dark:text-[#fca5a5]">
                 <span aria-hidden>↘</span>
                 <span className="text-xs font-bold uppercase tracking-wide">
                   Weakest section
                 </span>
               </div>
-              <p className="mt-1 text-xs text-[#3d3835]/80">
+              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#b8b0a6]">
                 Needs improvement
               </p>
-              <p className="onboarding-serif mt-4 text-xl font-semibold text-[#7f1d1d]">
+              <p className="onboarding-serif mt-4 text-xl font-semibold text-[#7f1d1d] dark:text-[#fecaca]">
                 {DIAGNOSTIC_SECTION_LABELS[worst].replace(
                   'Critical Analysis & Reasoning (CARS)',
                   'CARS',
                 )}
               </p>
-              <p className="mt-3 text-sm text-[#b91c1c]">
+              <p className="mt-3 text-sm text-[#b91c1c] dark:text-[#fecaca]">
                 Accuracy: {worstP}% · Attempted:{' '}
                 {diagnosticSummary.sections[worst].total}
               </p>
@@ -748,25 +771,25 @@ export function DashboardPage() {
 
         {/* Last session strip */}
         {diagnosticSummary ? (
-          <div className="mt-8 rounded-2xl border border-white/80 bg-white/90 p-5 shadow-[0_8px_32px_-12px_rgba(90,70,55,0.12)]">
+          <div className={`mt-8 ${dashCardSm}`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-semibold text-[#2c2825]">
+                <h3 className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
                   Last session takeaway
                 </h3>
-                <p className="mt-1 font-mono text-xs text-[#7a6e66]">
+                <p className="mt-1 font-mono text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
                   {diagnosticSummary.completedAt.slice(0, 10)} · mini diagnostic
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/diagnostics/results')}
-                className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline"
+                className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline dark:text-[#9bc4a8]"
               >
                 View results ↗
               </button>
             </div>
-            <p className="mt-3 text-sm text-[#3d3835]">
+            <p className="mt-3 text-sm text-[#3d3835] dark:text-[#e8e6e1]">
               Questions: {diagnosticSummary.overallCorrect} /{' '}
               {diagnosticSummary.overallTotal} correct
             </p>

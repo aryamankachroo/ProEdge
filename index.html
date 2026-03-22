@@ -11,6 +11,18 @@
       rel="stylesheet"
     />
     <title>ProEdge — MCAT questionnaire</title>
+    <script>
+      ;(function () {
+        try {
+          var k = 'proedge-theme'
+          var t = localStorage.getItem(k)
+          var sys = window.matchMedia('(prefers-color-scheme: dark)').matches
+          var dark = t === 'dark' || ((t === 'system' || t === null) && sys)
+          if (dark) document.documentElement.classList.add('dark')
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (_) {}
+      })()
+    </script>
   </head>
   <body class="proedge-app-body">
     <div id="root"></div>

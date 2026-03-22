@@ -31,7 +31,7 @@ function renderInlineMarkdown(line: string): ReactNode[] {
   return parts.map((part, j) => {
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
       return (
-        <strong key={j} className="font-semibold text-[#2c2825]">
+        <strong key={j} className="font-semibold text-[#2c2825] dark:text-[#f0ebe4]">
           {part.slice(2, -2)}
         </strong>
       )
@@ -40,7 +40,7 @@ function renderInlineMarkdown(line: string): ReactNode[] {
       return (
         <code
           key={j}
-          className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825]"
+          className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825] dark:bg-[#3a3836] dark:text-[#eae8e4]"
         >
           {part.slice(1, -1)}
         </code>
@@ -53,13 +53,13 @@ function renderInlineMarkdown(line: string): ReactNode[] {
 function AssistantFormattedText({ content }: { content: string }) {
   const lines = normalizeAssistantMarkdown(content).split('\n')
   return (
-    <div className="max-w-full text-sm leading-snug text-[#3d3835]">
+    <div className="max-w-full text-sm leading-snug text-[#3d3835] dark:text-[#e0ddd8]">
       {lines.map((line, i) => {
         const bullet = /^(\s*)[-*]\s+(.+)$/.exec(line)
         if (bullet) {
           return (
             <div key={i} className="mb-1 flex gap-2 pl-0.5">
-              <span className="shrink-0 text-[#5f7f6a]" aria-hidden>
+              <span className="shrink-0 text-[#5f7f6a] dark:text-[#9bc4a8]" aria-hidden>
                 •
               </span>
               <span className="min-w-0 break-words">
@@ -173,7 +173,7 @@ export function ChatAssistantWidget() {
       <div className="pointer-events-auto flex flex-col items-end gap-3">
         {open ? (
           <div
-            className="flex w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-[#e5ddd4] bg-[#faf7f3] shadow-[0_20px_50px_-12px_rgba(44,40,37,0.35)]"
+            className="flex w-[min(100vw-2rem,22rem)] flex-col overflow-hidden rounded-2xl border border-[#e5ddd4] bg-[#faf7f3] shadow-[0_20px_50px_-12px_rgba(44,40,37,0.35)] dark:border-[#3d3c38] dark:bg-[#262523] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.55)]"
             role="dialog"
             aria-label="Study assistant chat"
           >
@@ -187,7 +187,7 @@ export function ChatAssistantWidget() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-1 text-sm font-semibold text-[#6b5e54] hover:bg-[#f5f0eb]"
+                className="rounded-lg px-2 py-1 text-sm font-semibold text-[#6b5e54] hover:bg-[#f5f0eb] dark:text-[#c4bdb4] dark:hover:bg-[#353432]"
                 aria-label="Close chat"
               >
                 ✕
@@ -208,7 +208,7 @@ export function ChatAssistantWidget() {
                     className={`max-w-[92%] rounded-2xl px-3 py-2 text-sm leading-snug ${
                       row.role === 'user'
                         ? 'bg-[#5f7f6a] text-white'
-                        : 'border border-[#ebe5dc] bg-white text-[#3d3835]'
+                        : 'border border-[#ebe5dc] bg-white text-[#3d3835] dark:border-[#3d3c38] dark:bg-[#2a2927] dark:text-[#e8e6e1]'
                     }`}
                   >
                     <ChatBubbleContent role={row.role} content={row.content} />
@@ -216,7 +216,9 @@ export function ChatAssistantWidget() {
                 </div>
               ))}
               {loading ? (
-                <p className="text-xs italic text-[#9a8b7e]">Thinking…</p>
+                <p className="text-xs italic text-[#9a8b7e] dark:text-[#8a8278]">
+                  Thinking…
+                </p>
               ) : null}
               {error ? (
                 <p className="text-xs text-[#b91c1c]" role="alert">
@@ -225,7 +227,7 @@ export function ChatAssistantWidget() {
               ) : null}
             </div>
 
-            <div className="border-t border-[#ebe5dc] bg-white/95 p-2">
+            <div className="border-t border-[#ebe5dc] bg-white/95 p-2 dark:border-[#3d3c38] dark:bg-[#1f1e1c]/95">
               <textarea
                 ref={inputRef}
                 rows={2}
@@ -233,7 +235,7 @@ export function ChatAssistantWidget() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
                 placeholder="Ask about study strategy…"
-                className="w-full resize-none rounded-xl border border-[#e8dfd4] bg-[#fffefb] px-3 py-2 text-sm text-[#2c2825] placeholder:text-[#a8988c] focus:border-[#5f7f6a] focus:outline-none focus:ring-1 focus:ring-[#5f7f6a]/30"
+                className="w-full resize-none rounded-xl border border-[#e8dfd4] bg-[#fffefb] px-3 py-2 text-sm text-[#2c2825] placeholder:text-[#a8988c] focus:border-[#5f7f6a] focus:outline-none focus:ring-1 focus:ring-[#5f7f6a]/30 dark:border-[#454440] dark:bg-[#2a2927] dark:text-[#f0ebe4] dark:placeholder:text-[#8a8278] dark:focus:ring-[#5f7f6a]/45"
                 disabled={loading}
               />
               <button
@@ -244,18 +246,30 @@ export function ChatAssistantWidget() {
               >
                 Send
               </button>
-              <p className="mt-2 px-1 text-[10px] leading-relaxed text-[#9a8b7e]">
+              <p className="mt-2 px-1 text-[10px] leading-relaxed text-[#9a8b7e] dark:text-[#8a8278]">
                 {geminiLive ? (
                   <>
                     Using Gemini. Optional: set{' '}
-                    <code className="rounded bg-[#f5f0eb] px-0.5">VITE_CHAT_API_URL</code> for a
+                    <code className="rounded bg-[#f5f0eb] px-0.5 dark:bg-[#3a3836]">
+                      VITE_CHAT_API_URL
+                    </code> for a
                     server-side POST /chat instead.
                   </>
                 ) : (
                   <>
-                    Add <code className="rounded bg-[#f5f0eb] px-0.5">VITE_GEMINI_API_KEY</code> to{' '}
-                    <code className="rounded bg-[#f5f0eb] px-0.5">.env.local</code> and restart{' '}
-                    <code className="rounded bg-[#f5f0eb] px-0.5">npm run dev</code>.
+                    Add{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5 dark:bg-[#3a3836]">
+                      VITE_GEMINI_API_KEY
+                    </code>{' '}
+                    to{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5 dark:bg-[#3a3836]">
+                      .env.local
+                    </code>{' '}
+                    and restart{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5 dark:bg-[#3a3836]">
+                      npm run dev
+                    </code>
+                    .
                   </>
                 )}
               </p>

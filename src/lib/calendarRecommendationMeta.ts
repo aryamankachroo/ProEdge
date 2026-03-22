@@ -28,35 +28,43 @@ export const CALENDAR_KIND_STYLES: Record<
   { badge: string; dot: string }
 > = {
   weak_section: {
-    badge: 'bg-amber-100 text-amber-900 ring-amber-200/80',
+    badge:
+      'bg-amber-100 text-amber-900 ring-amber-200/80 dark:bg-amber-950/50 dark:text-amber-200 dark:ring-amber-800/50',
     dot: 'bg-amber-500',
   },
   science: {
-    badge: 'bg-emerald-100 text-emerald-900 ring-emerald-200/80',
+    badge:
+      'bg-emerald-100 text-emerald-900 ring-emerald-200/80 dark:bg-emerald-950/45 dark:text-emerald-200 dark:ring-emerald-800/45',
     dot: 'bg-emerald-500',
   },
   cars: {
-    badge: 'bg-violet-100 text-violet-900 ring-violet-200/80',
+    badge:
+      'bg-violet-100 text-violet-900 ring-violet-200/80 dark:bg-violet-950/45 dark:text-violet-200 dark:ring-violet-800/45',
     dot: 'bg-violet-500',
   },
   anki: {
-    badge: 'bg-sky-100 text-sky-900 ring-sky-200/80',
+    badge:
+      'bg-sky-100 text-sky-900 ring-sky-200/80 dark:bg-sky-950/45 dark:text-sky-200 dark:ring-sky-800/45',
     dot: 'bg-sky-500',
   },
   resource: {
-    badge: 'bg-rose-100 text-rose-900 ring-rose-200/80',
+    badge:
+      'bg-rose-100 text-rose-900 ring-rose-200/80 dark:bg-rose-950/45 dark:text-rose-200 dark:ring-rose-800/45',
     dot: 'bg-rose-500',
   },
   mixed: {
-    badge: 'bg-slate-200 text-slate-800 ring-slate-300/80',
+    badge:
+      'bg-slate-200 text-slate-800 ring-slate-300/80 dark:bg-slate-800/60 dark:text-slate-200 dark:ring-slate-600/50',
     dot: 'bg-slate-500',
   },
   recap: {
-    badge: 'bg-stone-200 text-stone-800 ring-stone-300/80',
+    badge:
+      'bg-stone-200 text-stone-800 ring-stone-300/80 dark:bg-stone-800/55 dark:text-stone-200 dark:ring-stone-600/45',
     dot: 'bg-stone-500',
   },
   general: {
-    badge: 'bg-neutral-100 text-neutral-800 ring-neutral-200/80',
+    badge:
+      'bg-neutral-100 text-neutral-800 ring-neutral-200/80 dark:bg-neutral-800/55 dark:text-neutral-200 dark:ring-neutral-600/45',
     dot: 'bg-neutral-400',
   },
 }

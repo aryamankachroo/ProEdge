@@ -67,7 +67,7 @@ export function OnboardingSideStepper({
               )}
               {isUpcoming && (
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#d6cfc4] bg-white text-xs font-semibold text-[#a8988c] sm:h-10 sm:w-10"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#d6cfc4] bg-white text-xs font-semibold text-[#a8988c] dark:border-[#5c5a56] dark:bg-[#2a2927] dark:text-[#c4bdb4] sm:h-10 sm:w-10"
                   aria-hidden
                 >
                   {i + 1}
@@ -78,7 +78,7 @@ export function OnboardingSideStepper({
                   className={`mt-2 min-h-[2.75rem] w-[3px] flex-1 rounded-full sm:min-h-[3.25rem] ${
                     segmentDone
                       ? 'bg-gradient-to-b from-[#f59e0b] to-[#fbbf24]'
-                      : 'bg-[#e8dfd4]'
+                      : 'bg-[#e8dfd4] dark:bg-[#454440]'
                   }`}
                   aria-hidden
                 />
@@ -95,17 +95,19 @@ export function OnboardingSideStepper({
               <p
                 className={`text-[0.95rem] font-bold leading-snug sm:text-base ${
                   isActive
-                    ? 'text-[#2c2825]'
+                    ? 'text-[#2c2825] dark:text-[#f5f2ed]'
                     : isComplete
-                      ? 'text-[#3d3835]'
-                      : 'text-[#8a7b70]'
+                      ? 'text-[#3d3835] dark:text-[#e8e4dd]'
+                      : 'text-[#8a7b70] dark:text-[#a89e94]'
                 }`}
               >
                 {s.title}
               </p>
               <p
                 className={`mt-1 text-sm leading-relaxed ${
-                  isActive ? 'text-[#6b5f56]' : 'text-[#9a8b7e]'
+                  isActive
+                    ? 'text-[#6b5f56] dark:text-[#c9c2ba]'
+                    : 'text-[#9a8b7e] dark:text-[#9a928a]'
                 }`}
               >
                 {s.description}
@@ -126,7 +128,7 @@ export function OnboardingSideStepper({
                 <button
                   type="button"
                   onClick={() => onStepSelect(i)}
-                  className="flex w-full gap-4 rounded-2xl text-left transition hover:bg-white/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d97706]"
+                  className="flex w-full gap-4 rounded-2xl text-left transition hover:bg-white/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d97706] dark:hover:bg-white/[0.06]"
                 >
                   {inner}
                 </button>

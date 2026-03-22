@@ -314,13 +314,9 @@ export function CalendarPage() {
 
   return (
     <div className="onboarding-shell min-h-dvh pb-16">
-      <header className="sticky top-0 z-10 border-b border-[#e8dfd4]/80 bg-[#faf7f3]/90 px-4 py-3 backdrop-blur-md sm:px-8">
+      <header className="app-shell-header">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <Link
-            to="/"
-            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf7f3] rounded-sm"
-            aria-label="ProEdge home"
-          >
+          <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
             ProEdge
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
@@ -365,20 +361,20 @@ export function CalendarPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
           Study calendar
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
           Pick a day and check tasks off. With{' '}
-          <strong className="font-semibold text-[#5a4f47]">Gemini</strong>, daily
+          <strong className="font-semibold text-[#5a4f47] dark:text-[#d4ccc4]">Gemini</strong>, daily
           tasks are generated from your questionnaire and (if you took it) your
           mini-diagnostic — different topics each day. Without a key, the app uses a
           simple repeated template instead.
         </p>
         {hasGeminiKey ? (
-          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#9a8b7e]">
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#a89e94]">
             Gemini only adds tasks on{' '}
-            <span className="font-medium text-[#6b5f56]">{geminiWeekdayHint}</span>
+            <span className="font-medium text-[#6b5f56] dark:text-[#d4ccc4]">{geminiWeekdayHint}</span>
             {profile.studyDays.length === 1 ? (
               <>
                 {' '}
@@ -395,8 +391,8 @@ export function CalendarPage() {
           </p>
         ) : null}
 
-        <div className="mt-5 max-w-3xl rounded-2xl border border-[#ebe5dc] bg-[#faf9f7] px-4 py-3 sm:px-5">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e]">
+        <div className="mt-5 max-w-3xl rounded-2xl border border-[#ebe5dc] bg-[#faf9f7] px-4 py-3 dark:border-[#454440] dark:bg-[#262523]/90 sm:px-5">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#9a928a]">
             Recommendation types
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -423,13 +419,20 @@ export function CalendarPage() {
               : 'Generate / refresh plan with Gemini (questionnaire + diagnostic)'}
           </button>
           {!hasGeminiKey ? (
-            <p className="text-xs leading-relaxed text-[#9a8b7e]">
+            <p className="text-xs leading-relaxed text-[#9a8b7e] dark:text-[#a89e94]">
               Add{' '}
-              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
                 VITE_GEMINI_API_KEY
               </code>{' '}
-              to <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">.env.local</code> in
-              ProEdge, then restart <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">npm run dev</code>.
+              to{' '}
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+                .env.local
+              </code>{' '}
+              in ProEdge, then restart{' '}
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+                npm run dev
+              </code>
+              .
               Keys in the frontend are visible in the browser — use for local demos only.
             </p>
           ) : null}
@@ -441,16 +444,16 @@ export function CalendarPage() {
         ) : null}
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_minmax(280px,380px)] lg:items-start">
-          <div className="overflow-hidden rounded-2xl border border-[#e5ddd4] bg-white shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)]">
-            <div className="flex items-center justify-between border-b border-[#ebe5dc] px-4 py-3 sm:px-5">
-              <h2 className="text-base font-bold text-[#1a1a1a] sm:text-lg">
+          <div className="onboarding-month-calendar overflow-hidden rounded-2xl border border-[#e5ddd4] bg-white shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)] dark:border-[#454440] dark:bg-[#262523] dark:shadow-[0_12px_40px_-16px_rgba(0,0,0,0.4)]">
+            <div className="onboarding-cal-toolbar flex items-center justify-between border-b border-[#ebe5dc] px-4 py-3 dark:border-[#3d3c38] sm:px-5">
+              <h2 className="text-base font-bold text-[#1a1a1a] dark:text-[#f5f2ed] sm:text-lg">
                 {monthTitle(viewYear, viewMonth)}
               </h2>
               <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   type="button"
                   onClick={goPrev}
-                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04]"
+                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
                   aria-label="Previous month"
                 >
                   ‹
@@ -458,14 +461,14 @@ export function CalendarPage() {
                 <button
                   type="button"
                   onClick={goToday}
-                  className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] sm:text-sm"
+                  className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] dark:border-[#5c5a56] dark:bg-[#353432] dark:text-[#f0ebe4] dark:hover:bg-[#454440] sm:text-sm"
                 >
                   Today
                 </button>
                 <button
                   type="button"
                   onClick={goNext}
-                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04]"
+                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
                   aria-label="Next month"
                 >
                   ›
@@ -473,18 +476,18 @@ export function CalendarPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-7 border-b border-[#ebe5dc] bg-[#faf9f7]">
+            <div className="grid grid-cols-7 border-b border-[#ebe5dc] bg-[#faf9f7] dark:border-[#3d3c38] dark:bg-[#1f1e1c]">
               {WEEK.map((d) => (
                 <div
                   key={d}
-                  className="py-2 text-center text-[11px] font-medium text-[#8a8580] sm:text-xs"
+                  className="py-2 text-center text-[11px] font-medium text-[#8a8580] dark:text-[#a89e94] sm:text-xs"
                 >
                   {d}
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-7 bg-white">
+            <div className="grid grid-cols-7 bg-white dark:bg-[#262523]">
               {grid.map(({ date, inMonth }) => {
                 const iso = toISODate(date)
                 const dayTodos = byDate.get(iso) ?? []
@@ -498,19 +501,19 @@ export function CalendarPage() {
                     key={iso}
                     type="button"
                     onClick={() => setSelectedIso(iso)}
-                    className={`flex min-h-[4.5rem] flex-col border-b border-r border-[#ebe5dc] p-1.5 text-left transition sm:min-h-[5.25rem] ${
+                    className={`flex min-h-[4.5rem] flex-col border-b border-r border-[#ebe5dc] p-1.5 text-left transition dark:border-[#3d3c38] sm:min-h-[5.25rem] ${
                       selected
-                        ? 'bg-[#f0f6f2] ring-1 ring-inset ring-[#5f7f6a]/35'
-                        : 'hover:bg-[#f7f5f2]'
-                    } ${!inMonth ? 'bg-[#fafaf9]' : ''}`}
+                        ? 'bg-[#f0f6f2] ring-1 ring-inset ring-[#5f7f6a]/35 dark:bg-[#1e2a22] dark:ring-[#5f7f6a]/40'
+                        : 'hover:bg-[#f7f5f2] dark:hover:bg-[#353432]/80'
+                    } ${!inMonth ? 'bg-[#fafaf9] dark:bg-[#1c1b1a]' : ''}`}
                   >
                     <span
                       className={`mb-1 flex h-6 w-6 shrink-0 items-center justify-center self-end text-[11px] font-medium sm:h-7 sm:w-7 sm:text-xs ${
                         isToday
                           ? 'rounded-full bg-[#e53935] text-white'
                           : inMonth
-                            ? 'text-[#1a1a1a]'
-                            : 'text-[#b5aea5]'
+                            ? 'text-[#1a1a1a] dark:text-[#f0ebe4]'
+                            : 'text-[#b5aea5] dark:text-[#7a756d]'
                       }`}
                     >
                       {date.getDate()}
@@ -527,8 +530,8 @@ export function CalendarPage() {
                                 title={`${CALENDAR_KIND_LABELS[k]}: ${t.title}`}
                                 className={`flex min-h-0 items-center gap-0.5 truncate rounded-md py-0.5 pl-0.5 pr-0.5 text-[8px] font-medium leading-tight sm:text-[9px] ${
                                   t.completed
-                                    ? 'bg-[#cfe5d6] text-[#1e3d2a] line-through decoration-[#5f7f6a]/60'
-                                    : `${st.badge} text-[#1a1816] ring-1 ring-inset ring-black/[0.06]`
+                                    ? 'bg-[#cfe5d6] text-[#1e3d2a] line-through decoration-[#5f7f6a]/60 dark:bg-[#243529]/55 dark:text-[#a8d4b8] dark:decoration-[#5f7f6a]/45'
+                                    : `${st.badge} ring-1 ring-inset ring-black/[0.06] dark:ring-white/10`
                                 }`}
                               >
                                 {!t.completed ? (
@@ -547,10 +550,10 @@ export function CalendarPage() {
                             </span>
                           ) : null}
                         </div>
-                        <span className="text-[10px] font-medium text-[#5f7f6a] sm:text-[11px]">
+                        <span className="text-[10px] font-medium text-[#5f7f6a] dark:text-[#9bc4a8] sm:text-[11px]">
                           {done}/{total} done
                         </span>
-                        <div className="h-1 overflow-hidden rounded-full bg-[#e8dfd4]">
+                        <div className="h-1 overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]">
                           <div
                             className="h-full rounded-full bg-[#5f7f6a] transition-[width]"
                             style={{
@@ -560,7 +563,7 @@ export function CalendarPage() {
                         </div>
                       </div>
                     ) : (
-                      <span className="mt-auto text-[9px] text-[#c4bbb2] sm:text-[10px]">
+                      <span className="mt-auto text-[9px] text-[#c4bbb2] dark:text-[#8a8278] sm:text-[10px]">
                         Tap to plan
                       </span>
                     )}
@@ -570,34 +573,34 @@ export function CalendarPage() {
             </div>
           </div>
 
-          <aside className="rounded-2xl border border-[#e5ddd4] bg-white/90 p-5 shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)] backdrop-blur-sm sm:p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#9a8b7e]">
+          <aside className="rounded-2xl border border-[#e5ddd4] bg-white/90 p-5 shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)] backdrop-blur-sm dark:border-[#454440] dark:bg-[#262523]/95 sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#9a8b7e] dark:text-[#9a928a]">
               Day detail
             </p>
-            <h3 className="onboarding-serif mt-2 text-xl font-semibold text-[#2c2825]">
+            <h3 className="onboarding-serif mt-2 text-xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
               {longDateLabel(selectedIso)}
             </h3>
             {totalSelected > 0 ? (
-              <p className="mt-1 text-sm text-[#5f7f6a]">
+              <p className="mt-1 text-sm text-[#5f7f6a] dark:text-[#9bc4a8]">
                 {completedCount} of {totalSelected} complete
               </p>
             ) : (
-              <div className="mt-1 space-y-1 text-sm text-[#7a6e66]">
+              <div className="mt-1 space-y-1 text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
                 <p>
                   No tasks yet — add six suggested tasks or type your own.
                 </p>
                 {fromDiagnostic ? (
-                  <p className="text-xs text-[#9a8b7e]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
                     Suggestions use your latest mini-diagnostic (client-side
                     dummy plan until the server is live).
                   </p>
                 ) : fromQuestionnaire ? (
-                  <p className="text-xs text-[#9a8b7e]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
                     Six task types per day (weak sections, CARS, Anki, resources,
                     etc.) follow your questionnaire answers.
                   </p>
                 ) : (
-                  <p className="text-xs text-[#9a8b7e]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
                     Generic study-day template — take the diagnostic or finish the
                     questionnaire for tailored suggestions.
                   </p>
@@ -611,8 +614,8 @@ export function CalendarPage() {
                   key={t.id}
                   className={`flex items-start gap-3 rounded-xl border px-3 py-2.5 transition ${
                     t.completed
-                      ? 'border-[#cfe5d6] bg-[#f4faf6]'
-                      : 'border-[#ebe5dc] bg-[#faf9f7]'
+                      ? 'border-[#cfe5d6] bg-[#f4faf6] dark:border-[#3d5244]/80 dark:bg-[#243529]/35'
+                      : 'border-[#ebe5dc] bg-[#faf9f7] dark:border-[#454440] dark:bg-[#2c2b29]/96'
                   }`}
                 >
                   <button
@@ -623,7 +626,7 @@ export function CalendarPage() {
                     className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition ${
                       t.completed
                         ? 'border-[#5f7f6a] bg-[#5f7f6a] text-white'
-                        : 'border-[#c9bfb4] bg-white hover:border-[#5f7f6a]/50'
+                        : 'border-[#c9bfb4] bg-white hover:border-[#5f7f6a]/50 dark:border-[#5c5a56] dark:bg-[#383633] dark:hover:border-[#5f7f6a]/55'
                     }`}
                   >
                     {t.completed ? (
@@ -649,8 +652,8 @@ export function CalendarPage() {
                     <p
                       className={`text-sm leading-snug ${
                         t.completed
-                          ? 'text-[#6b7f6f] line-through'
-                          : 'text-[#2c2825]'
+                          ? 'text-[#6b7f6f] line-through dark:text-[#8fb89a] dark:decoration-[#5f7f6a]/50'
+                          : 'text-[#2c2825] dark:text-[#eae8e4]'
                       }`}
                     >
                       {t.title}
@@ -671,7 +674,7 @@ export function CalendarPage() {
               <button
                 type="button"
                 onClick={addSuggestedTasks}
-                className="mt-5 w-full rounded-xl border border-[#5f7f6a]/40 bg-[#f0f6f2] py-3 text-sm font-semibold text-[#2d4a32] transition hover:bg-[#e4efe6]"
+                className="mt-5 w-full rounded-xl border border-[#5f7f6a]/40 bg-[#f0f6f2] py-3 text-sm font-semibold text-[#2d4a32] transition hover:bg-[#e4efe6] dark:border-[#5f7f6a]/35 dark:bg-[#243529]/50 dark:text-[#c8e6d0] dark:hover:bg-[#2d4a38]/55"
               >
                 {fromDiagnostic
                   ? 'Add suggested tasks from diagnostic (6)'

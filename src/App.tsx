@@ -15,6 +15,7 @@ import { OnboardingPage } from './pages/OnboardingPage'
 import { PostQuestionnairePage } from './pages/PostQuestionnairePage'
 import { StudyPlanPage } from './pages/StudyPlanPage'
 import { ChatAssistantWidget } from './components/ChatAssistantWidget'
+import { ThemeToggle } from './components/ThemeToggle'
 
 function AppRoutes() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
     <BrowserRouter>
       <ProfileProvider>
         <AppRoutes />
+        <ThemeToggle />
         <ChatAssistantWidget />
       </ProfileProvider>
     </BrowserRouter>

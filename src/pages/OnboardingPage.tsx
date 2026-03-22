@@ -76,7 +76,7 @@ function McatScoreTrack({ value }: { value: number }) {
   )
   return (
     <div
-      className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#e8dfd4]"
+      className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]"
       aria-hidden
     >
       <div
@@ -96,7 +96,7 @@ function SoftPanel({
 }) {
   return (
     <section
-      className={`rounded-[1.75rem] border border-white/70 bg-white/65 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md md:p-7 ${className}`}
+      className={`rounded-[1.75rem] border border-white/70 bg-white/65 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md dark:border-[#3d3c38]/75 dark:bg-[#262523]/90 dark:shadow-[0_12px_48px_-16px_rgba(0,0,0,0.4)] md:p-7 ${className}`}
     >
       {children}
     </section>
@@ -193,7 +193,7 @@ function DiagnosticsChoiceModal({
         >
           Diagnostics next
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66]">
+        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
           Ten-question preview (four sections), import a score, or go straight to
           your plan from the questionnaire.
         </p>
@@ -207,7 +207,7 @@ function DiagnosticsChoiceModal({
               <p className="text-sm font-semibold text-[#2c2825]">
                 Reading your PDF and analyzing with Gemini…
               </p>
-              <p className="text-xs text-[#7a6e66]">Usually under a minute.</p>
+              <p className="text-xs text-[#7a6e66] dark:text-[#c4bdb4]">Usually under a minute.</p>
             </div>
           ) : null}
           <button
@@ -396,7 +396,7 @@ export function OnboardingPage() {
         <header className="onboard-enter-hdr mb-6 flex justify-center lg:mb-8">
           <Link
             to="/"
-            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
+            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--pe-focus-ring-offset)] rounded-sm dark:text-[#f0ebe4]"
             aria-label="ProEdge home"
           >
             ProEdge
@@ -414,10 +414,10 @@ export function OnboardingPage() {
 
           <div className="onboard-enter-main min-w-0 flex-1">
             <div key={step}>
-            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl lg:text-4xl">
+            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] dark:text-[#f5f2ed] md:text-3xl lg:text-4xl">
               {meta.title}
             </h1>
-            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] md:text-base">
+            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#c9c2ba] md:text-base">
               {meta.subtitle}
             </p>
 
@@ -425,7 +425,7 @@ export function OnboardingPage() {
           {step === 0 && (
             <>
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   What should we call you?
                 </p>
                 <label htmlFor="ob-name" className="sr-only">
@@ -442,10 +442,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Where are you right now?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   Tap the option that fits — no wrong answers.
                 </p>
                 <div className="flex flex-col gap-3">
@@ -456,21 +456,21 @@ export function OnboardingPage() {
                         key={s}
                         type="button"
                         onClick={() => update({ studyStatus: s })}
-                        className={`flex w-full items-center rounded-2xl border-2 px-5 py-4 text-left text-[0.95rem] font-semibold transition-all duration-200 ${
+                        className={`onboarding-study-status-option flex w-full items-center rounded-2xl border-2 px-5 py-4 text-left text-[0.95rem] font-semibold transition-all duration-200 ${
                           on
-                            ? 'border-[#5f7f6a] bg-[#f0f5f1] text-[#2d3f32] shadow-[0_4px_20px_-8px_rgba(95,127,106,0.35)]'
-                            : 'border-transparent bg-white/90 text-[#4a423c] shadow-sm hover:border-[#e8dfd4] hover:shadow-md'
+                            ? 'onboarding-study-status-option--selected border-[#5f7f6a] bg-[#f0f5f1] text-[#2d3f32] shadow-[0_4px_20px_-8px_rgba(95,127,106,0.35)] dark:border-[#55524e] dark:bg-[#383633] dark:shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]'
+                            : 'border-transparent bg-white/90 text-[#4a423c] shadow-sm hover:border-[#e8dfd4] hover:shadow-md dark:border-[#3e3d3b] dark:bg-[#2c2b29] dark:shadow-none dark:hover:border-[#4e4c48] dark:hover:shadow-[0_2px_14px_-6px_rgba(0,0,0,0.35)]'
                         }`}
                       >
                         <span
                           className={`mr-4 flex h-5 w-5 shrink-0 rounded-full border-2 ${
                             on
-                              ? 'border-[#5f7f6a] bg-[#5f7f6a]'
-                              : 'border-[#d4c8bc] bg-white'
+                              ? 'border-[#5f7f6a] bg-[#5f7f6a] dark:border-[#7a8f80] dark:bg-[#5f7f6a]'
+                              : 'border-[#d4c8bc] bg-white dark:border-[#5c5a56] dark:bg-[#252422]'
                           }`}
                         >
                           {on ? (
-                            <span className="m-auto block h-1.5 w-1.5 rounded-full bg-white" />
+                            <span className="m-auto block h-1.5 w-1.5 rounded-full bg-white dark:bg-[#f5f2ed]" />
                           ) : null}
                         </span>
                         {STUDY_STATUS_LABELS[s]}
@@ -482,14 +482,14 @@ export function OnboardingPage() {
 
               <SoftPanel>
                 <div className="mb-1 flex items-baseline justify-between gap-3">
-                  <p className="text-sm font-semibold text-[#5a4f47]">
+                  <p className="text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                     Realistic study hours / day
                   </p>
-                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a]">
+                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a] dark:text-[#9bc4a8]">
                     {local.hoursPerDay}
                   </span>
                 </div>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   Slide to what you can repeat without burning out.
                 </p>
                 <input
@@ -507,22 +507,22 @@ export function OnboardingPage() {
                   aria-valuenow={local.hoursPerDay}
                   aria-label="Hours available per day"
                 />
-                <div className="mt-2 flex justify-between text-xs text-[#a8988c]">
+                <div className="mt-2 flex justify-between text-xs text-[#a8988c] dark:text-[#9a928a]">
                   <span>1 hr</span>
                   <span>12 hr</span>
                 </div>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Study load shape
                 </p>
-                <div className="flex rounded-2xl bg-[#ebe3d9]/80 p-1.5">
+                <div className="onboarding-load-shape flex rounded-2xl bg-[#ebe3d9]/80 p-1.5 dark:bg-[#2e2d2b]">
                   <button
                     type="button"
                     className={`flex-1 rounded-xl py-3.5 text-sm font-semibold transition-all ${
                       local.fullTimeStudying
-                        ? 'bg-white shadow-md'
+                        ? 'bg-white shadow-md dark:bg-[#383633] dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.45)]'
                         : 'onboarding-segment-muted'
                     }`}
                     onClick={() => update({ fullTimeStudying: true })}
@@ -533,7 +533,7 @@ export function OnboardingPage() {
                     type="button"
                     className={`flex-1 rounded-xl py-3.5 text-sm font-semibold transition-all ${
                       !local.fullTimeStudying
-                        ? 'bg-white shadow-md'
+                        ? 'bg-white shadow-md dark:bg-[#383633] dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.45)]'
                         : 'onboarding-segment-muted'
                     }`}
                     onClick={() => update({ fullTimeStudying: false })}
@@ -548,18 +548,18 @@ export function OnboardingPage() {
           {step === 1 && (
             <>
               <SoftPanel>
-                <p className="mb-4 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-4 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Score snapshot
                 </p>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                       Target score
                     </p>
-                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2">
+                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
                       <button
                         type="button"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
+                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
                         onClick={() =>
                           update({
                             targetScore: Math.max(472, local.targetScore - 1),
@@ -569,12 +569,12 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
                         {local.targetScore}
                       </span>
                       <button
                         type="button"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
+                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
                         onClick={() =>
                           update({
                             targetScore: Math.min(528, local.targetScore + 1),
@@ -588,13 +588,13 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.targetScore} />
                   </div>
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
                       Baseline / last FL
                     </p>
-                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2">
+                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
                       <button
                         type="button"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
+                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
                         onClick={() =>
                           update({
                             baselineScore: Math.max(
@@ -607,12 +607,12 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
                         {local.baselineScore}
                       </span>
                       <button
                         type="button"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
+                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
                         onClick={() =>
                           update({
                             baselineScore: Math.min(
@@ -629,13 +629,13 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.baselineScore} />
                   </div>
                 </div>
-                <p className="mt-4 text-center text-xs text-[#9a8b7e]">
+                <p className="mt-4 text-center text-xs text-[#9a8b7e] dark:text-[#9a928a]">
                   Scale 472–528 · MCAT total
                 </p>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Exam date
                 </p>
                 <label htmlFor="ob-exam" className="sr-only">
@@ -651,10 +651,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   When can you show up?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   Tap a day to add a to-do. It appears on your calendar like iOS —
                   even &quot;Anki 45m&quot; counts.
                 </p>
@@ -671,13 +671,13 @@ export function OnboardingPage() {
           {step === 2 && (
             <>
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Resources in rotation
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   Select all that apply.
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="onboarding-setup-pills flex flex-wrap gap-2">
                   {RESOURCE_OPTIONS.map((r) => {
                     const on = local.resources.includes(r)
                     return (
@@ -708,7 +708,7 @@ export function OnboardingPage() {
                   <div className="mt-4">
                     <label
                       htmlFor="ob-resource-other"
-                      className="mb-2 block text-sm font-semibold text-[#5a4f47]"
+                      className="mb-2 block text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]"
                     >
                       Add other source
                     </label>
@@ -727,13 +727,13 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Anki decks
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   We’ll phrase reviews to match your deck names.
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="onboarding-setup-pills flex flex-wrap gap-2">
                   {ANKI_OPTIONS.map((r) => {
                     const on = local.ankiDecks.includes(r)
                     return (
@@ -759,13 +759,13 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
                   Sections that feel shaky
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
                   Honesty here protects your time later.
                 </p>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="onboarding-setup-weak-grid grid gap-3 sm:grid-cols-2">
                   {WEAK_OPTIONS.map((r) => {
                     const on = local.weakSections.includes(r)
                     return (
@@ -790,8 +790,8 @@ export function OnboardingPage() {
                 </div>
               </SoftPanel>
 
-              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] sm:text-sm">
-                <span className="font-semibold text-[#7a6e66]">Disclaimer:</span>{' '}
+              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#9a928a] sm:text-sm">
+                <span className="font-semibold text-[#7a6e66] dark:text-[#c4bdb4]">Disclaimer:</span>{' '}
                 After completing the questionnaire, take a diagnostics test — or,
                 if you&apos;ve already taken one, import your diagnostics test
                 score and report.
@@ -803,7 +803,7 @@ export function OnboardingPage() {
           </div>
         </div>
 
-        <div className="onboard-enter-bar fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none">
+        <div className="onboard-enter-bar fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg dark:border-[#3a3836]/90 dark:bg-[#1f1f1d]/92 md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none dark:md:bg-transparent">
           <div className="mx-auto flex max-w-6xl justify-end px-0 lg:px-10">
             <div className="flex items-center gap-5 sm:gap-7">
               <button
