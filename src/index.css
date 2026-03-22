@@ -18,6 +18,15 @@
   min-height: 100dvh;
 }
 
+/* Pointer on interactive buttons (Tailwind preflight often uses default arrow). */
+#root button:not(:disabled) {
+  cursor: pointer;
+}
+
+#root button:disabled {
+  cursor: not-allowed;
+}
+
 /* Onboarding — warm questionnaire aesthetic */
 .onboarding-shell {
   font-family: 'Nunito', 'DM Sans', system-ui, sans-serif;
@@ -428,4 +437,67 @@
     opacity: 1;
     animation: none;
   }
+}
+
+/* ─── App shell top nav (Dashboard, Calendar, …) — subtle iOS-like hover ─── */
+
+.onboarding-shell button.shell-nav-btn {
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.625rem;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: none;
+  color: #5f7f6a !important;
+  -webkit-text-fill-color: currentColor;
+  transition:
+    transform 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    background-color 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 200ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .onboarding-shell button.shell-nav-btn:hover {
+    transform: translateY(-1px);
+    color: #2c2825 !important;
+    border-color: #e8e4dd;
+    background-color: rgba(255, 255, 255, 0.85);
+    box-shadow:
+      0 0 0 0.5px rgba(60, 42, 30, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.03),
+      0 5px 18px -5px rgba(62, 47, 35, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-shell button.shell-nav-btn:hover {
+    transform: none;
+  }
+}
+
+.onboarding-shell button.shell-nav-btn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(95, 127, 106, 0.4),
+    0 0 0 4px rgba(250, 247, 243, 1);
+}
+
+.shell-nav-btn-active {
+  display: inline-block;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.625rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #2c2825;
+  background: rgba(0, 0, 0, 0.04);
+  cursor: default;
 }

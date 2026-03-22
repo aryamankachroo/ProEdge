@@ -327,36 +327,36 @@ export function CalendarPage() {
             <button
               type="button"
               onClick={() => navigate('/dashboard')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Dashboard
             </button>
-            <span className="text-[#2c2825]">Calendar</span>
+            <span className="shell-nav-btn-active">Calendar</span>
             <button
               type="button"
               onClick={() => navigate('/analytics')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               AI analytics
             </button>
             <button
               type="button"
               onClick={() => navigate('/journal')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               AI journal
             </button>
             <button
               type="button"
               onClick={() => navigate('/study-plan')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Study plan
             </button>
             <button
               type="button"
               onClick={() => navigate('/diagnostics/test')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Retake diagnostic
             </button>

@@ -295,39 +295,39 @@ export function DashboardPage() {
             ProEdge
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
-            <span className="text-[#2c2825]">Dashboard</span>
+            <span className="shell-nav-btn-active">Dashboard</span>
             <button
               type="button"
               onClick={() => navigate('/calendar')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Calendar
             </button>
             <button
               type="button"
               onClick={() => navigate('/analytics')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               AI analytics
             </button>
             <button
               type="button"
               onClick={() => navigate('/journal')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               AI journal
             </button>
             <button
               type="button"
               onClick={() => navigate('/study-plan')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Study plan
             </button>
             <button
               type="button"
               onClick={() => navigate('/diagnostics/test')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Retake diagnostic
             </button>

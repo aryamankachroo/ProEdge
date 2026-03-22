@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { STUDY_STATUS_LABELS } from '../types/profile'
 import { useProfile } from '../context/useProfile'
 import {
@@ -183,22 +183,64 @@ export function StudyPlanPage() {
   return (
     <div className="onboarding-shell relative min-h-dvh pb-32 sm:pb-28">
       <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
         aria-hidden
       >
         <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-[#e8b4a2]/35 blur-[80px]" />
         <div className="absolute -left-20 top-[28%] h-72 w-72 rounded-full bg-[#a8c5b4]/40 blur-[72px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-2xl px-5 py-8 sm:px-6 sm:py-10">
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="onboarding-nav-back mb-6 inline-flex items-center gap-2 text-sm font-semibold"
-        >
-          <span aria-hidden>←</span> Back
-        </button>
+      <header className="sticky top-0 z-20 border-b border-[#e8dfd4]/80 bg-[#faf7f3]/90 px-4 py-3 backdrop-blur-md sm:px-8">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
+          <Link
+            to="/"
+            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf7f3] rounded-sm"
+            aria-label="ProEdge home"
+          >
+            ProEdge
+          </Link>
+          <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="shell-nav-btn"
+            >
+              Dashboard
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/calendar')}
+              className="shell-nav-btn"
+            >
+              Calendar
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/analytics')}
+              className="shell-nav-btn"
+            >
+              AI analytics
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/journal')}
+              className="shell-nav-btn"
+            >
+              AI journal
+            </button>
+            <span className="shell-nav-btn-active">Study plan</span>
+            <button
+              type="button"
+              onClick={() => navigate('/diagnostics/test')}
+              className="shell-nav-btn"
+            >
+              Retake diagnostic
+            </button>
+          </nav>
+        </div>
+      </header>
 
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-8 sm:py-10">
         <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] sm:text-[2rem]">
           Your study plan
         </h1>
@@ -345,7 +387,7 @@ export function StudyPlanPage() {
                   type="button"
                   onClick={handleGeneratePlan}
                   disabled={planLoading}
-                  className="mt-4 w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1f1c1a] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="journal-btn-on-dark mt-4 w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {planLoading ? 'Generating your plan…' : 'Generate AI study plan'}
                 </button>
@@ -366,51 +408,6 @@ export function StudyPlanPage() {
             steady weekly hours beat last-minute cramming.
           </p>
         ) : null}
-
-        <div className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
-          <button
-            type="button"
-            onClick={() => navigate('/diagnostics/test')}
-            className="w-full rounded-full border-2 border-[#2c2825] bg-white px-6 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#faf9f7] sm:min-w-[10rem] sm:flex-1"
-          >
-            Take diagnostic
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            className="w-full rounded-full border border-[#5f7f6a] bg-[#f0f6f2] px-6 py-3 text-sm font-semibold text-[#2c4a32] shadow-sm transition hover:bg-[#e4efe6] sm:min-w-[10rem] sm:flex-1"
-          >
-            Dashboard
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/calendar')}
-            className="w-full rounded-full border border-[#d4c9be] bg-white px-6 py-3 text-sm font-semibold text-[#4a423c] shadow-sm transition hover:bg-[#faf9f7] sm:min-w-[10rem] sm:flex-1"
-          >
-            Calendar
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/analytics')}
-            className="w-full rounded-full border border-[#c5d9f5] bg-[#eef4fc] px-6 py-3 text-sm font-semibold text-[#1e3a5f] shadow-sm transition hover:bg-[#e2ebf9] sm:min-w-[10rem] sm:flex-1"
-          >
-            AI analytics
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/journal')}
-            className="w-full rounded-full border border-[#cfe5d6] bg-[#f4faf6] px-6 py-3 text-sm font-semibold text-[#1a3d2e] shadow-sm transition hover:bg-[#e8f2ec] sm:min-w-[10rem] sm:flex-1"
-          >
-            AI journal
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] sm:min-w-[10rem] sm:flex-1"
-          >
-            Home
-          </button>
-        </div>
       </div>
     </div>
   )

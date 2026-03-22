@@ -117,31 +117,38 @@ export function AiJournalPage() {
             <button
               type="button"
               onClick={() => navigate('/dashboard')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Dashboard
             </button>
             <button
               type="button"
               onClick={() => navigate('/calendar')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Calendar
             </button>
             <button
               type="button"
               onClick={() => navigate('/analytics')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               AI analytics
             </button>
-            <span className="text-[#2c2825]">AI journal</span>
+            <span className="shell-nav-btn-active">AI journal</span>
             <button
               type="button"
               onClick={() => navigate('/study-plan')}
-              className="hover:text-[#2c2825]"
+              className="shell-nav-btn"
             >
               Study plan
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/diagnostics/test')}
+              className="shell-nav-btn"
+            >
+              Retake diagnostic
             </button>
           </nav>
         </div>

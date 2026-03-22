@@ -95,7 +95,7 @@ export function DiagnosticsPage() {
           <button
             type="button"
             onClick={() => navigate('/dashboard')}
-            className="text-sm font-semibold text-[#5f7f6a] hover:text-[#2c2825]"
+            className="shell-nav-btn text-sm font-semibold"
           >
             Dashboard
           </button>
