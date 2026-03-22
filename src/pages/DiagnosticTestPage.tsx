@@ -2,21 +2,20 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import { buildDiagnosticSummary } from '../lib/diagnosticSummary'
-import {
-  DIAGNOSTIC_QUESTIONS,
-  DIAGNOSTIC_TOTAL,
-} from '../data/diagnosticQuestions'
+import { createDiagnosticSession } from '../lib/diagnosticSession'
+import { DIAGNOSTIC_TOTAL } from '../data/diagnosticQuestions'
 import { saveDiagnosticScores } from '../lib/api'
 
 export function DiagnosticTestPage() {
   const navigate = useNavigate()
   const { setProfile } = useProfile()
+  const [session] = useState(() => createDiagnosticSession())
   const [index, setIndex] = useState(0)
   const [answers, setAnswers] = useState<(number | null)[]>(() =>
     Array.from({ length: DIAGNOSTIC_TOTAL }, () => null),
   )
 
-  const q = DIAGNOSTIC_QUESTIONS[index]
+  const q = session[index]
   const selected = answers[index]
   const progressPct = ((index + 1) / DIAGNOSTIC_TOTAL) * 100
   const isLast = index === DIAGNOSTIC_TOTAL - 1
@@ -34,8 +33,14 @@ export function DiagnosticTestPage() {
   const goNext = () => {
     if (!canNext) return
     if (isLast) {
-      const summary = buildDiagnosticSummary(answers as number[])
-      setProfile({ diagnosticSummary: summary })
+      const summary = buildDiagnosticSummary(answers as number[], session)
+      setProfile((prev) => ({
+        diagnosticSummary: summary,
+        studyDayTodos: prev.studyDayTodos.filter(
+          (t) =>
+            t.fillSource !== 'diagnostic' && t.fillSource !== 'questionnaire',
+        ),
+      }))
 
       // Persist scores to backend (fire-and-forget)
       saveDiagnosticScores(summary).catch((err) =>

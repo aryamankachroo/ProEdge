@@ -20,6 +20,23 @@ export type StudyCalendarEvent = {
   title: string
 }
 
+/**
+ * Where a calendar task came from — drives colors/labels in the UI.
+ * Questionnaire weak sections → `weak_section`; prep books → `resource`; etc.
+ */
+export type CalendarRecommendationKind =
+  | 'weak_section'
+  | 'cars'
+  | 'science'
+  | 'anki'
+  | 'resource'
+  | 'mixed'
+  | 'recap'
+  | 'general'
+
+/** Auto-filled rows from suggestion templates (not manual or Gemini merge). */
+export type StudyDayTodoFillSource = 'diagnostic' | 'questionnaire'
+
 /** Checkable daily tasks on the study calendar (max ~6 per day in UI). */
 export type StudyDayTodo = {
   id: string
@@ -27,6 +44,10 @@ export type StudyDayTodo = {
   date: string
   title: string
   completed: boolean
+  /** From questionnaire/Gemini heuristics; omit on older saved data */
+  kind?: CalendarRecommendationKind
+  /** Present when this row came from calendar suggestion auto-fill */
+  fillSource?: StudyDayTodoFillSource
 }
 
 export type DiagnosticSectionKey =

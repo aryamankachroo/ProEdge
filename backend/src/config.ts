@@ -1,10 +1,18 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-function required(key: string): string {
+const isProd = process.env.NODE_ENV === 'production'
+
+/**
+ * In development, missing vars use safe placeholders so `npm run dev` works without copying `.env`.
+ * JWT is bypassed when there is no `Authorization` header (see `middleware/auth.ts`).
+ * Snowflake / Gemini calls still need real keys in `.env` to succeed at runtime.
+ */
+function env(key: string, devFallback?: string): string {
   const value = process.env[key]
-  if (!value) throw new Error(`Missing required environment variable: ${key}`)
-  return value
+  if (value) return value
+  if (!isProd && devFallback !== undefined) return devFallback
+  throw new Error(`Missing required environment variable: ${key}`)
 }
 
 export const config = {
@@ -16,21 +24,21 @@ export const config = {
   devUserId: process.env.DEV_USER_ID ?? 'dev-user-001',
 
   auth0: {
-    domain: required('AUTH0_DOMAIN'),
-    audience: required('AUTH0_AUDIENCE'),
+    domain: env('AUTH0_DOMAIN', 'dev-placeholder.invalid'),
+    audience: env('AUTH0_AUDIENCE', 'https://proedge-api'),
   },
 
   snowflake: {
-    account: required('SNOWFLAKE_ACCOUNT'),
-    username: required('SNOWFLAKE_USERNAME'),
-    password: required('SNOWFLAKE_PASSWORD'),
-    database: required('SNOWFLAKE_DATABASE'),
-    schema: required('SNOWFLAKE_SCHEMA'),
-    warehouse: required('SNOWFLAKE_WAREHOUSE'),
-    role: required('SNOWFLAKE_ROLE'),
+    account: env('SNOWFLAKE_ACCOUNT', ''),
+    username: env('SNOWFLAKE_USERNAME', ''),
+    password: env('SNOWFLAKE_PASSWORD', ''),
+    database: env('SNOWFLAKE_DATABASE', 'PROEDGE_DB'),
+    schema: env('SNOWFLAKE_SCHEMA', 'PUBLIC'),
+    warehouse: env('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH'),
+    role: env('SNOWFLAKE_ROLE', 'SYSADMIN'),
   },
 
   gemini: {
-    apiKey: required('GEMINI_API_KEY'),
+    apiKey: env('GEMINI_API_KEY', 'dev-placeholder-no-gemini'),
   },
 }

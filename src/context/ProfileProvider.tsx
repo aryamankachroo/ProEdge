@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react'
 import { defaultProfile, type UserProfile } from '../types/profile'
-import { ProfileContext } from './profile-context'
+import { ProfileContext, type ProfileUpdate } from './profile-context'
 import { fetchProfile } from '../lib/api'
 
 const PROFILE_KEY = 'proedge-profile-v1'
@@ -70,8 +70,11 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
   }, [profile])
 
-  const setProfile = useCallback((p: Partial<UserProfile>) => {
-    setProfileState((prev) => ({ ...prev, ...p }))
+  const setProfile = useCallback((p: ProfileUpdate) => {
+    setProfileState((prev) => ({
+      ...prev,
+      ...(typeof p === 'function' ? p(prev) : p),
+    }))
   }, [])
 
   const value = useMemo(

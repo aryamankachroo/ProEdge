@@ -2,10 +2,20 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import {
-  getSuggestedDailyTaskTitles,
+  CALENDAR_KIND_LABELS,
+  CALENDAR_KIND_ORDER,
+  CALENDAR_KIND_STYLES,
+  effectiveTodoKind,
+} from '../lib/calendarRecommendationMeta'
+import {
+  getSuggestedDailyTasks,
   suggestedTasksAreFromDiagnostic,
   suggestedTasksAreFromQuestionnaire,
 } from '../lib/calendarSuggestedTasks'
+import {
+  generateCalendarTodosFromProfile,
+  mergeGeminiTodosIntoProfile,
+} from '../lib/geminiCalendar'
 import type { StudyDayTodo } from '../types/profile'
 
 const WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
@@ -80,6 +90,10 @@ export function CalendarPage() {
   const [viewMonth, setViewMonth] = useState(today.getMonth())
   const [selectedIso, setSelectedIso] = useState(() => toISODate(today))
   const [draftTitle, setDraftTitle] = useState('')
+  const [geminiLoading, setGeminiLoading] = useState(false)
+  const [geminiError, setGeminiError] = useState<string | null>(null)
+
+  const hasGeminiKey = Boolean(import.meta.env.VITE_GEMINI_API_KEY)
 
   const grid = useMemo(
     () => buildGrid(viewYear, viewMonth),
@@ -96,17 +110,17 @@ export function CalendarPage() {
     return m
   }, [todos])
 
-  const suggestedTitles = useMemo(
-    () => getSuggestedDailyTaskTitles(profile),
+  const suggestedTasks = useMemo(
+    () => getSuggestedDailyTasks(profile),
     [profile],
   )
 
   const fromDiagnostic = suggestedTasksAreFromDiagnostic(profile)
   const fromQuestionnaire = suggestedTasksAreFromQuestionnaire(profile)
 
-  /** Pre-fill each in-month day with suggested tasks so the grid shows real items (dummy until backend). */
+  /** Pre-fill each in-month day with typed suggested tasks (questionnaire / diagnostic). */
   useEffect(() => {
-    const titles = getSuggestedDailyTaskTitles(profile)
+    const tasks = getSuggestedDailyTasks(profile)
     const monthDates = buildGrid(viewYear, viewMonth)
       .filter((c) => c.inMonth)
       .map((c) => toISODate(c.date))
@@ -116,15 +130,22 @@ export function CalendarPage() {
       hasTasksFor.add(t.date)
     }
 
+    const fillSource =
+      fromDiagnostic ? 'diagnostic'
+      : fromQuestionnaire ? 'questionnaire'
+      : undefined
+
     const additions: StudyDayTodo[] = []
     for (const iso of monthDates) {
       if (hasTasksFor.has(iso)) continue
-      for (const title of titles) {
+      for (const s of tasks) {
         additions.push({
           id: newId(),
           date: iso,
-          title,
+          title: s.title,
           completed: false,
+          kind: s.kind,
+          ...(fillSource ? { fillSource } : {}),
         })
       }
     }
@@ -169,6 +190,7 @@ export function CalendarPage() {
         date: selectedIso,
         title: draftTitle.trim(),
         completed: false,
+        kind: 'general',
       },
     ])
     setDraftTitle('')
@@ -176,11 +198,17 @@ export function CalendarPage() {
 
   const addSuggestedTasks = () => {
     if (selectedTodos.length > 0) return
-    const additions: StudyDayTodo[] = suggestedTitles.map((title) => ({
+    const fillSource =
+      fromDiagnostic ? 'diagnostic'
+      : fromQuestionnaire ? 'questionnaire'
+      : undefined
+    const additions: StudyDayTodo[] = suggestedTasks.map((s) => ({
       id: newId(),
       date: selectedIso,
-      title,
+      title: s.title,
       completed: false,
+      kind: s.kind,
+      ...(fillSource ? { fillSource } : {}),
     }))
     setTodos([...todos, ...additions])
   }
@@ -203,6 +231,22 @@ export function CalendarPage() {
     setViewYear(today.getFullYear())
     setViewMonth(today.getMonth())
     setSelectedIso(toISODate(today))
+  }
+
+  const handleGeminiCalendar = async () => {
+    setGeminiError(null)
+    setGeminiLoading(true)
+    try {
+      const rows = await generateCalendarTodosFromProfile(profile)
+      const next = mergeGeminiTodosIntoProfile(profile.studyDayTodos, rows)
+      setProfile({ studyDayTodos: next })
+    } catch (e) {
+      setGeminiError(
+        e instanceof Error ? e.message : 'Could not generate calendar tasks.',
+      )
+    } finally {
+      setGeminiLoading(false)
+    }
   }
 
   return (
@@ -254,10 +298,56 @@ export function CalendarPage() {
           Study calendar
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] sm:text-base">
-          Pick a day and add suggested tasks from your diagnostic (or
-          questionnaire weak sections) — placeholder copy until the backend
-          syncs real plans. Check items off as you go.
+          Pick a day and check tasks off. Suggestions are{' '}
+          <strong className="font-semibold text-[#5a4f47]">typed by category</strong>{' '}
+          (weak sections, CARS, science, Anki, prep resources, etc.) from your
+          questionnaire. Use{' '}
+          <strong className="font-semibold text-[#5a4f47]">Gemini</strong> to
+          fill upcoming study days with the same kinds of recommendations.
         </p>
+
+        <div className="mt-5 max-w-3xl rounded-2xl border border-[#ebe5dc] bg-[#faf9f7] px-4 py-3 sm:px-5">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e]">
+            Recommendation types
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {CALENDAR_KIND_ORDER.map((k) => (
+              <span
+                key={k}
+                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset ${CALENDAR_KIND_STYLES[k].badge}`}
+              >
+                {CALENDAR_KIND_LABELS[k]}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 flex max-w-2xl flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <button
+            type="button"
+            onClick={handleGeminiCalendar}
+            disabled={geminiLoading || !hasGeminiKey}
+            className="inline-flex items-center justify-center rounded-full bg-[#1a73e8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1557b0] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {geminiLoading ? 'Generating with Gemini…' : 'Fill calendar with Gemini (from questionnaire)'}
+          </button>
+          {!hasGeminiKey ? (
+            <p className="text-xs leading-relaxed text-[#9a8b7e]">
+              Add{' '}
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">
+                VITE_GEMINI_API_KEY
+              </code>{' '}
+              to <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">.env.local</code> in
+              ProEdge, then restart <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px]">npm run dev</code>.
+              Keys in the frontend are visible in the browser — use for local demos only.
+            </p>
+          ) : null}
+        </div>
+        {geminiError ? (
+          <p className="mt-3 max-w-2xl rounded-xl bg-[#fff0ee] px-4 py-3 text-sm text-[#9d4e36]">
+            {geminiError}
+          </p>
+        ) : null}
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_minmax(280px,380px)] lg:items-start">
           <div className="overflow-hidden rounded-2xl border border-[#e5ddd4] bg-white shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)]">
@@ -337,19 +427,29 @@ export function CalendarPage() {
                     {total > 0 ? (
                       <div className="mt-auto flex min-h-0 flex-1 flex-col gap-0.5 overflow-hidden">
                         <div className="flex min-h-0 flex-1 flex-col gap-0.5">
-                          {dayTodos.slice(0, 2).map((t) => (
-                            <span
-                              key={t.id}
-                              title={t.title}
-                              className={`truncate rounded-md px-1 py-0.5 pl-1 text-[8px] font-medium leading-tight sm:text-[9px] ${
-                                t.completed
-                                  ? 'bg-[#cfe5d6] text-[#1e3d2a] line-through decoration-[#5f7f6a]/60'
-                                  : 'bg-[#ede9fe] text-[#5b21b6]'
-                              }`}
-                            >
-                              {t.title}
-                            </span>
-                          ))}
+                          {dayTodos.slice(0, 2).map((t) => {
+                            const k = effectiveTodoKind(t)
+                            const st = CALENDAR_KIND_STYLES[k]
+                            return (
+                              <span
+                                key={t.id}
+                                title={`${CALENDAR_KIND_LABELS[k]}: ${t.title}`}
+                                className={`flex min-h-0 items-center gap-0.5 truncate rounded-md py-0.5 pl-0.5 pr-0.5 text-[8px] font-medium leading-tight sm:text-[9px] ${
+                                  t.completed
+                                    ? 'bg-[#cfe5d6] text-[#1e3d2a] line-through decoration-[#5f7f6a]/60'
+                                    : `${st.badge} text-[#1a1816] ring-1 ring-inset ring-black/[0.06]`
+                                }`}
+                              >
+                                {!t.completed ? (
+                                  <span
+                                    className={`h-1.5 w-1.5 shrink-0 rounded-full ${st.dot}`}
+                                    aria-hidden
+                                  />
+                                ) : null}
+                                <span className="min-w-0 truncate">{t.title}</span>
+                              </span>
+                            )
+                          })}
                           {total > 2 ? (
                             <span className="text-[8px] text-[#8a8580] sm:text-[9px]">
                               +{total - 2} more
@@ -402,8 +502,8 @@ export function CalendarPage() {
                   </p>
                 ) : fromQuestionnaire ? (
                   <p className="text-xs text-[#9a8b7e]">
-                    Suggestions reference sections you marked shaky in the
-                    questionnaire (placeholder wording).
+                    Six task types per day (weak sections, CARS, Anki, resources,
+                    etc.) follow your questionnaire answers.
                   </p>
                 ) : (
                   <p className="text-xs text-[#9a8b7e]">
@@ -449,15 +549,22 @@ export function CalendarPage() {
                       </svg>
                     ) : null}
                   </button>
-                  <span
-                    className={`min-w-0 flex-1 text-sm leading-snug ${
-                      t.completed
-                        ? 'text-[#6b7f6f] line-through'
-                        : 'text-[#2c2825]'
-                    }`}
-                  >
-                    {t.title}
-                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span
+                      className={`mb-1 inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${CALENDAR_KIND_STYLES[effectiveTodoKind(t)].badge}`}
+                    >
+                      {CALENDAR_KIND_LABELS[effectiveTodoKind(t)]}
+                    </span>
+                    <p
+                      className={`text-sm leading-snug ${
+                        t.completed
+                          ? 'text-[#6b7f6f] line-through'
+                          : 'text-[#2c2825]'
+                      }`}
+                    >
+                      {t.title}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     onClick={() => removeTodo(t.id)}

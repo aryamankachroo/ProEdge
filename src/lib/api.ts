@@ -1,5 +1,5 @@
 /**
- * ProEdge API client — all calls proxy through Vite to http://localhost:3001
+ * ProEdge API client — when enabled, calls proxy through Vite to http://localhost:3001
  *
  * Type conversions handled here:
  *   Frontend StudyStatus  (kebab)  →  Backend studyStatus  (snake_case)
@@ -8,9 +8,25 @@
 
 import type { UserProfile, DiagnosticSummary } from '../types/profile'
 
+/** When false, no `/api` requests are made (avoids Vite proxy ECONNREFUSED if the API is down). */
+export function isBackendApiEnabled(): boolean {
+  return import.meta.env.VITE_USE_BACKEND_API === 'true'
+}
+
+class BackendDisabledError extends Error {
+  constructor() {
+    super('Backend API disabled (set VITE_USE_BACKEND_API=true when the server is running)')
+    this.name = 'BackendDisabledError'
+  }
+}
+
 // ─── Internal helpers ──────────────────────────────────────────────────────────
 
 async function req<T>(path: string, options?: RequestInit): Promise<T> {
+  if (!isBackendApiEnabled()) {
+    throw new BackendDisabledError()
+  }
+
   const res = await fetch(`/api${path}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -177,8 +193,9 @@ export async function saveProfile(profile: UserProfile): Promise<void> {
   })
 }
 
-/** Fetch the stored profile. Returns null if not found (404). */
+/** Fetch the stored profile. Returns null if not found (404) or API disabled. */
 export async function fetchProfile(): Promise<BackendProfile | null> {
+  if (!isBackendApiEnabled()) return null
   try {
     const data = await req<{ profile: BackendProfile }>('/profile')
     return data.profile
@@ -251,6 +268,9 @@ export async function saveDiagnosticScores(
 
 /** Upload a PDF score report and have the server parse it. */
 export async function uploadDiagnosticPdf(file: File): Promise<DiagnosticScoreEntry> {
+  if (!isBackendApiEnabled()) {
+    throw new BackendDisabledError()
+  }
   const form = new FormData()
   form.append('file', file)
 
