@@ -5,10 +5,15 @@ import { useProfile } from '../context/useProfile'
 import {
   fetchActivePlan,
   generatePlan,
+  isBackendApiEnabled,
   type GeneratedPlan,
   type PlanPhase,
   type PlanWeek,
 } from '../lib/api'
+import {
+  generateStudyPlanWithGemini,
+  isGeminiStudyPlanAvailable,
+} from '../lib/geminiStudyPlan'
 
 function daysUntilExam(examDateIso: string): number | null {
   if (!examDateIso) return null
@@ -111,8 +116,9 @@ export function StudyPlanPage() {
   const [planError, setPlanError] = useState<string | null>(null)
   const [generatedAt, setGeneratedAt] = useState<string | null>(null)
 
-  // On mount: check if a saved plan exists
+  // On mount: load saved plan from backend when API is enabled
   useEffect(() => {
+    if (!isBackendApiEnabled()) return
     fetchActivePlan()
       .then((saved) => {
         if (saved) {
@@ -121,7 +127,7 @@ export function StudyPlanPage() {
         }
       })
       .catch(() => {
-        // Backend unavailable — no plan shown, user can generate one
+        // Backend unavailable
       })
   }, [])
 
@@ -129,9 +135,21 @@ export function StudyPlanPage() {
     setPlanLoading(true)
     setPlanError(null)
     try {
-      const plan = await generatePlan()
-      setAiPlan(plan)
-      setGeneratedAt(new Date().toISOString())
+      if (isGeminiStudyPlanAvailable()) {
+        const plan = await generateStudyPlanWithGemini(profile)
+        setAiPlan(plan)
+        setGeneratedAt(new Date().toISOString())
+        return
+      }
+      if (isBackendApiEnabled()) {
+        const plan = await generatePlan()
+        setAiPlan(plan)
+        setGeneratedAt(new Date().toISOString())
+        return
+      }
+      setPlanError(
+        'Add VITE_GEMINI_API_KEY to .env.local and restart the dev server, or set VITE_USE_BACKEND_API=true with the ProEdge API running.',
+      )
     } catch (err) {
       setPlanError(
         err instanceof Error ? err.message : 'Failed to generate plan. Please try again.',
@@ -309,8 +327,14 @@ export function StudyPlanPage() {
             ) : (
               <div className="mt-4">
                 <p className="text-sm leading-relaxed text-[#7a6e66]">
-                  Let Gemini AI build a personalised week-by-week study plan
-                  from your hours, exam date, weak sections, and resources.
+                  Let Gemini build a week-by-week plan from your questionnaire:
+                  goals, daily hours, exam date, study days, weak sections,
+                  resources, and Anki decks (and your mini-diagnostic if you took
+                  it). Uses{' '}
+                  <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px]">
+                    VITE_GEMINI_API_KEY
+                  </code>{' '}
+                  in the browser for demos.
                 </p>
                 {planError ? (
                   <p className="mt-3 rounded-xl bg-[#fff0ee] px-4 py-3 text-sm text-[#9d4e36]">

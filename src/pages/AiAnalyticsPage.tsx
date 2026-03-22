@@ -5,6 +5,10 @@ import {
   type DragEvent,
 } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  analyzePracticeReportWithGemini,
+  isGeminiAnalyticsAvailable,
+} from '../lib/geminiPdfAnalytics'
 import { analyzePracticeReportText } from '../lib/practicePdfAnalytics'
 import type { AiAnalyticsSnapshot } from '../types/analytics'
 import { useProfile } from '../context/useProfile'
@@ -63,7 +67,15 @@ export function AiAnalyticsPage() {
         setLoading(false)
         return
       }
-      const base = analyzePracticeReportText(text)
+      let base = analyzePracticeReportText(text)
+      if (isGeminiAnalyticsAvailable()) {
+        try {
+          base = await analyzePracticeReportWithGemini(text)
+        } catch (err) {
+          console.warn('[ProEdge] Gemini PDF analytics failed, using heuristics:', err)
+          base = analyzePracticeReportText(text)
+        }
+      }
       const snap: AiAnalyticsSnapshot = {
         ...base,
         analyzedAt: new Date().toISOString(),
@@ -143,10 +155,14 @@ export function AiAnalyticsPage() {
           AI analytics
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] sm:text-base">
-          Import a <strong>practice MCAT</strong> or score-report PDF. We read
-          the text on-device, estimate section scores when headings are present,
-          and surface <strong>strengths vs weak topics</strong> using patterns
-          (a real model API can replace this later).
+          Import a <strong>practice MCAT</strong> or score-report PDF. Text is
+          extracted in the browser; with{' '}
+          <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px]">
+            VITE_GEMINI_API_KEY
+          </code>{' '}
+          we use <strong>Gemini</strong> to read section scores and strengths /
+          gaps even when headings don&apos;t match fixed patterns. Without a key,
+          we fall back to on-device heuristics.
         </p>
 
         <input
@@ -196,6 +212,11 @@ export function AiAnalyticsPage() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e]">
                   Last analysis
+                  {snapshot.engine === 'gemini_v1' ? (
+                    <span className="ml-2 rounded-full bg-[#e8f0fe] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1a73e8]">
+                      Gemini
+                    </span>
+                  ) : null}
                 </p>
                 <p className="mt-1 text-sm text-[#3d3835]">
                   <span className="font-medium">{snapshot.sourceFileName}</span>
@@ -222,10 +243,11 @@ export function AiAnalyticsPage() {
               <h2 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e]">
                 Section estimates
               </h2>
-              <p className="mt-1 text-xs text-[#7a6e66]">
-                Parsed from headings + nearby 118–132 numbers. May be wrong if
-                the layout differs.
-              </p>
+                <p className="mt-1 text-xs text-[#7a6e66]">
+                  {snapshot.engine === 'gemini_v1' ?
+                    'Extracted with Gemini from report text (scores 118–132 per section, 472–528 total when present).'
+                  : 'Parsed from headings + nearby 118–132 numbers. May be wrong if the layout differs.'}
+                </p>
               <ul className="mt-4 space-y-3">
                 {snapshot.sections.map((row) => (
                   <li

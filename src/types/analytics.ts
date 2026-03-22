@@ -9,14 +9,14 @@ export type PracticeSectionRow = {
   detail: string
 }
 
-/** Output of the on-device “AI-style” analyzer (heuristics until a model API is wired). */
+/** Output of the PDF analyzer (heuristics and/or Gemini). */
 export type PracticeAnalyticsReport = {
   totalScore: number | null
   sections: PracticeSectionRow[]
   strengths: PracticeInsight[]
   weaknesses: PracticeInsight[]
   excerpt: string
-  engine: 'heuristic_v1'
+  engine: 'heuristic_v1' | 'gemini_v1'
 }
 
 export type AiAnalyticsSnapshot = PracticeAnalyticsReport & {

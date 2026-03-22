@@ -1,8 +1,27 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import type { CalendarRecommendationKind, StudyDayTodo, UserProfile } from '../types/profile'
+import type {
+  CalendarRecommendationKind,
+  DiagnosticSectionKey,
+  StudyDayTodo,
+  UserProfile,
+} from '../types/profile'
 import { isCalendarRecommendationKind } from './calendarRecommendationMeta'
 
 const MODEL = 'gemini-2.5-flash'
+
+const MON_FRI = [1, 2, 3, 4, 5] as const
+
+/**
+ * Weekdays used when placing Gemini tasks. If onboarding only recorded **one** study
+ * day (e.g. a single Saturday tap), we fall back to Mon–Fri so the calendar is not
+ * empty on all other days.
+ */
+export function studyDaysForGeminiSchedule(profile: UserProfile): number[] {
+  const d = profile.studyDays
+  if (d.length === 0) return [...MON_FRI]
+  if (d.length === 1) return [...MON_FRI]
+  return d
+}
 
 function isoDate(d: Date): string {
   const y = d.getFullYear()
@@ -28,6 +47,60 @@ export function eligibleStudyDates(
   return out
 }
 
+/** Every date in `month` (0–11) that falls on a configured study weekday. */
+export function studyDayDatesInMonth(
+  studyDays: number[],
+  year: number,
+  month: number,
+): string[] {
+  const days = studyDays.length > 0 ? new Set(studyDays) : new Set([1, 2, 3, 4, 5])
+  const out: string[] = []
+  const last = new Date(year, month + 1, 0).getDate()
+  for (let d = 1; d <= last; d++) {
+    const dt = new Date(year, month, d)
+    if (days.has(dt.getDay())) out.push(isoDate(dt))
+  }
+  return out
+}
+
+/** Dates to schedule: upcoming study days plus all study days in the visible calendar month. */
+export function allowedGenerationDates(
+  profile: UserProfile,
+  viewYear: number,
+  viewMonth: number,
+): string[] {
+  const scheduleDays = studyDaysForGeminiSchedule(profile)
+  const forward = eligibleStudyDates(scheduleDays, 70)
+  const inMonth = studyDayDatesInMonth(scheduleDays, viewYear, viewMonth)
+  const set = new Set([...forward, ...inMonth])
+  return [...set].sort()
+}
+
+function diagnosticDetailForPrompt(p: UserProfile): Record<string, unknown> | null {
+  const s = p.diagnosticSummary
+  if (!s) return null
+  const keys: DiagnosticSectionKey[] = [
+    'chemPhys',
+    'cars',
+    'bioBiochem',
+    'psychSoc',
+  ]
+  const sections: Record<string, { correct: number; total: number; pct: number; missed: boolean }> =
+    {}
+  for (const k of keys) {
+    const c = s.sections[k].correct
+    const t = s.sections[k].total
+    const pct = t > 0 ? Math.round((c / t) * 100) : 0
+    sections[k] = { correct: c, total: t, pct, missed: c < t }
+  }
+  return {
+    completedAt: s.completedAt,
+    overall: `${s.overallCorrect}/${s.overallTotal}`,
+    sections,
+    prioritizeMissedSections: keys.filter((k) => sections[k].missed),
+  }
+}
+
 function profileContext(p: UserProfile): string {
   return JSON.stringify(
     {
@@ -39,16 +112,16 @@ function profileContext(p: UserProfile): string {
       baselineScore: p.baselineScore,
       examDate: p.examDate,
       studyDays: p.studyDays,
+      geminiScheduleWeekdays:
+        'Use these weekdays for task dates (0=Sun … 6=Sat): ' +
+        studyDaysForGeminiSchedule(p).join(', '),
       resources: p.resources,
       resourceOtherDetail: p.resourceOtherDetail,
       ankiDecks: p.ankiDecks,
       weakSections: p.weakSections,
-      diagnosticSummary: p.diagnosticSummary
-        ? {
-            overall: `${p.diagnosticSummary.overallCorrect}/${p.diagnosticSummary.overallTotal}`,
-            sections: p.diagnosticSummary.sections,
-          }
-        : null,
+      questionnaireNote:
+        'Use weakSections as self-reported weak areas; tie tasks to named resources and Anki decks when present.',
+      diagnosticDetail: diagnosticDetailForPrompt(p),
     },
     null,
     2,
@@ -93,12 +166,19 @@ function parseTodosJson(raw: string): GeminiTodoRow[] {
   return rows
 }
 
+export type GenerateCalendarOptions = {
+  /** Calendar month the user is viewing (so that month gets distinct daily plans). */
+  viewYear: number
+  viewMonth: number
+}
+
 /**
- * Ask Gemini for dated MCAT study to-dos from the questionnaire (and diagnostic if present).
+ * Ask Gemini for dated MCAT study to-dos from the questionnaire and diagnostic (when present).
  * Requires `import.meta.env.VITE_GEMINI_API_KEY` (exposed in browser — use only for demos).
  */
 export async function generateCalendarTodosFromProfile(
   profile: UserProfile,
+  options: GenerateCalendarOptions,
 ): Promise<GeminiTodoRow[]> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY
   if (!apiKey || typeof apiKey !== 'string') {
@@ -107,7 +187,11 @@ export async function generateCalendarTodosFromProfile(
     )
   }
 
-  const allowedDates = eligibleStudyDates(profile.studyDays, 56)
+  const allowedDates = allowedGenerationDates(
+    profile,
+    options.viewYear,
+    options.viewMonth,
+  )
   const allowedSet = new Set(allowedDates)
 
   const genAI = new GoogleGenerativeAI(apiKey)
@@ -115,36 +199,38 @@ export async function generateCalendarTodosFromProfile(
     model: MODEL,
     generationConfig: {
       responseMimeType: 'application/json',
-      temperature: 0.6,
+      temperature: 0.75,
     },
   })
 
-  const prompt = `You are an MCAT study coach. The student profile (JSON) is:
+  const prompt = `You are an MCAT study coach. Build a VARIED multi-day study plan from the student profile (JSON) below.
 
 ${profileContext(profile)}
 
-You MUST schedule tasks only on these dates (YYYY-MM-DD), in order — use each date at least once if possible, up to 5 concise tasks per day:
+SCHEDULING DATES (YYYY-MM-DD) — you may ONLY use these dates:
 ${allowedDates.join(', ')}
 
-For EVERY task, assign a "kind" so the UI can color-code recommendations:
-- weak_section: extra work on questionnaire weakSections or diagnostic weak areas
-- science: Chem/Phys, Bio/Biochem, or Psych/Soc practice blocks (not CARS)
+CRITICAL — variety:
+- Do NOT repeat the same task title (or same wording) on different days. Each date must have DISTINCT titles that reflect different topics, subtopics, or modalities.
+- Rotate emphasis across MCAT areas: Chemical/Physical Foundations, CARS, Biological/Biochemical Foundations, Psychological/Social — guided by questionnaire weakSections AND diagnosticDetail.prioritizeMissedSections (if diagnostic was taken). If no diagnostic, rely on weakSections and baseline.
+- Across the week, mix: weak_section, science, cars, anki, resource, mixed, recap — not the same six labels every day.
+- Per day: up to 6 concise tasks; vary count 4–6 when possible.
+- Reference specific resources (Kaplan, UWorld, named decks) when profile lists them; otherwise use generic but SPECIFIC titles (e.g. "Psych/Soc: research methods — 15 discrete, timed" not "science block").
+
+For EVERY task, assign "kind":
+- weak_section: targeted work on a named weak area
+- science: Chem/Phys, Bio/Biochem, or Psych/Soc (not CARS)
 - cars: CARS passages / reasoning
 - anki: spaced repetition / flashcards
-- resource: work tied to their prep books (Kaplan, UWorld, etc.)
-- mixed: mixed passages or full-length style blocks
-- recap: journaling, error logs, planning tomorrow
-- general: anything else
+- resource: named prep book / Q-bank work
+- mixed: mixed passages or interleaved blocks
+- recap: error log, review, plan next day
+- general: other
 
-Rules:
-- Tailor tasks to weakSections, hoursPerDay, resources, and ankiDecks when provided.
-- If diagnosticSummary is present, weight weaker sections slightly more.
-- Tasks are short imperative lines (e.g. "UWorld: 20 bio/biochem timed").
-- Only output JSON, no markdown. Shape:
+Output ONLY valid JSON, no markdown. Shape:
 { "todos": [ { "date": "YYYY-MM-DD", "title": "...", "kind": "weak_section" } ] }
-  where each "kind" is one of: weak_section, science, cars, anki, resource, mixed, recap, general
-- Use ONLY dates from the allowed list above. Max 120 total todos.
-- Vary kinds across the week so different recommendation types appear.`
+Each "kind" must be one of: weak_section, science, cars, anki, resource, mixed, recap, general
+Max 140 todos total. Use ONLY dates from the allowed list above.`
 
   const result = await model.generateContent(prompt)
   const text = result.response.text()

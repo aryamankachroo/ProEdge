@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import {
@@ -15,6 +15,7 @@ import {
 import {
   generateCalendarTodosFromProfile,
   mergeGeminiTodosIntoProfile,
+  studyDaysForGeminiSchedule,
 } from '../lib/geminiCalendar'
 import type { StudyDayTodo } from '../types/profile'
 
@@ -71,6 +72,8 @@ function newId(): string {
   )
 }
 
+const WEEKDAY_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+
 function longDateLabel(iso: string): string {
   return new Date(`${iso}T12:00:00`).toLocaleDateString(undefined, {
     weekday: 'long',
@@ -78,6 +81,13 @@ function longDateLabel(iso: string): string {
     day: 'numeric',
     year: 'numeric',
   })
+}
+
+/** Remove template auto-fills before replacing with Gemini-generated tasks. */
+function stripSuggestionFillTodos(todos: StudyDayTodo[]): StudyDayTodo[] {
+  return todos.filter(
+    (t) => t.fillSource !== 'diagnostic' && t.fillSource !== 'questionnaire',
+  )
 }
 
 export function CalendarPage() {
@@ -118,8 +128,18 @@ export function CalendarPage() {
   const fromDiagnostic = suggestedTasksAreFromDiagnostic(profile)
   const fromQuestionnaire = suggestedTasksAreFromQuestionnaire(profile)
 
-  /** Pre-fill each in-month day with typed suggested tasks (questionnaire / diagnostic). */
+  const geminiWeekdayHint = useMemo(() => {
+    const days = studyDaysForGeminiSchedule(profile)
+    return days.map((d) => WEEKDAY_ABBR[d] ?? '?').join(', ')
+  }, [profile])
+
+  /**
+   * Without a Gemini key, pre-fill each empty in-month day with the static template.
+   * With VITE_GEMINI_API_KEY, we skip this so the calendar stays diverse (Gemini or manual add).
+   */
   useEffect(() => {
+    if (hasGeminiKey) return
+
     const tasks = getSuggestedDailyTasks(profile)
     const monthDates = buildGrid(viewYear, viewMonth)
       .filter((c) => c.inMonth)
@@ -155,7 +175,46 @@ export function CalendarPage() {
     setProfile({
       studyDayTodos: [...profile.studyDayTodos, ...additions],
     })
-  }, [viewYear, viewMonth, profile, setProfile])
+  }, [hasGeminiKey, viewYear, viewMonth, profile, setProfile, fromDiagnostic, fromQuestionnaire])
+
+  const geminiAutoStarted = useRef(false)
+  useEffect(() => {
+    if (!hasGeminiKey) return
+    if (geminiAutoStarted.current) return
+    const personalized =
+      profile.weakSections.length > 0 || profile.diagnosticSummary != null
+    if (!personalized) return
+    if (profile.studyDayTodos.length > 0) return
+
+    geminiAutoStarted.current = true
+    let cancelled = false
+    ;(async () => {
+      try {
+        const rows = await generateCalendarTodosFromProfile(profile, {
+          viewYear,
+          viewMonth,
+        })
+        if (cancelled) return
+        setProfile((prev) => ({
+          studyDayTodos: mergeGeminiTodosIntoProfile(prev.studyDayTodos, rows),
+        }))
+      } catch {
+        geminiAutoStarted.current = false
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [
+    hasGeminiKey,
+    profile,
+    profile.weakSections,
+    profile.diagnosticSummary,
+    profile.studyDayTodos.length,
+    viewYear,
+    viewMonth,
+    setProfile,
+  ])
 
   const selectedTodos = useMemo(
     () => todos.filter((t) => t.date === selectedIso),
@@ -237,8 +296,12 @@ export function CalendarPage() {
     setGeminiError(null)
     setGeminiLoading(true)
     try {
-      const rows = await generateCalendarTodosFromProfile(profile)
-      const next = mergeGeminiTodosIntoProfile(profile.studyDayTodos, rows)
+      const base = stripSuggestionFillTodos(profile.studyDayTodos)
+      const rows = await generateCalendarTodosFromProfile(profile, {
+        viewYear,
+        viewMonth,
+      })
+      const next = mergeGeminiTodosIntoProfile(base, rows)
       setProfile({ studyDayTodos: next })
     } catch (e) {
       setGeminiError(
@@ -306,13 +369,31 @@ export function CalendarPage() {
           Study calendar
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] sm:text-base">
-          Pick a day and check tasks off. Suggestions are{' '}
-          <strong className="font-semibold text-[#5a4f47]">typed by category</strong>{' '}
-          (weak sections, CARS, science, Anki, prep resources, etc.) from your
-          questionnaire. Use{' '}
-          <strong className="font-semibold text-[#5a4f47]">Gemini</strong> to
-          fill upcoming study days with the same kinds of recommendations.
+          Pick a day and check tasks off. With{' '}
+          <strong className="font-semibold text-[#5a4f47]">Gemini</strong>, daily
+          tasks are generated from your questionnaire and (if you took it) your
+          mini-diagnostic — different topics each day. Without a key, the app uses a
+          simple repeated template instead.
         </p>
+        {hasGeminiKey ? (
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#9a8b7e]">
+            Gemini only adds tasks on{' '}
+            <span className="font-medium text-[#6b5f56]">{geminiWeekdayHint}</span>
+            {profile.studyDays.length === 1 ? (
+              <>
+                {' '}
+                (you only chose one study day in onboarding, so we use Mon–Fri for
+                the plan).
+              </>
+            ) : (
+              <>
+                {' '}
+                (from your study-day settings). Other days stay empty unless you add
+                tasks manually.
+              </>
+            )}
+          </p>
+        ) : null}
 
         <div className="mt-5 max-w-3xl rounded-2xl border border-[#ebe5dc] bg-[#faf9f7] px-4 py-3 sm:px-5">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e]">
@@ -337,7 +418,9 @@ export function CalendarPage() {
             disabled={geminiLoading || !hasGeminiKey}
             className="inline-flex items-center justify-center rounded-full bg-[#1a73e8] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1557b0] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {geminiLoading ? 'Generating with Gemini…' : 'Fill calendar with Gemini (from questionnaire)'}
+            {geminiLoading
+              ? 'Generating with Gemini…'
+              : 'Generate / refresh plan with Gemini (questionnaire + diagnostic)'}
           </button>
           {!hasGeminiKey ? (
             <p className="text-xs leading-relaxed text-[#9a8b7e]">
