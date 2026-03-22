@@ -16,7 +16,8 @@ export type PracticeAnalyticsReport = {
   strengths: PracticeInsight[]
   weaknesses: PracticeInsight[]
   excerpt: string
-  engine: 'heuristic_v1' | 'gemini_v1'
+  /** `demo_v1` = illustrative scores when Gemini is missing or failed */
+  engine: 'heuristic_v1' | 'gemini_v1' | 'demo_v1'
 }
 
 export type AiAnalyticsSnapshot = PracticeAnalyticsReport & {

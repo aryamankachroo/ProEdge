@@ -9,6 +9,7 @@ import {
   analyzePracticeReportWithGemini,
   isGeminiAnalyticsAvailable,
 } from '../lib/geminiPdfAnalytics'
+import { applyDemoScoresWhenGeminiUnavailable } from '../lib/analyticsDemoFallback'
 import { analyzePracticeReportText } from '../lib/practicePdfAnalytics'
 import type { AiAnalyticsSnapshot } from '../types/analytics'
 import { useProfile } from '../context/useProfile'
@@ -67,14 +68,19 @@ export function AiAnalyticsPage() {
         setLoading(false)
         return
       }
+      let usedGemini = false
       let base = analyzePracticeReportText(text)
       if (isGeminiAnalyticsAvailable()) {
         try {
           base = await analyzePracticeReportWithGemini(text)
+          usedGemini = true
         } catch (err) {
           console.warn('[ProEdge] Gemini PDF analytics failed, using heuristics:', err)
           base = analyzePracticeReportText(text)
         }
+      }
+      if (!usedGemini) {
+        base = applyDemoScoresWhenGeminiUnavailable(base)
       }
       const snap: AiAnalyticsSnapshot = {
         ...base,
@@ -223,6 +229,10 @@ export function AiAnalyticsPage() {
                     <span className="ml-2 rounded-full bg-[#e8f0fe] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1a73e8]">
                       Gemini
                     </span>
+                  ) : snapshot.engine === 'demo_v1' ? (
+                    <span className="ml-2 rounded-full bg-[#fef3c7] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#b45309]">
+                      Demo scores
+                    </span>
                   ) : null}
                 </p>
                 <p className="mt-1 text-sm text-[#3d3835]">
@@ -253,6 +263,8 @@ export function AiAnalyticsPage() {
                 <p className="mt-1 text-xs text-[#7a6e66]">
                   {snapshot.engine === 'gemini_v1' ?
                     'Extracted with Gemini from report text (scores 118–132 per section, 472–528 total when present).'
+                  : snapshot.engine === 'demo_v1' ?
+                    'Illustrative section scores — Gemini was not available or failed; totals match your PDF when a total was detected.'
                   : 'Parsed from headings + nearby 118–132 numbers. May be wrong if the layout differs.'}
                 </p>
               <ul className="mt-4 space-y-3">

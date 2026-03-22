@@ -79,7 +79,7 @@ function parseSections(text: string) {
   })
 }
 
-function dedupeInsights(items: PracticeInsight[]): PracticeInsight[] {
+export function dedupeInsights(items: PracticeInsight[]): PracticeInsight[] {
   const seen = new Set<string>()
   const out: PracticeInsight[] = []
   for (const it of items) {
@@ -128,7 +128,7 @@ function mineTopics(
   return dedupeInsights(out).slice(0, 4)
 }
 
-function relativeSectionInsights(
+export function relativeSectionInsights(
   sections: PracticeAnalyticsReport['sections'],
 ): { strengths: PracticeInsight[]; weaknesses: PracticeInsight[] } {
   const parsed = sections
