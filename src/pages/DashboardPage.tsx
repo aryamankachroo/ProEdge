@@ -276,6 +276,13 @@ export function DashboardPage() {
             </button>
             <button
               type="button"
+              onClick={() => navigate('/analytics')}
+              className="hover:text-[#2c2825]"
+            >
+              AI analytics
+            </button>
+            <button
+              type="button"
               onClick={() => navigate('/study-plan')}
               className="hover:text-[#2c2825]"
             >

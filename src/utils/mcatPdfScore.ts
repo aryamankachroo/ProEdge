@@ -10,6 +10,11 @@ function ensureWorker() {
   }
 }
 
+export async function extractPdfPlainText(file: File): Promise<string> {
+  const data = await file.arrayBuffer()
+  return pdfToPlainText(data)
+}
+
 async function pdfToPlainText(data: ArrayBuffer): Promise<string> {
   ensureWorker()
   const pdf = await getDocument({ data: new Uint8Array(data) }).promise
@@ -91,8 +96,7 @@ export type PdfScoreResult = {
 export async function extractMcatTotalFromPdfFile(
   file: File,
 ): Promise<PdfScoreResult> {
-  const data = await file.arrayBuffer()
-  const text = await pdfToPlainText(data)
+  const text = await extractPdfPlainText(file)
   const excerpt = text.replace(/\s+/g, ' ').trim().slice(0, 800)
   const score = parseMcatTotalScoreFromText(text)
   return { score, excerpt }

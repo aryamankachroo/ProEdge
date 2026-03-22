@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProfileProvider } from './context/ProfileProvider'
+import { AiAnalyticsPage } from './pages/AiAnalyticsPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DiagnosticExamPage } from './pages/DiagnosticExamPage'
@@ -10,6 +11,7 @@ import { LandingPage } from './pages/LandingPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { PostQuestionnairePage } from './pages/PostQuestionnairePage'
 import { StudyPlanPage } from './pages/StudyPlanPage'
+import { ChatAssistantWidget } from './components/ChatAssistantWidget'
 
 function AppRoutes() {
   return (
@@ -19,6 +21,7 @@ function AppRoutes() {
       <Route path="/post-questionnaire" element={<PostQuestionnairePage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
+      <Route path="/analytics" element={<AiAnalyticsPage />} />
       <Route path="/study-plan" element={<StudyPlanPage />} />
       <Route path="/diagnostics/test" element={<DiagnosticTestPage />} />
       <Route path="/diagnostics" element={<DiagnosticsPage />} />
@@ -34,6 +37,7 @@ export default function App() {
     <BrowserRouter>
       <ProfileProvider>
         <AppRoutes />
+        <ChatAssistantWidget />
       </ProfileProvider>
     </BrowserRouter>
   )

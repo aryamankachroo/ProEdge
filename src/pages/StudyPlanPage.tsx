@@ -177,6 +177,13 @@ export function StudyPlanPage() {
           </button>
           <button
             type="button"
+            onClick={() => navigate('/analytics')}
+            className="w-full rounded-full border border-[#c5d9f5] bg-[#eef4fc] px-6 py-3 text-sm font-semibold text-[#1e3a5f] shadow-sm transition hover:bg-[#e2ebf9] sm:min-w-[10rem] sm:flex-1"
+          >
+            AI analytics
+          </button>
+          <button
+            type="button"
             onClick={() => navigate('/')}
             className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] sm:min-w-[10rem] sm:flex-1"
           >

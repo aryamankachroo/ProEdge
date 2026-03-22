@@ -1,3 +1,5 @@
+import type { AiAnalyticsSnapshot } from './analytics'
+
 export type StudyStatus =
   | 'full-time-student'
   | 'part-time-student'
@@ -88,6 +90,8 @@ export interface UserProfile {
   diagnosticReportPdfName: string
   /** Latest mini-diagnostic results (10 Q), if completed */
   diagnosticSummary: DiagnosticSummary | null
+  /** Last practice PDF “AI analytics” run (heuristic until backend model) */
+  lastAiAnalytics: AiAnalyticsSnapshot | null
 }
 
 export const defaultProfile: UserProfile = {
@@ -107,6 +111,7 @@ export const defaultProfile: UserProfile = {
   weakSections: [],
   diagnosticReportPdfName: '',
   diagnosticSummary: null,
+  lastAiAnalytics: null,
 }
 
 export function studyDaysFromCalendarEvents(
