@@ -383,7 +383,7 @@ export function OnboardingPage() {
         onChooseSkipStudyPlan={() => commitProfileAndNavigate('/study-plan')}
       />
       <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
+        className="onboard-enter-orbs pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden
       >
         <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-[#e8b4a2]/40 blur-[80px]" />
@@ -393,7 +393,7 @@ export function OnboardingPage() {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-5 pb-36 pt-5 md:px-8 md:pb-16 md:pt-8 lg:px-10">
-        <header className="mb-6 flex justify-center lg:mb-8">
+        <header className="onboard-enter-hdr mb-6 flex justify-center lg:mb-8">
           <Link
             to="/"
             className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
@@ -404,7 +404,7 @@ export function OnboardingPage() {
         </header>
 
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">
-          <aside className="shrink-0 lg:sticky lg:top-8 lg:w-72 xl:w-80">
+          <aside className="onboard-enter-aside shrink-0 lg:sticky lg:top-8 lg:w-72 xl:w-80">
             <OnboardingSideStepper
               steps={STEPPER_STEPS}
               currentStep={step}
@@ -412,15 +412,16 @@ export function OnboardingPage() {
             />
           </aside>
 
-          <div className="min-w-0 flex-1">
-            <h1 className="onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl lg:text-4xl">
+          <div className="onboard-enter-main min-w-0 flex-1">
+            <div key={step}>
+            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl lg:text-4xl">
               {meta.title}
             </h1>
-            <p className="mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] md:text-base">
+            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] md:text-base">
               {meta.subtitle}
             </p>
 
-            <div className="flex flex-col gap-6">
+            <div className="onboard-step-in-3 flex flex-col gap-6">
           {step === 0 && (
             <>
               <SoftPanel>
@@ -798,10 +799,11 @@ export function OnboardingPage() {
             </>
           )}
             </div>
+            </div>
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none">
+        <div className="onboard-enter-bar fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none">
           <div className="mx-auto flex max-w-6xl justify-end px-0 lg:px-10">
             <div className="flex items-center gap-5 sm:gap-7">
               <button

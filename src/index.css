@@ -171,3 +171,261 @@
   border-color: #9d5a36 !important;
   -webkit-text-fill-color: currentColor;
 }
+
+/* ─── Landing hero (/ + /signin) — ambient motion, respects reduced motion ─── */
+
+@keyframes landing-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-float-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(4%, -3%) scale(1.06);
+  }
+  66% {
+    transform: translate(-3%, 4%) scale(0.96);
+  }
+}
+
+@keyframes landing-float-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-5%, 5%) scale(1.05);
+  }
+}
+
+@keyframes landing-float-c {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(3%, 6%) scale(1.04);
+  }
+  80% {
+    transform: translate(-4%, -2%) scale(0.97);
+  }
+}
+
+@keyframes landing-ambient {
+  0% {
+    opacity: 0.55;
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    opacity: 0.85;
+    transform: scale(1.08) translate(-1%, 1%);
+  }
+}
+
+@keyframes landing-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.landing-hero-shell {
+  position: relative;
+}
+
+.landing-hero-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 90% 55% at 50% -10%,
+      rgba(168, 197, 180, 0.22),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 70% 45% at 95% 85%,
+      rgba(201, 184, 232, 0.14),
+      transparent 55%
+    );
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-hero-shell::before {
+    animation: landing-ambient 22s ease-in-out infinite alternate;
+  }
+
+  .landing-orb {
+    will-change: transform;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .landing-orb--a {
+    animation-name: landing-float-a;
+    animation-duration: 19s;
+  }
+
+  .landing-orb--b {
+    animation-name: landing-float-b;
+    animation-duration: 24s;
+    animation-delay: -6s;
+  }
+
+  .landing-orb--c {
+    animation-name: landing-float-c;
+    animation-duration: 21s;
+    animation-delay: -11s;
+  }
+
+  .landing-hero-title {
+    opacity: 0;
+    animation: landing-fade-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
+  }
+
+  .landing-hero-sub {
+    opacity: 0;
+    animation: landing-fade-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+  }
+
+  .landing-hero-body {
+    opacity: 0;
+    animation: landing-fade-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.38s forwards;
+  }
+
+  .landing-hero-cta {
+    opacity: 0;
+    animation: landing-fade-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.52s forwards;
+  }
+
+  .landing-logo-word {
+    background: linear-gradient(
+      120deg,
+      #1f1c1a 0%,
+      #2c2825 35%,
+      #3d3835 50%,
+      #2c2825 65%,
+      #1f1c1a 100%
+    );
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: landing-shine 12s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero-title,
+  .landing-hero-sub,
+  .landing-hero-body,
+  .landing-hero-cta {
+    opacity: 1;
+    transform: none;
+  }
+
+  .landing-logo-word {
+    color: #2c2825;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
+
+.landing-cta-glow {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .landing-cta-glow:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow:
+      0 12px 32px -10px rgba(95, 127, 106, 0.65),
+      0 0 0 1px rgba(95, 127, 106, 0.12);
+  }
+
+  .landing-cta-glow:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+/* ─── Onboarding / questionnaire — entrance + per-step (same motion as landing) ─── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .onboard-enter-orbs {
+    opacity: 0;
+    animation: landing-fade-rise 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0s forwards;
+  }
+
+  .onboard-enter-hdr {
+    opacity: 0;
+    animation: landing-fade-rise 0.68s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards;
+  }
+
+  .onboard-enter-aside {
+    opacity: 0;
+    animation: landing-fade-rise 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.12s forwards;
+  }
+
+  .onboard-enter-main {
+    opacity: 0;
+    animation: landing-fade-rise 0.78s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
+  }
+
+  .onboard-enter-bar {
+    opacity: 0;
+    animation: landing-fade-rise 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  }
+
+  /* Re-runs each time `step` changes (keyed wrapper remounts) — mirrors landing stagger */
+  .onboard-step-in-1 {
+    opacity: 0;
+    animation: landing-fade-rise 0.76s cubic-bezier(0.22, 1, 0.36, 1) 0.04s forwards;
+  }
+
+  .onboard-step-in-2 {
+    opacity: 0;
+    animation: landing-fade-rise 0.74s cubic-bezier(0.22, 1, 0.36, 1) 0.14s forwards;
+  }
+
+  .onboard-step-in-3 {
+    opacity: 0;
+    animation: landing-fade-rise 0.78s cubic-bezier(0.22, 1, 0.36, 1) 0.24s forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboard-enter-orbs,
+  .onboard-enter-hdr,
+  .onboard-enter-aside,
+  .onboard-enter-main,
+  .onboard-enter-bar {
+    opacity: 1;
+    animation: none;
+  }
+
+  .onboard-step-in-1,
+  .onboard-step-in-2,
+  .onboard-step-in-3 {
+    opacity: 1;
+    animation: none;
+  }
+}
