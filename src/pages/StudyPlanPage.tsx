@@ -170,6 +170,13 @@ export function StudyPlanPage() {
           </button>
           <button
             type="button"
+            onClick={() => navigate('/calendar')}
+            className="w-full rounded-full border border-[#d4c9be] bg-white px-6 py-3 text-sm font-semibold text-[#4a423c] shadow-sm transition hover:bg-[#faf9f7] sm:min-w-[10rem] sm:flex-1"
+          >
+            Calendar
+          </button>
+          <button
+            type="button"
             onClick={() => navigate('/')}
             className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] sm:min-w-[10rem] sm:flex-1"
           >

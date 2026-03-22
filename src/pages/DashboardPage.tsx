@@ -269,6 +269,13 @@ export function DashboardPage() {
             <span className="text-[#2c2825]">Dashboard</span>
             <button
               type="button"
+              onClick={() => navigate('/calendar')}
+              className="hover:text-[#2c2825]"
+            >
+              Calendar
+            </button>
+            <button
+              type="button"
               onClick={() => navigate('/study-plan')}
               className="hover:text-[#2c2825]"
             >

@@ -18,6 +18,15 @@ export type StudyCalendarEvent = {
   title: string
 }
 
+/** Checkable daily tasks on the study calendar (max ~6 per day in UI). */
+export type StudyDayTodo = {
+  id: string
+  /** Local calendar date yyyy-mm-dd */
+  date: string
+  title: string
+  completed: boolean
+}
+
 export type DiagnosticSectionKey =
   | 'chemPhys'
   | 'cars'
@@ -68,6 +77,8 @@ export interface UserProfile {
   studyDays: number[]
   /** iOS-style calendar to-dos marking days you can study */
   studyCalendarEvents: StudyCalendarEvent[]
+  /** Dashboard calendar — daily MCAT tasks with checkboxes */
+  studyDayTodos: StudyDayTodo[]
   resources: string[]
   /** When "Other" is in resources, user-specified source name */
   resourceOtherDetail: string
@@ -89,6 +100,7 @@ export const defaultProfile: UserProfile = {
   examDate: '',
   studyDays: [1, 2, 3, 4, 5],
   studyCalendarEvents: [],
+  studyDayTodos: [],
   resources: [],
   resourceOtherDetail: '',
   ankiDecks: [],

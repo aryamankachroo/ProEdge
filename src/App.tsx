@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProfileProvider } from './context/ProfileProvider'
+import { CalendarPage } from './pages/CalendarPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DiagnosticExamPage } from './pages/DiagnosticExamPage'
 import { DiagnosticPage } from './pages/DiagnosticPage'
@@ -17,6 +18,7 @@ function AppRoutes() {
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/post-questionnaire" element={<PostQuestionnairePage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/study-plan" element={<StudyPlanPage />} />
       <Route path="/diagnostics/test" element={<DiagnosticTestPage />} />
       <Route path="/diagnostics" element={<DiagnosticsPage />} />
