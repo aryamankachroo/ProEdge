@@ -80,6 +80,20 @@ export const DIAGNOSTIC_WEAK_HINTS: Record<DiagnosticSectionKey, string> = {
   psychSoc: 'Research methods, theories, data interpretation',
 }
 
+/** One row from the last completed mini diagnostic (order matches the quiz). */
+export type DiagnosticQuestionResult = {
+  /** 1-based position in the quiz */
+  index: number
+  sectionShort: string
+  sectionTitle: string
+  prompt: string
+  choices: [string, string, string, string]
+  selectedIndex: number
+  correctIndex: number
+  isCorrect: boolean
+  explanation: string
+}
+
 export interface DiagnosticSummary {
   completedAt: string
   overallCorrect: number
@@ -88,6 +102,8 @@ export interface DiagnosticSummary {
     DiagnosticSectionKey,
     { correct: number; total: number }
   >
+  /** Present when the quiz was completed with a build that stores item-level data */
+  questionResults?: DiagnosticQuestionResult[]
 }
 
 export interface UserProfile {

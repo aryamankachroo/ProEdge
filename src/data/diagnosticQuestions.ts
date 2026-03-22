@@ -9,6 +9,8 @@ export type DiagnosticQuestion = {
   choices: [string, string, string, string]
   /** Correct option index 0–3 (for future scoring) */
   correctIndex: number
+  /** Why the keyed answer is correct */
+  explanation: string
 }
 
 export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
@@ -28,6 +30,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'Work depends only on the change in internal energy.',
     ],
     correctIndex: 1,
+    explanation:
+      'Isothermal means ΔU = 0 for an ideal gas, not that no work occurs. During expansion the gas can still do work on the surroundings; “work is zero because temperature is constant” confuses energy change with mechanical work.',
   },
   {
     id: 2,
@@ -45,6 +49,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'It shifts the reaction quotient Q toward products only.',
     ],
     correctIndex: 1,
+    explanation:
+      'Catalysts provide an alternate pathway with a lower activation energy; they do not change ΔG° or the equilibrium constant, and they do not change the average kinetic energy of molecules at a given temperature.',
   },
   {
     id: 3,
@@ -62,6 +68,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'Color perception independent of medium',
     ],
     correctIndex: 1,
+    explanation:
+      'Frequency (and photon energy E = hf) is set by the source and is unchanged at the boundary; in a medium, v = c/n, so the speed of light in the medium changes.',
   },
   {
     id: 4,
@@ -79,6 +87,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'replace qualitative criticism with popularity metrics only.',
     ],
     correctIndex: 1,
+    explanation:
+      'Linking funding to measurable civic outcomes shows the author cares about demonstrating results and accountability for public spending, not eliminating private support or replacing all qualitative judgment.',
   },
   {
     id: 5,
@@ -96,6 +106,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'confusing correlation with causation.',
     ],
     correctIndex: 1,
+    explanation:
+      'Treating a counterexample as a special case narrows or refines the main claim rather than overturning it—this is qualifying the general statement.',
   },
   {
     id: 6,
@@ -113,6 +125,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'Nucleolus',
     ],
     correctIndex: 1,
+    explanation:
+      'The electron transport chain pumps protons and couples electron flow to ATP synthase; in eukaryotes it sits in the inner mitochondrial membrane.',
   },
   {
     id: 7,
@@ -130,6 +144,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'Ligases',
     ],
     correctIndex: 1,
+    explanation:
+      'Peptide-bond hydrolysis is cleaving the amide linkage between amino acids; proteases (peptidases) specialize in that reaction.',
   },
   {
     id: 8,
@@ -147,6 +163,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'RNA primers instead of DNA on both sides.',
     ],
     correctIndex: 1,
+    explanation:
+      'Semiconservative replication means each daughter double helix contains one original parental strand and one newly synthesized complementary strand.',
   },
   {
     id: 9,
@@ -165,6 +183,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'a punishment schedule that reduces behavior.',
     ],
     correctIndex: 1,
+    explanation:
+      'After repeated pairing, a conditioned stimulus is a cue that was initially neutral but now predicts the unconditioned stimulus (e.g., the US that originally drove the reflex).',
   },
   {
     id: 10,
@@ -183,6 +203,8 @@ export const DIAGNOSTIC_QUESTIONS: DiagnosticQuestion[] = [
       'Cognitive dissonance',
     ],
     correctIndex: 1,
+    explanation:
+      'Social loafing is reduced individual effort when people work in a group and responsibility feels diffuse; groupthink is premature consensus, not simply lower effort.',
   },
 ]
 

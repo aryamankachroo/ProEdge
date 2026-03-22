@@ -1,5 +1,9 @@
 import type { DiagnosticSessionQuestion } from './diagnosticSession'
-import type { DiagnosticSectionKey, DiagnosticSummary } from '../types/profile'
+import type {
+  DiagnosticQuestionResult,
+  DiagnosticSectionKey,
+  DiagnosticSummary,
+} from '../types/profile'
 
 const SECTION_BY_NUMBER: Record<1 | 2 | 3 | 4, DiagnosticSectionKey> = {
   1: 'chemPhys',
@@ -28,15 +32,29 @@ export function buildDiagnosticSummary(
   const sections = emptySections()
   let overallCorrect = 0
   const overallTotal = questions.length
+  const questionResults: DiagnosticQuestionResult[] = []
 
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i]
     const key = SECTION_BY_NUMBER[q.sectionNumber]
     sections[key].total++
-    if (answers[i] === q.correctIndex) {
+    const selectedIndex = answers[i]!
+    const isCorrect = selectedIndex === q.correctIndex
+    if (isCorrect) {
       sections[key].correct++
       overallCorrect++
     }
+    questionResults.push({
+      index: i + 1,
+      sectionShort: q.sectionShort,
+      sectionTitle: q.sectionTitle,
+      prompt: q.prompt,
+      choices: q.choices,
+      selectedIndex,
+      correctIndex: q.correctIndex,
+      isCorrect,
+      explanation: q.explanation,
+    })
   }
 
   return {
@@ -44,5 +62,6 @@ export function buildDiagnosticSummary(
     overallCorrect,
     overallTotal,
     sections,
+    questionResults,
   }
 }

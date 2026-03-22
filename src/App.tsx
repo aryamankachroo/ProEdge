@@ -3,9 +3,11 @@ import { ProfileProvider } from './context/ProfileProvider'
 import { AiAnalyticsPage } from './pages/AiAnalyticsPage'
 import { AiJournalPage } from './pages/AiJournalPage'
 import { CalendarPage } from './pages/CalendarPage'
+import { CarsPracticePage } from './pages/CarsPracticePage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DiagnosticExamPage } from './pages/DiagnosticExamPage'
 import { DiagnosticPage } from './pages/DiagnosticPage'
+import { DiagnosticResultsPage } from './pages/DiagnosticResultsPage'
 import { DiagnosticTestPage } from './pages/DiagnosticTestPage'
 import { DiagnosticsPage } from './pages/DiagnosticsPage'
 import { LandingPage } from './pages/LandingPage'
@@ -21,11 +23,13 @@ function AppRoutes() {
       <Route path="/onboarding" element={<OnboardingPage />} />
       <Route path="/post-questionnaire" element={<PostQuestionnairePage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/practice/cars" element={<CarsPracticePage />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/analytics" element={<AiAnalyticsPage />} />
       <Route path="/journal" element={<AiJournalPage />} />
       <Route path="/study-plan" element={<StudyPlanPage />} />
       <Route path="/diagnostics/test" element={<DiagnosticTestPage />} />
+      <Route path="/diagnostics/results" element={<DiagnosticResultsPage />} />
       <Route path="/diagnostics" element={<DiagnosticsPage />} />
       <Route path="/diagnostic/exam" element={<DiagnosticExamPage />} />
       <Route path="/diagnostic" element={<DiagnosticPage />} />

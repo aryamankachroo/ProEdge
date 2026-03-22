@@ -34,6 +34,7 @@ export type DiagnosticSessionQuestion = {
   prompt: string
   choices: [string, string, string, string]
   correctIndex: number
+  explanation: string
 }
 
 /** New shuffled question order and per-question choice shuffle for each visit to the mini diagnostic. */
@@ -51,6 +52,7 @@ export function createDiagnosticSession(): DiagnosticSessionQuestion[] {
       prompt: base.prompt,
       choices,
       correctIndex,
+      explanation: base.explanation,
     }
   })
 }

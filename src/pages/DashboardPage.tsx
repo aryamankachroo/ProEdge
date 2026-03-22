@@ -503,7 +503,7 @@ export function DashboardPage() {
                 Recommended next step
               </h2>
               <p className="mt-1 text-xs text-[#7a6e66]">
-                Short quiz-style review for your lowest section.
+                Five passage-based questions — explanations after you finish.
               </p>
               <div className="mt-8 flex flex-col items-center text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#cfe5d6] text-3xl text-[#2d5a40]">
@@ -512,27 +512,31 @@ export function DashboardPage() {
                 <p className="mt-5 text-sm leading-relaxed text-[#3d3835]">
                   {diagnosticSummary ? (
                     <>
-                      Focus on{' '}
-                      <span className="font-semibold">
-                        {DIAGNOSTIC_SECTION_LABELS[worst]}
-                      </span>{' '}
-                      — your lowest section ({worstP}% on the preview).
+                      Quick <span className="font-semibold">CARS</span> drill:
+                      reading, inference, and author reasoning — separate from
+                      your full diagnostic
+                      {worst === 'cars' ?
+                        ' (your preview flagged CARS for extra work).'
+                      : '.'}
                     </>
                   ) : (
-                    'Take the diagnostic so we can recommend a section to drill first.'
+                    <>
+                      Start with{' '}
+                      <span className="font-semibold">CARS</span> — five
+                      timed-style passages. Take the mini diagnostic anytime from
+                      the header for a full-section snapshot.
+                    </>
                   )}
                 </p>
               </div>
             </div>
             <button
               type="button"
-              onClick={() => navigate('/diagnostics/test')}
+              onClick={() => navigate('/practice/cars')}
               className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[#3b82f6] py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#2563eb]"
             >
               <span aria-hidden>▶</span>
-              {diagnosticSummary
-                ? `Practice ${DIAGNOSTIC_SECTION_SHORT[worst]}`
-                : 'Take mini diagnostic'}
+              Practice CARS (5 questions)
               <span aria-hidden>→</span>
             </button>
           </div>
@@ -756,7 +760,7 @@ export function DashboardPage() {
               </div>
               <button
                 type="button"
-                onClick={() => navigate('/diagnostics/test')}
+                onClick={() => navigate('/diagnostics/results')}
                 className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline"
               >
                 View results ↗
