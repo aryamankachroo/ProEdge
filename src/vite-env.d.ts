@@ -9,6 +9,11 @@ interface ImportMetaEnv {
    * If unset, the app uses local profile state and does not call `/api/*` (no proxy errors).
    */
   readonly VITE_USE_BACKEND_API?: string
+  /**
+   * Production backend base URL (e.g. https://proedge-backend.vercel.app).
+   * Leave unset in development — Vite proxy handles `/api` automatically.
+   */
+  readonly VITE_API_BASE_URL?: string
 }
 
 interface ImportMeta {

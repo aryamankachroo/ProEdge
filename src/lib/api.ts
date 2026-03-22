@@ -22,12 +22,15 @@ class BackendDisabledError extends Error {
 
 // ─── Internal helpers ──────────────────────────────────────────────────────────
 
+/** In dev: empty string (Vite proxy handles /api). In production: full backend URL e.g. https://proedge-backend.vercel.app */
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '')
+
 async function req<T>(path: string, options?: RequestInit): Promise<T> {
   if (!isBackendApiEnabled()) {
     throw new BackendDisabledError()
   }
 
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}/api${path}`, {
     headers: {
       'Content-Type': 'application/json',
       ...(options?.headers ?? {}),
