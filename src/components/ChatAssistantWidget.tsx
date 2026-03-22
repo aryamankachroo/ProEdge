@@ -4,7 +4,13 @@ import {
   useState,
   type KeyboardEvent,
 } from 'react'
-import { requestChatReply, type ChatTurn } from '../lib/chatAssistant'
+import ReactMarkdown from 'react-markdown'
+import {
+  isGeminiChatAvailable,
+  isRemoteChatApiConfigured,
+  requestChatReply,
+  type ChatTurn,
+} from '../lib/chatAssistant'
 import { useProfile } from '../context/useProfile'
 
 type Row = ChatTurn & { id: string }
@@ -13,20 +19,76 @@ function newId() {
   return globalThis.crypto?.randomUUID?.() ?? `m-${Date.now()}`
 }
 
+/** Gemini sometimes returns `\**bold**` — strip stray backslashes before markdown punctuation. */
+function normalizeAssistantMarkdown(raw: string): string {
+  return raw.replace(/\\([*#`])/g, '$1')
+}
+
+function ChatBubbleContent({
+  role,
+  content,
+}: {
+  role: 'user' | 'assistant'
+  content: string
+}) {
+  if (role === 'user') {
+    return <p className="whitespace-pre-wrap break-words">{content}</p>
+  }
+  return (
+    <div className="max-w-full text-sm leading-snug text-[#3d3835] [&_a]:text-[#2563eb] [&_a]:underline">
+      <ReactMarkdown
+        components={{
+          p: ({ children }) => (
+            <p className="mb-2 last:mb-0 whitespace-pre-wrap">{children}</p>
+          ),
+          ul: ({ children }) => (
+            <ul className="mb-2 list-disc space-y-1 pl-4 last:mb-0">{children}</ul>
+          ),
+          ol: ({ children }) => (
+            <ol className="mb-2 list-decimal space-y-1 pl-4 last:mb-0">{children}</ol>
+          ),
+          li: ({ children }) => <li className="leading-snug">{children}</li>,
+          strong: ({ children }) => (
+            <strong className="font-semibold text-[#2c2825]">{children}</strong>
+          ),
+          em: ({ children }) => <em className="italic">{children}</em>,
+          h1: ({ children }) => (
+            <p className="mb-2 font-semibold text-[#2c2825]">{children}</p>
+          ),
+          h2: ({ children }) => (
+            <p className="mb-2 font-semibold text-[#2c2825]">{children}</p>
+          ),
+          h3: ({ children }) => (
+            <p className="mb-1.5 font-semibold">{children}</p>
+          ),
+          code: ({ children }) => (
+            <code className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825]">
+              {children}
+            </code>
+          ),
+        }}
+      >
+        {normalizeAssistantMarkdown(content)}
+      </ReactMarkdown>
+    </div>
+  )
+}
+
 export function ChatAssistantWidget() {
   const { profile } = useProfile()
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const geminiLive = isGeminiChatAvailable() || isRemoteChatApiConfigured()
   const [rows, setRows] = useState<Row[]>(() => [
     {
       id: newId(),
       role: 'assistant',
       content:
         profile.name.trim()
-          ? `Hi ${profile.name.trim().split(/\s+/)[0]} — I’m your study assistant. Ask about pacing, review, or MCAT sections. (Preview until Gemini is wired on your server.)`
-          : 'Hi — I’m your study assistant. Ask about pacing, review, or MCAT sections. (Preview until Gemini is wired on your server.)',
+          ? `Hi ${profile.name.trim().split(/\s+/)[0]} — I’m your study assistant. Ask about pacing, review, or MCAT sections.${geminiLive ? '' : ' (Add VITE_GEMINI_API_KEY in .env.local to chat with Gemini.)'}`
+          : `Hi — I’m your study assistant. Ask about pacing, review, or MCAT sections.${geminiLive ? '' : ' (Add VITE_GEMINI_API_KEY in .env.local to chat with Gemini.)'}`,
     },
   ])
 
@@ -71,7 +133,7 @@ export function ChatAssistantWidget() {
           id: newId(),
           role: 'assistant',
           content:
-            'Could not reach the chat API. Check VITE_CHAT_API_URL and your server.',
+            'Could not get a reply. Check VITE_GEMINI_API_KEY in .env.local, your network, or VITE_CHAT_API_URL if you use a custom server.',
         },
       ])
     } finally {
@@ -99,7 +161,7 @@ export function ChatAssistantWidget() {
               <div>
                 <p className="text-sm font-bold text-[#2c2825]">Study assistant</p>
                 <p className="text-[10px] text-[#7a6e66]">
-                  Gemini Flash via your API later
+                  {geminiLive ? 'Gemini Flash' : 'Preview — add VITE_GEMINI_API_KEY'}
                 </p>
               </div>
               <button
@@ -129,7 +191,7 @@ export function ChatAssistantWidget() {
                         : 'border border-[#ebe5dc] bg-white text-[#3d3835]'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words">{row.content}</p>
+                    <ChatBubbleContent role={row.role} content={row.content} />
                   </div>
                 </div>
               ))}
@@ -163,8 +225,19 @@ export function ChatAssistantWidget() {
                 Send
               </button>
               <p className="mt-2 px-1 text-[10px] leading-relaxed text-[#9a8b7e]">
-                Set <code className="rounded bg-[#f5f0eb] px-0.5">VITE_CHAT_API_URL</code>{' '}
-                and implement POST /chat → Gemini Flash on the server.
+                {geminiLive ? (
+                  <>
+                    Using Gemini. Optional: set{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5">VITE_CHAT_API_URL</code> for a
+                    server-side POST /chat instead.
+                  </>
+                ) : (
+                  <>
+                    Add <code className="rounded bg-[#f5f0eb] px-0.5">VITE_GEMINI_API_KEY</code> to{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5">.env.local</code> and restart{' '}
+                    <code className="rounded bg-[#f5f0eb] px-0.5">npm run dev</code>.
+                  </>
+                )}
               </p>
             </div>
           </div>
