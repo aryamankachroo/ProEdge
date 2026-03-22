@@ -297,9 +297,6 @@ export function CalendarPage() {
             >
               Retake diagnostic
             </button>
-            <Link to="/" className="hover:text-[#2c2825]">
-              Home
-            </Link>
           </nav>
         </div>
       </header>
