@@ -185,8 +185,9 @@ export interface SectionBreakdown {
 
 // ─── Profile endpoints ─────────────────────────────────────────────────────────
 
-/** Save (upsert) the user's profile to Snowflake. Fire-and-forget safe. */
+/** Save (upsert) the user's profile to Snowflake. No-op when API is disabled. */
 export async function saveProfile(profile: UserProfile): Promise<void> {
+  if (!isBackendApiEnabled()) return
   await req<{ message: string }>('/profile', {
     method: 'POST',
     body: JSON.stringify(toBackendProfile(profile)),
@@ -220,6 +221,7 @@ export async function generatePlan(): Promise<GeneratedPlan> {
 
 /** Fetch the user's current active study plan. Returns null if none exists. */
 export async function fetchActivePlan(): Promise<BackendStudyPlan | null> {
+  if (!isBackendApiEnabled()) return null
   try {
     return await req<BackendStudyPlan>('/plan')
   } catch (err) {
@@ -236,7 +238,8 @@ export async function fetchActivePlan(): Promise<BackendStudyPlan | null> {
 export async function saveDiagnosticScores(
   summary: DiagnosticSummary,
   baselineScore?: number,
-): Promise<DiagnosticScoreEntry> {
+): Promise<DiagnosticScoreEntry | null> {
+  if (!isBackendApiEnabled()) return null
   const { sections } = summary
   const totalCorrect = summary.overallCorrect
   const totalPossible = summary.overallTotal
@@ -293,7 +296,11 @@ export async function uploadDiagnosticPdf(file: File): Promise<DiagnosticScoreEn
 }
 
 /** Save a manual total score entry. */
-export async function saveManualScore(totalScore: number, testDate?: string): Promise<DiagnosticScoreEntry> {
+export async function saveManualScore(
+  totalScore: number,
+  testDate?: string,
+): Promise<DiagnosticScoreEntry | null> {
+  if (!isBackendApiEnabled()) return null
   const data = await req<{ scores: DiagnosticScoreEntry }>('/diagnostics/scores', {
     method: 'POST',
     body: JSON.stringify({
@@ -307,6 +314,7 @@ export async function saveManualScore(totalScore: number, testDate?: string): Pr
 
 /** Fetch diagnostic score history. */
 export async function fetchDiagnosticScores(limit = 20): Promise<DiagnosticScoreEntry[]> {
+  if (!isBackendApiEnabled()) return []
   const data = await req<{ scores: DiagnosticScoreEntry[] }>(`/diagnostics/scores?limit=${limit}`)
   return data.scores
 }
