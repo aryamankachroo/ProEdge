@@ -58,7 +58,9 @@ export function StudyPlanPage() {
 
   const daysLeft = daysUntilExam(examDate)
   const weeksLeft =
-    daysLeft !== null && daysLeft > 0 ? Math.max(1, Math.round(daysLeft / 7)) : null
+    daysLeft !== null && daysLeft > 0
+      ? Math.max(1, Math.round(daysLeft / 7))
+      : null
 
   const studyDaysPerWeek = studyDays.length
   const weeklyHours = hoursPerDay * studyDaysPerWeek
@@ -103,10 +105,7 @@ export function StudyPlanPage() {
             <div className="mt-1">
               <Row label="Target score" value={String(targetScore)} />
               <Row label="Baseline / last FL" value={String(baselineScore)} />
-              <Row
-                label="Exam date"
-                value={examDate || '—'}
-              />
+              <Row label="Exam date" value={examDate || '—'} />
               <Row
                 label="Days until exam"
                 value={daysLeft !== null ? String(daysLeft) : '—'}
