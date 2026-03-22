@@ -374,6 +374,13 @@ export function StudyPlanPage() {
           </button>
           <button
             type="button"
+            onClick={() => navigate('/journal')}
+            className="w-full rounded-full border border-[#cfe5d6] bg-[#f4faf6] px-6 py-3 text-sm font-semibold text-[#1a3d2e] shadow-sm transition hover:bg-[#e8f2ec] sm:min-w-[10rem] sm:flex-1"
+          >
+            AI journal
+          </button>
+          <button
+            type="button"
             onClick={() => navigate('/')}
             className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-6 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] sm:min-w-[10rem] sm:flex-1"
           >

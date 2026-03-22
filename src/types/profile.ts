@@ -1,4 +1,5 @@
 import type { AiAnalyticsSnapshot } from './analytics'
+import type { AiJournalEntry } from './journal'
 
 export type StudyStatus =
   | 'full-time-student'
@@ -92,6 +93,10 @@ export interface UserProfile {
   diagnosticSummary: DiagnosticSummary | null
   /** Last practice PDF “AI analytics” run (heuristic until backend model) */
   lastAiAnalytics: AiAnalyticsSnapshot | null
+  /** Burnout signals this student chose to track (ids from BURNOUT_SIGNALS) */
+  trackedBurnoutSignalIds: string[]
+  /** AI journal entries — local only; used for pattern notes, not a score */
+  aiJournalEntries: AiJournalEntry[]
 }
 
 export const defaultProfile: UserProfile = {
@@ -112,6 +117,8 @@ export const defaultProfile: UserProfile = {
   diagnosticReportPdfName: '',
   diagnosticSummary: null,
   lastAiAnalytics: null,
+  trackedBurnoutSignalIds: [],
+  aiJournalEntries: [],
 }
 
 export function studyDaysFromCalendarEvents(

@@ -209,9 +209,13 @@ export function CalendarPage() {
     <div className="onboarding-shell min-h-dvh pb-16">
       <header className="sticky top-0 z-10 border-b border-[#e8dfd4]/80 bg-[#faf7f3]/90 px-4 py-3 backdrop-blur-md sm:px-8">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <span className="text-lg font-bold tracking-tight text-[#1a1816]">
+          <Link
+            to="/"
+            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#faf7f3] rounded-sm"
+            aria-label="ProEdge home"
+          >
             ProEdge
-          </span>
+          </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
             <button
               type="button"
@@ -227,6 +231,13 @@ export function CalendarPage() {
               className="hover:text-[#2c2825]"
             >
               AI analytics
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/journal')}
+              className="hover:text-[#2c2825]"
+            >
+              AI journal
             </button>
             <button
               type="button"

@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ProfileProvider } from './context/ProfileProvider'
 import { AiAnalyticsPage } from './pages/AiAnalyticsPage'
+import { AiJournalPage } from './pages/AiJournalPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { DiagnosticExamPage } from './pages/DiagnosticExamPage'
@@ -22,6 +23,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/calendar" element={<CalendarPage />} />
       <Route path="/analytics" element={<AiAnalyticsPage />} />
+      <Route path="/journal" element={<AiJournalPage />} />
       <Route path="/study-plan" element={<StudyPlanPage />} />
       <Route path="/diagnostics/test" element={<DiagnosticTestPage />} />
       <Route path="/diagnostics" element={<DiagnosticsPage />} />

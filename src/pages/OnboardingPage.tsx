@@ -5,7 +5,7 @@ import {
   type ChangeEvent,
   type ReactNode,
 } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { OnboardingMonthCalendar } from '../components/OnboardingMonthCalendar'
 import { OnboardingSideStepper } from '../components/OnboardingSideStepper'
 import { useProfile } from '../context/useProfile'
@@ -352,9 +352,13 @@ export function OnboardingPage() {
 
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-5 pb-36 pt-5 md:px-8 md:pb-16 md:pt-8 lg:px-10">
         <header className="mb-6 flex justify-center lg:mb-8">
-          <span className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c]">
+          <Link
+            to="/"
+            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
+            aria-label="ProEdge home"
+          >
             ProEdge
-          </span>
+          </Link>
         </header>
 
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">

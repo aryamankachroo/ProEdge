@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   DIAGNOSTIC_SECTIONS,
   totalDiagnosticQuestions,
@@ -160,9 +160,13 @@ export function DiagnosticExamPage() {
 
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-3xl flex-col px-5 pb-28 pt-6 md:px-8 md:pb-16 md:pt-8">
         <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <span className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c]">
+          <Link
+            to="/"
+            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
+            aria-label="ProEdge home"
+          >
             ProEdge
-          </span>
+          </Link>
           <span className="text-sm font-medium tabular-nums text-[#6b5f56]">
             Question {overallIndex} of {totalQ}
           </span>

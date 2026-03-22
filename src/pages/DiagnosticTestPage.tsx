@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import { buildDiagnosticSummary } from '../lib/diagnosticSummary'
 import {
@@ -57,9 +57,13 @@ export function DiagnosticTestPage() {
     <div className="min-h-dvh bg-[#fdf9f3] font-[Nunito,'DM_Sans',system-ui,sans-serif] text-[#2c2825]">
       <header className="border-b border-[#e8dfd4]/90 bg-[#fdf9f3]/95 px-4 py-4 backdrop-blur-sm sm:px-8">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
-          <span className="text-lg font-bold tracking-tight text-[#1a1816]">
+          <Link
+            to="/"
+            className="text-lg font-bold tracking-tight text-[#1a1816] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#fdf9f3] rounded-sm"
+            aria-label="ProEdge home"
+          >
             ProEdge
-          </span>
+          </Link>
           <span className="text-sm font-medium text-[#7a6e66]">
             Question {index + 1} of {DIAGNOSTIC_TOTAL}
           </span>

@@ -98,6 +98,12 @@
   -webkit-text-fill-color: currentColor;
 }
 
+/* Shell rule above forces dark text on all buttons; these need light labels */
+.onboarding-shell button.journal-btn-on-dark {
+  color: #ffffff !important;
+  -webkit-text-fill-color: currentColor;
+}
+
 .onboarding-shell button.onboarding-segment-muted {
   color: #6b5e54 !important;
 }

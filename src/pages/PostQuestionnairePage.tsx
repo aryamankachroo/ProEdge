@@ -5,7 +5,7 @@ import {
   type DragEvent,
   type ReactNode,
 } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 import { extractMcatTotalFromPdfFile } from '../utils/mcatPdfScore'
 import { saveManualScore, uploadDiagnosticPdf } from '../lib/api'
@@ -153,9 +153,13 @@ export function PostQuestionnairePage() {
 
       <div className="relative z-10 mx-auto flex min-h-dvh max-w-2xl flex-col px-5 pb-28 pt-8 md:px-8 md:pb-16 md:pt-10">
         <header className="mb-2">
-          <span className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c]">
+          <Link
+            to="/"
+            className="onboarding-serif inline-block text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
+            aria-label="ProEdge home"
+          >
             ProEdge
-          </span>
+          </Link>
         </header>
 
         <h1 className="onboarding-serif mb-3 text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl">
