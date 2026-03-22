@@ -1,4 +1,5 @@
 import type { AiAnalyticsSnapshot } from './analytics'
+import type { ImportedDiagnosticReport } from './diagnosticImport'
 import type { AiJournalEntry } from './journal'
 
 export type StudyStatus =
@@ -110,6 +111,8 @@ export interface UserProfile {
   weakSections: string[]
   /** Set when user imports a diagnostic report PDF from onboarding */
   diagnosticReportPdfName: string
+  /** Full-report analysis from imported PDF (Gemini), if generated */
+  importedDiagnosticReport: ImportedDiagnosticReport | null
   /** Latest mini-diagnostic results (10 Q), if completed */
   diagnosticSummary: DiagnosticSummary | null
   /** Last practice PDF “AI analytics” run (heuristic until backend model) */
@@ -136,6 +139,7 @@ export const defaultProfile: UserProfile = {
   ankiDecks: [],
   weakSections: [],
   diagnosticReportPdfName: '',
+  importedDiagnosticReport: null,
   diagnosticSummary: null,
   lastAiAnalytics: null,
   trackedBurnoutSignalIds: [],

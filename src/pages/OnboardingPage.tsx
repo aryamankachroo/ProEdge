@@ -16,6 +16,8 @@ import {
   type UserProfile,
 } from '../types/profile'
 import { saveProfile } from '../lib/api'
+import { analyzeDiagnosticPdfText } from '../lib/geminiDiagnosticReport'
+import { extractPdfPlainText } from '../utils/mcatPdfScore'
 
 const STUDY_STATUSES: StudyStatus[] = [
   'full-time-student',
@@ -146,6 +148,7 @@ function DiagnosticsChoiceModal({
   onChooseImport,
   onChooseSkipStudyPlan,
   importFileError,
+  importLoading,
 }: {
   open: boolean
   onClose: () => void
@@ -153,6 +156,7 @@ function DiagnosticsChoiceModal({
   onChooseImport: () => void
   onChooseSkipStudyPlan: () => void
   importFileError: string
+  importLoading: boolean
 }) {
   useEffect(() => {
     if (!open) return
@@ -193,32 +197,48 @@ function DiagnosticsChoiceModal({
           Ten-question preview (four sections), import a score, or go straight to
           your plan from the questionnaire.
         </p>
-        <div className="mt-6 flex flex-col gap-3">
+        <div className="relative mt-6 flex flex-col gap-3">
+          {importLoading ? (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#faf7f3]/95 px-4 py-8 text-center backdrop-blur-sm">
+              <span
+                className="h-10 w-10 animate-spin rounded-full border-2 border-[#5f7f6a] border-t-transparent"
+                aria-hidden
+              />
+              <p className="text-sm font-semibold text-[#2c2825]">
+                Reading your PDF and analyzing with Gemini…
+              </p>
+              <p className="text-xs text-[#7a6e66]">Usually under a minute.</p>
+            </div>
+          ) : null}
           <button
             type="button"
+            disabled={importLoading}
             onClick={onChooseTake}
-            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-5 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a]"
+            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-5 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] disabled:opacity-40"
           >
             Take a diagnostics test
           </button>
           <button
             type="button"
+            disabled={importLoading}
             onClick={onChooseImport}
-            className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white"
+            className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white disabled:opacity-40"
           >
             Import diagnostics test score
           </button>
           <button
             type="button"
+            disabled={importLoading}
             onClick={onChooseSkipStudyPlan}
-            className="w-full rounded-full border border-[#b8d4be] bg-[#e8f2ea] px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#ddece0]"
+            className="w-full rounded-full border border-[#b8d4be] bg-[#e8f2ea] px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#ddece0] disabled:opacity-40"
           >
             Skip to study plan
           </button>
           <button
             type="button"
+            disabled={importLoading}
             onClick={onClose}
-            className="onboarding-diagnostics-modal-muted mt-1 py-2 text-center text-sm font-semibold underline-offset-4 hover:underline"
+            className="onboarding-diagnostics-modal-muted mt-1 py-2 text-center text-sm font-semibold underline-offset-4 hover:underline disabled:opacity-40"
           >
             Not now — stay on this step
           </button>
@@ -240,6 +260,7 @@ export function OnboardingPage() {
   const [local, setLocal] = useState<UserProfile>(profile)
   const [diagnosticsChoiceOpen, setDiagnosticsChoiceOpen] = useState(false)
   const [importPdfError, setImportPdfError] = useState('')
+  const [diagnosticImportLoading, setDiagnosticImportLoading] = useState(false)
   const diagnosticPdfInputRef = useRef<HTMLInputElement>(null)
 
   const update = (p: Partial<UserProfile>) =>
@@ -291,7 +312,7 @@ export function OnboardingPage() {
     el?.click()
   }
 
-  const onDiagnosticPdfSelected = (e: ChangeEvent<HTMLInputElement>) => {
+  const onDiagnosticPdfSelected = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const isPdf =
@@ -302,9 +323,29 @@ export function OnboardingPage() {
       e.target.value = ''
       return
     }
-    commitProfileAndNavigate('/diagnostics?flow=import', {
-      diagnosticReportPdfName: file.name,
-    })
+    setDiagnosticImportLoading(true)
+    setImportPdfError('')
+    try {
+      const text = await extractPdfPlainText(file)
+      const report = await analyzeDiagnosticPdfText(text, file.name)
+      const extra: Partial<UserProfile> = {
+        diagnosticReportPdfName: file.name,
+        importedDiagnosticReport: report,
+      }
+      if (report.totalScore != null) {
+        extra.baselineScore = report.totalScore
+      }
+      commitProfileAndNavigate('/diagnostics?flow=import', extra)
+    } catch (err) {
+      setImportPdfError(
+        err instanceof Error ?
+          err.message
+        : 'Could not analyze that PDF. Check your Gemini key and try again.',
+      )
+    } finally {
+      setDiagnosticImportLoading(false)
+      e.target.value = ''
+    }
   }
 
   const goBack = () => {
@@ -328,6 +369,7 @@ export function OnboardingPage() {
       <DiagnosticsChoiceModal
         open={diagnosticsChoiceOpen}
         importFileError={importPdfError}
+        importLoading={diagnosticImportLoading}
         onClose={() => {
           setImportPdfError('')
           setDiagnosticsChoiceOpen(false)
