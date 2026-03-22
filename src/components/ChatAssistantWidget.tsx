@@ -177,10 +177,12 @@ export function ChatAssistantWidget() {
             role="dialog"
             aria-label="Study assistant chat"
           >
-            <div className="flex items-center justify-between border-b border-[#ebe5dc] bg-white/90 px-3 py-2.5">
+            <div className="flex items-center justify-between border-b border-[#ebe5dc] bg-white/90 px-3 py-2.5 dark:border-[#3d3c38] dark:bg-[#1f1e1c]/95">
               <div>
-                <p className="text-sm font-bold text-[#2c2825]">Study assistant</p>
-                <p className="text-[10px] text-[#7a6e66]">
+                <p className="text-sm font-bold text-[#2c2825] dark:text-[#f5f2ed]">
+                  Study assistant
+                </p>
+                <p className="text-[10px] text-[#7a6e66] dark:text-[#b8b0a6]">
                   {geminiLive ? 'Gemini Flash' : 'Preview — add VITE_GEMINI_API_KEY'}
                 </p>
               </div>
@@ -221,7 +223,7 @@ export function ChatAssistantWidget() {
                 </p>
               ) : null}
               {error ? (
-                <p className="text-xs text-[#b91c1c]" role="alert">
+                <p className="text-xs text-[#b91c1c] dark:text-[#fca5a5]" role="alert">
                   {error}
                 </p>
               ) : null}
