@@ -10,7 +10,7 @@ function scoreColor(pct: number | null) {
 function BarStack({ pctCorrect }: { pctCorrect: number | null }) {
   if (pctCorrect === null) {
     return (
-      <div className="h-3 w-full overflow-hidden rounded-full bg-[#f0ebe4]">
+      <div className="h-3 w-full overflow-hidden rounded-full bg-[#f0ebe4] transition-colors duration-200 ease-out group-hover:bg-[#ebe6df]">
         <div className="h-full w-full bg-[#e8dfd4]" />
       </div>
     )
@@ -18,15 +18,9 @@ function BarStack({ pctCorrect }: { pctCorrect: number | null }) {
   const p = Math.min(100, Math.max(0, pctCorrect))
   const wrong = 100 - p
   return (
-    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[#fecaca]">
-      <div
-        className="h-full bg-[#5f7f6a] transition-all"
-        style={{ width: `${p}%` }}
-      />
-      <div
-        className="h-full bg-[#f87171]"
-        style={{ width: `${wrong}%` }}
-      />
+    <div className="flex h-3 w-full overflow-hidden rounded-full bg-[#fecaca] shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-[box-shadow] duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:group-hover:shadow-[0_0_0_0.5px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="h-full bg-[#5f7f6a]" style={{ width: `${p}%` }} />
+      <div className="h-full bg-[#f87171]" style={{ width: `${wrong}%` }} />
     </div>
   )
 }
@@ -109,7 +103,7 @@ export function DiagnosticImportedReportView({
                 return (
                   <li
                     key={`${s.key}-${s.label}`}
-                    className="rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3"
+                    className="group cursor-default rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:hover:-translate-y-px motion-safe:hover:border-[#e0d8ce] motion-safe:hover:bg-[#fdfcfa] motion-safe:hover:shadow-[0_0_0_0.5px_rgba(60,42,30,0.07),0_1px_2px_rgba(0,0,0,0.04),0_6px_20px_-6px_rgba(62,47,35,0.09)]"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="text-sm font-semibold text-[#2c2825]">
@@ -141,7 +135,7 @@ export function DiagnosticImportedReportView({
                           <span>118</span>
                           <span>132 scale</span>
                         </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-[#f0ebe4]">
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-[#f0ebe4] transition-colors duration-200 ease-out group-hover:bg-[#ebe8e3]">
                           <div
                             className={`h-full rounded-full ${scoreColor(pct)}`}
                             style={{
@@ -166,7 +160,10 @@ export function DiagnosticImportedReportView({
           </h3>
           <ul className="mt-4 space-y-3">
             {report.subjectBreakdown.map((row) => (
-              <li key={row.name}>
+              <li
+                key={row.name}
+                className="group cursor-default rounded-xl border border-transparent px-3 py-2.5 transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:hover:-translate-y-px motion-safe:hover:border-[#e8e4dd] motion-safe:hover:bg-white/85 motion-safe:hover:shadow-[0_0_0_0.5px_rgba(60,42,30,0.06),0_1px_2px_rgba(0,0,0,0.03),0_5px_18px_-5px_rgba(62,47,35,0.08)]"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
                   <span className="font-medium text-[#3d3835]">
                     {row.name}
