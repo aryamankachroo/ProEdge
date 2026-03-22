@@ -1,20 +1,30 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useProfile } from '../context/useProfile'
 
 export function DiagnosticsPage() {
+  const navigate = useNavigate()
   const [params] = useSearchParams()
   const flow = params.get('flow')
+
+  useEffect(() => {
+    if (flow === 'take') {
+      navigate('/diagnostics/test', { replace: true })
+    }
+  }, [flow, navigate])
   const { profile } = useProfile()
   const pdfName = profile.diagnosticReportPdfName
+
+  if (flow === 'take') {
+    return null
+  }
 
   const blurb =
     flow === 'import'
       ? pdfName
         ? `We’ll use your report: ${pdfName}`
         : 'Choose a PDF report from your computer to import your diagnostic score.'
-      : flow === 'take'
-        ? 'Take a full-length diagnostic when you’re ready — this screen is where that flow will live.'
-        : "Take a full-length diagnostic here, or import your score and report if you've already completed one elsewhere."
+      : "Take a full-length diagnostic here, or import your score and report if you've already completed one elsewhere."
 
   return (
     <div className="onboarding-shell relative min-h-dvh">

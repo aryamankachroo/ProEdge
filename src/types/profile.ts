@@ -18,6 +18,44 @@ export type StudyCalendarEvent = {
   title: string
 }
 
+export type DiagnosticSectionKey =
+  | 'chemPhys'
+  | 'cars'
+  | 'bioBiochem'
+  | 'psychSoc'
+
+export const DIAGNOSTIC_SECTION_LABELS: Record<DiagnosticSectionKey, string> = {
+  chemPhys: 'Chemistry & Physics',
+  cars: 'Critical Analysis & Reasoning (CARS)',
+  bioBiochem: 'Biology & Biochemistry',
+  psychSoc: 'Psychology & Sociology',
+}
+
+export const DIAGNOSTIC_SECTION_SHORT: Record<DiagnosticSectionKey, string> = {
+  chemPhys: 'Chem / Phys',
+  cars: 'CARS',
+  bioBiochem: 'Bio / Biochem',
+  psychSoc: 'Psych / Soc',
+}
+
+/** Optional hints when a section scores low (UI copy only). */
+export const DIAGNOSTIC_WEAK_HINTS: Record<DiagnosticSectionKey, string> = {
+  chemPhys: 'Thermodynamics, kinetics, electrochemistry',
+  cars: 'Author reasoning, inference from the passage',
+  bioBiochem: 'Metabolism, genetics, lab techniques',
+  psychSoc: 'Research methods, theories, data interpretation',
+}
+
+export interface DiagnosticSummary {
+  completedAt: string
+  overallCorrect: number
+  overallTotal: number
+  sections: Record<
+    DiagnosticSectionKey,
+    { correct: number; total: number }
+  >
+}
+
 export interface UserProfile {
   name: string
   studyStatus: StudyStatus | ''
@@ -37,6 +75,8 @@ export interface UserProfile {
   weakSections: string[]
   /** Set when user imports a diagnostic report PDF from onboarding */
   diagnosticReportPdfName: string
+  /** Latest mini-diagnostic results (10 Q), if completed */
+  diagnosticSummary: DiagnosticSummary | null
 }
 
 export const defaultProfile: UserProfile = {
@@ -54,6 +94,7 @@ export const defaultProfile: UserProfile = {
   ankiDecks: [],
   weakSections: [],
   diagnosticReportPdfName: '',
+  diagnosticSummary: null,
 }
 
 export function studyDaysFromCalendarEvents(

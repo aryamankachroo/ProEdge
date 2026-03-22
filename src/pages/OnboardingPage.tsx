@@ -143,12 +143,14 @@ function DiagnosticsChoiceModal({
   onClose,
   onChooseTake,
   onChooseImport,
+  onChooseSkipStudyPlan,
   importFileError,
 }: {
   open: boolean
   onClose: () => void
   onChooseTake: () => void
   onChooseImport: () => void
+  onChooseSkipStudyPlan: () => void
   importFileError: string
 }) {
   useEffect(() => {
@@ -187,7 +189,8 @@ function DiagnosticsChoiceModal({
           Diagnostics next
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-[#7a6e66]">
-          Choose how you want to continue — you can always switch later.
+          Ten-question preview (four sections), import a score, or go straight to
+          your plan from the questionnaire.
         </p>
         <div className="mt-6 flex flex-col gap-3">
           <button
@@ -203,6 +206,13 @@ function DiagnosticsChoiceModal({
             className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white"
           >
             Import diagnostics test score
+          </button>
+          <button
+            type="button"
+            onClick={onChooseSkipStudyPlan}
+            className="w-full rounded-full border border-[#b8d4be] bg-[#e8f2ea] px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#ddece0]"
+          >
+            Skip to study plan
           </button>
           <button
             type="button"
@@ -316,11 +326,12 @@ export function OnboardingPage() {
           setDiagnosticsChoiceOpen(false)
         }}
         onChooseTake={() =>
-          commitProfileAndNavigate('/diagnostics?flow=take', {
+          commitProfileAndNavigate('/diagnostics/test', {
             diagnosticReportPdfName: '',
           })
         }
         onChooseImport={openDiagnosticPdfPicker}
+        onChooseSkipStudyPlan={() => commitProfileAndNavigate('/study-plan')}
       />
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden"
