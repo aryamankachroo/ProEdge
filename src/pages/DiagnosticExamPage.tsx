@@ -93,27 +93,27 @@ export function DiagnosticExamPage() {
         </div>
 
         <div className="relative z-10 mx-auto flex min-h-dvh max-w-2xl flex-col px-5 py-10 md:px-8 md:py-14">
-          <h1 className="onboarding-serif mb-2 text-3xl font-semibold text-[#2c2825] dark:text-[#f5f2ed] md:text-4xl">
+          <h1 className="onboarding-serif mb-2 text-3xl font-semibold text-[#2c2825] dark:text-[#fafaf8] md:text-4xl">
             Diagnostic complete
           </h1>
-          <p className="mb-8 text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#c4bdb4]">
+          <p className="mb-8 text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#ebe7e0]">
             Full-length structure (four sections) with a couple of practice
             items per section — use this as a pulse check, not a scaled MCAT
             prediction.
           </p>
 
           <section className="mb-8 rounded-[1.75rem] border border-white/70 bg-white/65 p-8 text-center shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:shadow-[0_12px_48px_-16px_rgba(0,0,0,0.4)] md:p-10">
-            <p className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#c4bdb4]">
+            <p className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#ebe7e0]">
               Raw score
             </p>
-            <p className="onboarding-serif mt-2 text-5xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed] md:text-6xl">
+            <p className="onboarding-serif mt-2 text-5xl font-semibold tabular-nums text-[#2c2825] dark:text-[#fafaf8] md:text-6xl">
               {correct}
-              <span className="text-2xl font-medium text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-2xl font-medium text-[#9a8b7e] dark:text-[#d2cdc4]">
                 {' '}
                 / {total}
               </span>
             </p>
-            <p className="mt-2 text-sm text-[#6b5f56] dark:text-[#b8b0a6]">{pct}% correct</p>
+            <p className="mt-2 text-sm text-[#6b5f56] dark:text-[#e3dfd8]">{pct}% correct</p>
           </section>
 
           <div className="flex flex-wrap gap-4">
@@ -162,12 +162,12 @@ export function DiagnosticExamPage() {
         <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/"
-            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 dark:text-[#eae8e4] dark:focus-visible:ring-offset-[#121211] rounded-sm"
+            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 dark:text-[#f6f5f3] dark:focus-visible:ring-offset-[#121211] rounded-sm"
             aria-label="ProEdge home"
           >
             ProEdge
           </Link>
-          <span className="text-sm font-medium tabular-nums text-[#6b5f56] dark:text-[#b8b0a6]">
+          <span className="text-sm font-medium tabular-nums text-[#6b5f56] dark:text-[#e3dfd8]">
             Question {overallIndex} of {totalQ}
           </span>
         </header>
@@ -180,25 +180,25 @@ export function DiagnosticExamPage() {
           />
         </div>
 
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
           Section {sectionIdx + 1} of {DIAGNOSTIC_SECTIONS.length} ·{' '}
           {section.shortName}
         </p>
-        <h1 className="onboarding-serif mb-2 text-xl font-semibold leading-snug text-[#2c2825] dark:text-[#f5f2ed] md:text-2xl">
+        <h1 className="onboarding-serif mb-2 text-xl font-semibold leading-snug text-[#2c2825] dark:text-[#fafaf8] md:text-2xl">
           {section.fullName}
         </h1>
-        <p className="mb-8 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+        <p className="mb-8 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
           Question {qInSection + 1} of {section.questions.length} in this
           section
         </p>
 
         <section className="rounded-[1.75rem] border border-white/70 bg-white/65 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md dark:border-[#3d3c38]/90 dark:bg-[#262523] dark:shadow-[0_12px_48px_-16px_rgba(0,0,0,0.45)] md:p-8">
           {question.passage ? (
-            <div className="mb-6 rounded-2xl border border-[#ebe3d9] bg-[#faf7f3]/80 p-5 text-sm leading-relaxed text-[#4a423c] dark:border-[#454440] dark:bg-[#32312f]/90 dark:text-[#e8e6e1]">
+            <div className="mb-6 rounded-2xl border border-[#ebe3d9] bg-[#faf7f3]/80 p-5 text-sm leading-relaxed text-[#4a423c] dark:border-[#454440] dark:bg-[#32312f]/90 dark:text-[#f4f3f0]">
               {question.passage}
             </div>
           ) : null}
-          <p className="text-base font-medium leading-relaxed text-[#2c2825] dark:text-[#f0ebe4] md:text-[1.05rem]">
+          <p className="text-base font-medium leading-relaxed text-[#2c2825] dark:text-[#faf9f7] md:text-[1.05rem]">
             {question.stem}
           </p>
           <ul className="mt-6 flex flex-col gap-3">
@@ -219,7 +219,7 @@ export function DiagnosticExamPage() {
                       className={`mr-3 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 text-xs tabular-nums ${
                         on
                           ? 'border-[#5f7f6a] bg-[#5f7f6a] text-white'
-                          : 'border-[#d4c8bc] bg-white text-[#6b5f56] dark:border-[#5c5a56] dark:bg-[#454440] dark:text-[#f5f2ed]'
+                          : 'border-[#d4c8bc] bg-white text-[#6b5f56] dark:border-[#5c5a56] dark:bg-[#454440] dark:text-[#fafaf8]'
                       }`}
                     >
                       {String.fromCharCode(65 + i)}
@@ -237,7 +237,7 @@ export function DiagnosticExamPage() {
             <button
               type="button"
               onClick={goBack}
-              className="py-2.5 text-sm font-semibold text-[#6b5f56] hover:text-[#2c2825] dark:text-[#a89e94] dark:hover:text-[#f0ebe4]"
+              className="py-2.5 text-sm font-semibold text-[#6b5f56] hover:text-[#2c2825] dark:text-[#ddd8d0] dark:hover:text-[#faf9f7]"
             >
               Back
             </button>

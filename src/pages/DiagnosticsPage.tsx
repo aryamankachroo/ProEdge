@@ -88,7 +88,7 @@ export function DiagnosticsPage() {
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/"
-            className="text-sm font-semibold text-[#5f7f6a] no-underline hover:text-[#2c2825] dark:text-[#9bc4a8] dark:hover:text-[#f5f2ed]"
+            className="text-sm font-semibold text-[#5f7f6a] no-underline hover:text-[#2c2825] dark:text-[#c8edd4] dark:hover:text-[#fcfcfb]"
           >
             ← Home
           </Link>
@@ -103,10 +103,10 @@ export function DiagnosticsPage() {
 
         {!importFlow ? (
           <>
-            <h1 className="onboarding-serif text-2xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-3xl">
+            <h1 className="onboarding-serif text-2xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-3xl">
               Diagnostics
             </h1>
-            <p className="mt-3 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
+            <p className="mt-3 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0]">
               Take a full-length diagnostic here, or import your score and
               report if you&apos;ve already completed one elsewhere.
             </p>
@@ -129,12 +129,12 @@ export function DiagnosticsPage() {
           </>
         ) : (
           <>
-            <h1 className="onboarding-serif text-2xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-3xl">
+            <h1 className="onboarding-serif text-2xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-3xl">
               Imported diagnostic report
             </h1>
-            <p className="mt-3 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
+            <p className="mt-3 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0]">
               {pdfName ?
-                <>File: <strong className="text-[#3d3835] dark:text-[#eae8e4]">{pdfName}</strong></>
+                <>File: <strong className="text-[#3d3835] dark:text-[#f6f5f3]">{pdfName}</strong></>
               : 'Upload a text-based score report PDF (Blueprint, AAMC, etc.).'}
             </p>
 
@@ -148,7 +148,7 @@ export function DiagnosticsPage() {
                 {report ? 'Replace PDF & re-analyze' : 'Choose PDF to analyze'}
               </button>
               {busy ? (
-                <span className="text-sm text-[#7a6e66] dark:text-[#b8b0a6]">Analyzing with Gemini…</span>
+                <span className="text-sm text-[#7a6e66] dark:text-[#e3dfd8]">Analyzing with Gemini…</span>
               ) : null}
             </div>
 
@@ -164,18 +164,18 @@ export function DiagnosticsPage() {
               </div>
             ) : (
               <div className="mt-10 rounded-2xl border border-dashed border-[#d4c9be] bg-white/60 p-8 text-center dark:border-[#5c5a56] dark:bg-[#262523]/70">
-                <p className="text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
+                <p className="text-sm text-[#7a6e66] dark:text-[#ebe7e0]">
                   No analysis yet. Choose a PDF above — we&apos;ll extract text
                   on your device and send it to Gemini to build a Blueprint-style
                   summary (sections, subjects, passages, and study priorities).
                 </p>
-                <p className="mt-3 text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                <p className="mt-3 text-xs text-[#9a8b7e] dark:text-[#d2cdc4]">
                   Requires{' '}
-                  <code className="rounded bg-[#f5f0eb] px-1 dark:bg-[#3a3836] dark:text-[#eae8e4]">
+                  <code className="rounded bg-[#f5f0eb] px-1 dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                     VITE_GEMINI_API_KEY
                   </code>{' '}
                   in{' '}
-                  <code className="rounded bg-[#f5f0eb] px-1 dark:bg-[#3a3836] dark:text-[#eae8e4]">
+                  <code className="rounded bg-[#f5f0eb] px-1 dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                     .env.local
                   </code>
                   .

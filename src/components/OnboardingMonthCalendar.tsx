@@ -137,14 +137,14 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
   return (
     <div className="onboarding-month-calendar overflow-hidden rounded-2xl border border-[#e5ddd4] bg-white shadow-sm dark:border-[#454440] dark:bg-[#262523] dark:shadow-[0_8px_32px_-12px_rgba(0,0,0,0.4)]">
       <div className="onboarding-cal-toolbar flex items-center justify-between border-b border-[#ebe5dc] px-4 py-3 dark:border-[#3d3c38] sm:px-5">
-        <h3 className="text-base font-bold text-[#1a1a1a] dark:text-[#f5f2ed] sm:text-lg">
+        <h3 className="text-base font-bold text-[#1a1a1a] dark:text-[#fafaf8] sm:text-lg">
           {monthTitle(viewYear, viewMonth)}
         </h3>
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             type="button"
             onClick={goPrev}
-            className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
+            className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#f4f3f0] dark:hover:bg-white/[0.06]"
             aria-label="Previous month"
           >
             ‹
@@ -152,14 +152,14 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
           <button
             type="button"
             onClick={goToday}
-            className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] dark:border-[#5c5a56] dark:bg-[#353432] dark:text-[#f0ebe4] dark:hover:bg-[#454440] sm:text-sm"
+            className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] dark:border-[#5c5a56] dark:bg-[#353432] dark:text-[#faf9f7] dark:hover:bg-[#454440] sm:text-sm"
           >
             Today
           </button>
           <button
             type="button"
             onClick={goNext}
-            className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
+            className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#f4f3f0] dark:hover:bg-white/[0.06]"
             aria-label="Next month"
           >
             ›
@@ -171,7 +171,7 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
         {WEEK.map((d) => (
           <div
             key={d}
-            className="py-2 text-center text-[11px] font-medium text-[#8a8580] dark:text-[#a89e94] sm:text-xs"
+            className="py-2 text-center text-[11px] font-medium text-[#8a8580] dark:text-[#ddd8d0] sm:text-xs"
           >
             {d}
           </div>
@@ -198,8 +198,8 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
                   isToday
                     ? 'rounded-full bg-[#e53935] text-white'
                     : inMonth
-                      ? 'text-[#1a1a1a] dark:text-[#f0ebe4]'
-                      : 'text-[#b5aea5] dark:text-[#7a756d]'
+                      ? 'text-[#1a1a1a] dark:text-[#faf9f7]'
+                      : 'text-[#b5aea5] dark:text-[#c8c4bc]'
                 }`}
               >
                 {date.getDate()}
@@ -215,7 +215,7 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
                   </span>
                 ))}
                 {dayEvents.length > 3 ? (
-                  <span className="text-[9px] text-[#8a8580] dark:text-[#9a928a]">
+                  <span className="text-[9px] text-[#8a8580] dark:text-[#d2cdc4]">
                     +{dayEvents.length - 3} more
                   </span>
                 ) : null}
@@ -241,7 +241,7 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
           >
             <h4
               id="cal-dialog-title"
-              className="mb-4 text-sm font-semibold text-[#3d3835] dark:text-[#f0ebe4]"
+              className="mb-4 text-sm font-semibold text-[#3d3835] dark:text-[#faf9f7]"
             >
               {new Date(`${dialogDate}T12:00:00`).toLocaleDateString(undefined, {
                 weekday: 'long',
@@ -256,7 +256,7 @@ export function OnboardingMonthCalendar({ events, onChange }: Props) {
                 {dialogEvents.map((ev) => (
                   <li
                     key={ev.id}
-                    className="flex items-center justify-between gap-2 rounded-xl bg-[#f5f3f0] px-3 py-2 text-sm text-[#2c2825] dark:bg-[#353432] dark:text-[#eae8e4]"
+                    className="flex items-center justify-between gap-2 rounded-xl bg-[#f5f3f0] px-3 py-2 text-sm text-[#2c2825] dark:bg-[#353432] dark:text-[#f6f5f3]"
                   >
                     <span className="min-w-0 truncate">{ev.title}</span>
                     <button

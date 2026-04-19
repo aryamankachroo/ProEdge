@@ -33,15 +33,15 @@ export function DiagnosticImportedReportView({
   return (
     <div className="space-y-10">
       <header className="border-b border-[#ebe5dc] pb-6 dark:border-[#454440]">
-        <p className="text-xs font-bold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+        <p className="text-xs font-bold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
           AI-analyzed diagnostic
         </p>
-        <h2 className="onboarding-serif mt-1 text-2xl font-semibold text-[#2c2825] dark:text-[#f5f2ed] sm:text-3xl">
+        <h2 className="onboarding-serif mt-1 text-2xl font-semibold text-[#2c2825] dark:text-[#fafaf8] sm:text-3xl">
           {report.reportTitle}
         </h2>
-        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
-          <span className="font-medium text-[#3d3835] dark:text-[#eae8e4]">{report.sourceFileName}</span>
-          <span className="text-[#9a8b7e] dark:text-[#9a928a]">
+        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#ebe7e0]">
+          <span className="font-medium text-[#3d3835] dark:text-[#f6f5f3]">{report.sourceFileName}</span>
+          <span className="text-[#9a8b7e] dark:text-[#d2cdc4]">
             {' '}
             ·{' '}
             {new Date(report.analyzedAt).toLocaleString(undefined, {
@@ -64,34 +64,34 @@ export function DiagnosticImportedReportView({
             <div className="flex h-[5.5rem] w-[5.5rem] flex-col items-center justify-center rounded-full bg-[#faf7f3] dark:bg-[#1f1e1c]">
               {report.totalScore != null ? (
                 <>
-                  <span className="onboarding-serif text-3xl font-bold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                  <span className="onboarding-serif text-3xl font-bold tabular-nums text-[#2c2825] dark:text-[#fafaf8]">
                     {report.totalScore}
                   </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wide text-[#7a6e66] dark:text-[#b8b0a6]">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-[#7a6e66] dark:text-[#e3dfd8]">
                     Total
                   </span>
                 </>
               ) : (
-                <span className="px-2 text-center text-xs font-medium text-[#7a6e66] dark:text-[#b8b0a6]">
+                <span className="px-2 text-center text-xs font-medium text-[#7a6e66] dark:text-[#e3dfd8]">
                   Total not detected in PDF
                 </span>
               )}
             </div>
           </div>
           {report.totalPercentile ? (
-            <p className="mt-4 text-center text-sm font-semibold text-[#5f7f6a] dark:text-[#9bc4a8]">
+            <p className="mt-4 text-center text-sm font-semibold text-[#5f7f6a] dark:text-[#c8edd4]">
               {report.totalPercentile}
             </p>
           ) : null}
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
             Section scores
           </h3>
           <ul className="mt-4 space-y-4">
             {report.sections.length === 0 ? (
-              <li className="text-sm text-[#9a8b7e] dark:text-[#9a928a]">
+              <li className="text-sm text-[#9a8b7e] dark:text-[#d2cdc4]">
                 No section scores extracted — try a text-based PDF export.
               </li>
             ) : (
@@ -106,32 +106,32 @@ export function DiagnosticImportedReportView({
                     className="group cursor-default rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3 shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:hover:-translate-y-px motion-safe:hover:border-[#e0d8ce] motion-safe:hover:bg-[#fdfcfa] motion-safe:hover:shadow-[0_0_0_0.5px_rgba(60,42,30,0.07),0_1px_2px_rgba(0,0,0,0.04),0_6px_20px_-6px_rgba(62,47,35,0.09)] dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:motion-safe:hover:border-[#5c5a56] dark:motion-safe:hover:bg-[#383633] dark:motion-safe:hover:shadow-[0_6px_20px_-6px_rgba(0,0,0,0.35)]"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-sm font-semibold text-[#2c2825] dark:text-[#eae8e4]">
+                      <span className="text-sm font-semibold text-[#2c2825] dark:text-[#f6f5f3]">
                         {s.label}
                       </span>
                       <div className="flex items-baseline gap-2">
                         {s.scaledScore != null ? (
-                          <span className="onboarding-serif text-xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                          <span className="onboarding-serif text-xl font-semibold tabular-nums text-[#2c2825] dark:text-[#fafaf8]">
                             {s.scaledScore}
                           </span>
                         ) : (
-                          <span className="text-sm text-[#9a8b7e] dark:text-[#9a928a]">—</span>
+                          <span className="text-sm text-[#9a8b7e] dark:text-[#d2cdc4]">—</span>
                         )}
                         {s.percentile ? (
-                          <span className="text-xs text-[#7a6e66] dark:text-[#c4bdb4]">
+                          <span className="text-xs text-[#7a6e66] dark:text-[#ebe7e0]">
                             {s.percentile}
                           </span>
                         ) : null}
                       </div>
                     </div>
                     {s.correct != null && s.total != null ? (
-                      <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#c4bdb4]">
+                      <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#ebe7e0]">
                         {s.correct}/{s.total} correct
                       </p>
                     ) : null}
                     {pct !== null ? (
                       <div className="mt-2">
-                        <div className="mb-1 flex justify-between text-[10px] text-[#9a8b7e] dark:text-[#9a928a]">
+                        <div className="mb-1 flex justify-between text-[10px] text-[#9a8b7e] dark:text-[#d2cdc4]">
                           <span>118</span>
                           <span>132 scale</span>
                         </div>
@@ -155,7 +155,7 @@ export function DiagnosticImportedReportView({
 
       {report.subjectBreakdown.length > 0 ? (
         <section>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
             By subject (from report)
           </h3>
           <ul className="mt-4 space-y-3">
@@ -165,18 +165,18 @@ export function DiagnosticImportedReportView({
                 className="group cursor-default rounded-xl border border-transparent px-3 py-2.5 transition-[transform,box-shadow,border-color,background-color] duration-200 ease-[cubic-bezier(0.25,0.1,0.25,1)] motion-safe:hover:-translate-y-px motion-safe:hover:border-[#e8e4dd] motion-safe:hover:bg-white/85 motion-safe:hover:shadow-[0_0_0_0.5px_rgba(60,42,30,0.06),0_1px_2px_rgba(0,0,0,0.03),0_5px_18px_-5px_rgba(62,47,35,0.08)] dark:motion-safe:hover:border-[#454440] dark:motion-safe:hover:bg-[#353432]/90 dark:motion-safe:hover:shadow-[0_5px_18px_-5px_rgba(0,0,0,0.35)]"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                  <span className="font-medium text-[#3d3835] dark:text-[#eae8e4]">
+                  <span className="font-medium text-[#3d3835] dark:text-[#f6f5f3]">
                     {row.name}
                     {row.questionCount != null ?
                       ` (${row.questionCount})`
                     : ''}
                   </span>
                   {row.percentCorrect != null ? (
-                    <span className="tabular-nums text-[#5f7f6a] dark:text-[#9bc4a8]">
+                    <span className="tabular-nums text-[#5f7f6a] dark:text-[#c8edd4]">
                       {row.percentCorrect.toFixed(1)}% correct
                     </span>
                   ) : (
-                    <span className="text-[#9a8b7e] dark:text-[#9a928a]">—</span>
+                    <span className="text-[#9a8b7e] dark:text-[#d2cdc4]">—</span>
                   )}
                 </div>
                 <div className="mt-1.5">
@@ -190,7 +190,7 @@ export function DiagnosticImportedReportView({
 
       {report.passageHighlights.length > 0 ? (
         <section>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
             Passage & discrete highlights
           </h3>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -199,10 +199,10 @@ export function DiagnosticImportedReportView({
                 key={`${p.section}-${p.label}-${i}`}
                 className="rounded-lg border border-[#ebe5dc] bg-[#faf9f7] px-3 py-2 text-sm dark:border-[#454440] dark:bg-[#2c2b29]/96"
               >
-                <span className="text-xs font-semibold text-[#5f7f6a] dark:text-[#9bc4a8]">
+                <span className="text-xs font-semibold text-[#5f7f6a] dark:text-[#c8edd4]">
                   {p.section}
                 </span>
-                <div className="mt-0.5 flex justify-between gap-2 text-[#3d3835] dark:text-[#eae8e4]">
+                <div className="mt-0.5 flex justify-between gap-2 text-[#3d3835] dark:text-[#f6f5f3]">
                   <span>{p.label}</span>
                   <span className="tabular-nums font-semibold">
                     {p.correct}/{p.total}
@@ -231,27 +231,27 @@ export function DiagnosticImportedReportView({
           <ul className="mt-3 list-inside list-disc space-y-2 text-sm text-[#14532d] dark:text-[#bbf7d0]">
             {report.strengths.length ?
               report.strengths.map((s) => <li key={s}>{s}</li>)
-            : <li className="list-none text-[#7a6e66] dark:text-[#9a928a]">—</li>}
+            : <li className="list-none text-[#7a6e66] dark:text-[#d2cdc4]">—</li>}
           </ul>
         </section>
         <section className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-5 dark:border-[#6b3a3a]/90 dark:bg-[#2c2b29]/96">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c] dark:text-[#fca5a5]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c] dark:text-[#fecaca]">
             Growth areas
           </h3>
           <ul className="mt-3 list-inside list-disc space-y-2 text-sm text-[#7f1d1d] dark:text-[#fecaca]">
             {report.growthAreas.length ?
               report.growthAreas.map((s) => <li key={s}>{s}</li>)
-            : <li className="list-none text-[#7a6e66] dark:text-[#9a928a]">—</li>}
+            : <li className="list-none text-[#7a6e66] dark:text-[#d2cdc4]">—</li>}
           </ul>
         </section>
       </div>
 
       {report.studyPriorities.length > 0 ? (
         <section className="rounded-2xl border border-[#e8dfd4] bg-white/90 p-5 dark:border-[#454440] dark:bg-[#2c2b29]/96">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
             Suggested study priorities
           </h3>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-[#3d3835] dark:text-[#eae8e4]">
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed text-[#3d3835] dark:text-[#f6f5f3]">
             {report.studyPriorities.map((s) => (
               <li key={s}>{s}</li>
             ))}
@@ -260,10 +260,10 @@ export function DiagnosticImportedReportView({
       ) : null}
 
       <details className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-xs dark:border-[#454440] dark:bg-[#2c2b29]/96">
-        <summary className="cursor-pointer font-semibold text-[#7a6e66] dark:text-[#c4bdb4]">
+        <summary className="cursor-pointer font-semibold text-[#7a6e66] dark:text-[#ebe7e0]">
           Extracted text preview (debug)
         </summary>
-        <p className="mt-3 whitespace-pre-wrap break-words leading-relaxed text-[#9a8b7e] dark:text-[#9a928a]">
+        <p className="mt-3 whitespace-pre-wrap break-words leading-relaxed text-[#9a8b7e] dark:text-[#d2cdc4]">
           {report.textExcerpt}
         </p>
       </details>

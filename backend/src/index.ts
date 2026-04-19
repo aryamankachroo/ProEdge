@@ -10,6 +10,7 @@ import planRouter from './routes/plan'
 import diagnosticsRouter from './routes/diagnostics'
 import progressRouter from './routes/progress'
 import analyticsRouter from './routes/analytics'
+import authRouter from './routes/auth'
 
 const app = express()
 
@@ -17,7 +18,20 @@ const app = express()
 app.use(helmet())
 app.use(
   cors({
-    origin: config.corsOrigins,
+    origin: (origin, callback) => {
+      if (!origin || config.corsOrigins.includes(origin)) {
+        callback(null, true)
+        return
+      }
+      if (
+        config.nodeEnv === 'development' &&
+        /^http:\/\/localhost:\d+$/.test(origin)
+      ) {
+        callback(null, true)
+        return
+      }
+      callback(new Error(`CORS blocked: ${origin}`))
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -40,6 +54,7 @@ app.get('/api/health', (_req, res) => {
 })
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
+app.use('/api/auth', authRouter)
 app.use('/api/profile', profileRouter)
 app.use('/api/plan', planRouter)
 app.use('/api/diagnostics', diagnosticsRouter)

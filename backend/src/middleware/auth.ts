@@ -1,4 +1,5 @@
 import { auth } from 'express-oauth2-jwt-bearer'
+import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express'
 import { config } from '../config'
 
@@ -9,20 +10,51 @@ const jwtAuth = auth({
 })
 
 /**
- * In development mode, requests without an Authorization header bypass JWT
- * validation and use DEV_USER_ID as the authenticated user.
- * In production, a valid Auth0 JWT is always required.
+ * Requires a valid Bearer token (ProEdge HS256 JWT or Auth0 RS256 JWT), unless
+ * development dev-auth bypass is enabled with no Authorization header (see DEV_AUTH_BYPASS).
  */
 export function requireAuth(req: Request, res: Response, next: NextFunction): void {
-  if (config.nodeEnv === 'development' && !req.headers.authorization) {
-    // Inject a synthetic auth payload so getUserId() works downstream
-    ;(req as any).auth = {
-      header: {},
-      payload: { sub: config.devUserId },
-      token: 'dev',
+  const authHeader = req.headers.authorization
+
+  if (!authHeader?.startsWith('Bearer ')) {
+    if (config.devAuthBypass && config.nodeEnv === 'development') {
+      ;(req as any).auth = {
+        header: {},
+        payload: { sub: config.devUserId },
+        token: 'dev',
+      }
+      return next()
     }
-    return next()
+    res.status(401).json({ error: 'Unauthorized' })
+    return
   }
+
+  const token = authHeader.slice(7)
+  const meta = jwt.decode(token, { complete: true })
+  const alg = meta?.header?.alg
+
+  if (alg === 'HS256') {
+    try {
+      const payload = jwt.verify(token, config.jwtSecret) as jwt.JwtPayload & {
+        sub?: string
+      }
+      const sub = payload.sub
+      if (!sub || typeof sub !== 'string') {
+        res.status(401).json({ error: 'Invalid token' })
+        return
+      }
+      ;(req as any).auth = {
+        header: {},
+        payload: { sub },
+        token,
+      }
+      return next()
+    } catch {
+      res.status(401).json({ error: 'Invalid or expired token' })
+      return
+    }
+  }
+
   jwtAuth(req, res, next)
 }
 

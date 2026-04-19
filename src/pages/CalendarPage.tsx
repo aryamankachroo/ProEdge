@@ -361,10 +361,10 @@ export function CalendarPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-4xl">
           Study calendar
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0] sm:text-base">
           Pick a day and check tasks off. With{' '}
           <strong className="font-semibold text-[#5a4f47] dark:text-[#d4ccc4]">Gemini</strong>, daily
           tasks are generated from your questionnaire and (if you took it) your
@@ -372,7 +372,7 @@ export function CalendarPage() {
           simple repeated template instead.
         </p>
         {hasGeminiKey ? (
-          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#a89e94]">
+          <p className="mt-2 max-w-2xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#ddd8d0]">
             Gemini only adds tasks on{' '}
             <span className="font-medium text-[#6b5f56] dark:text-[#d4ccc4]">{geminiWeekdayHint}</span>
             {profile.studyDays.length === 1 ? (
@@ -392,7 +392,7 @@ export function CalendarPage() {
         ) : null}
 
         <div className="mt-5 max-w-3xl rounded-2xl border border-[#ebe5dc] bg-[#faf9f7] px-4 py-3 dark:border-[#454440] dark:bg-[#262523]/90 sm:px-5">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#9a928a]">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#d2cdc4]">
             Recommendation types
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
@@ -419,17 +419,17 @@ export function CalendarPage() {
               : 'Generate / refresh plan with Gemini (questionnaire + diagnostic)'}
           </button>
           {!hasGeminiKey ? (
-            <p className="text-xs leading-relaxed text-[#9a8b7e] dark:text-[#a89e94]">
+            <p className="text-xs leading-relaxed text-[#9a8b7e] dark:text-[#ddd8d0]">
               Add{' '}
-              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                 VITE_GEMINI_API_KEY
               </code>{' '}
               to{' '}
-              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                 .env.local
               </code>{' '}
               in ProEdge, then restart{' '}
-              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+              <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[11px] dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                 npm run dev
               </code>
               .
@@ -446,14 +446,14 @@ export function CalendarPage() {
         <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_minmax(280px,380px)] lg:items-start">
           <div className="onboarding-month-calendar overflow-hidden rounded-2xl border border-[#e5ddd4] bg-white shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)] dark:border-[#454440] dark:bg-[#262523] dark:shadow-[0_12px_40px_-16px_rgba(0,0,0,0.4)]">
             <div className="onboarding-cal-toolbar flex items-center justify-between border-b border-[#ebe5dc] px-4 py-3 dark:border-[#3d3c38] sm:px-5">
-              <h2 className="text-base font-bold text-[#1a1a1a] dark:text-[#f5f2ed] sm:text-lg">
+              <h2 className="text-base font-bold text-[#1a1a1a] dark:text-[#fafaf8] sm:text-lg">
                 {monthTitle(viewYear, viewMonth)}
               </h2>
               <div className="flex items-center gap-1 sm:gap-2">
                 <button
                   type="button"
                   onClick={goPrev}
-                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
+                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#f4f3f0] dark:hover:bg-white/[0.06]"
                   aria-label="Previous month"
                 >
                   ‹
@@ -461,14 +461,14 @@ export function CalendarPage() {
                 <button
                   type="button"
                   onClick={goToday}
-                  className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] dark:border-[#5c5a56] dark:bg-[#353432] dark:text-[#f0ebe4] dark:hover:bg-[#454440] sm:text-sm"
+                  className="rounded-lg border border-[#d8d0c6] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d3835] shadow-sm hover:bg-[#faf8f5] dark:border-[#5c5a56] dark:bg-[#353432] dark:text-[#faf9f7] dark:hover:bg-[#454440] sm:text-sm"
                 >
                   Today
                 </button>
                 <button
                   type="button"
                   onClick={goNext}
-                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#e8e6e1] dark:hover:bg-white/[0.06]"
+                  className="onboarding-nav-back rounded-lg px-2 py-1.5 text-sm font-medium text-[#3d3835] hover:bg-black/[0.04] dark:text-[#f4f3f0] dark:hover:bg-white/[0.06]"
                   aria-label="Next month"
                 >
                   ›
@@ -480,7 +480,7 @@ export function CalendarPage() {
               {WEEK.map((d) => (
                 <div
                   key={d}
-                  className="py-2 text-center text-[11px] font-medium text-[#8a8580] dark:text-[#a89e94] sm:text-xs"
+                  className="py-2 text-center text-[11px] font-medium text-[#8a8580] dark:text-[#ddd8d0] sm:text-xs"
                 >
                   {d}
                 </div>
@@ -512,8 +512,8 @@ export function CalendarPage() {
                         isToday
                           ? 'rounded-full bg-[#e53935] text-white'
                           : inMonth
-                            ? 'text-[#1a1a1a] dark:text-[#f0ebe4]'
-                            : 'text-[#b5aea5] dark:text-[#7a756d]'
+                            ? 'text-[#1a1a1a] dark:text-[#faf9f7]'
+                            : 'text-[#b5aea5] dark:text-[#c8c4bc]'
                       }`}
                     >
                       {date.getDate()}
@@ -550,7 +550,7 @@ export function CalendarPage() {
                             </span>
                           ) : null}
                         </div>
-                        <span className="text-[10px] font-medium text-[#5f7f6a] dark:text-[#9bc4a8] sm:text-[11px]">
+                        <span className="text-[10px] font-medium text-[#5f7f6a] dark:text-[#c8edd4] sm:text-[11px]">
                           {done}/{total} done
                         </span>
                         <div className="h-1 overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]">
@@ -563,7 +563,7 @@ export function CalendarPage() {
                         </div>
                       </div>
                     ) : (
-                      <span className="mt-auto text-[9px] text-[#c4bbb2] dark:text-[#8a8278] sm:text-[10px]">
+                      <span className="mt-auto text-[9px] text-[#c4bbb2] dark:text-[#d4cec5] sm:text-[10px]">
                         Tap to plan
                       </span>
                     )}
@@ -574,33 +574,33 @@ export function CalendarPage() {
           </div>
 
           <aside className="rounded-2xl border border-[#e5ddd4] bg-white/90 p-5 shadow-[0_12px_40px_-16px_rgba(90,70,55,0.12)] backdrop-blur-sm dark:border-[#454440] dark:bg-[#262523]/95 sm:p-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#9a8b7e] dark:text-[#9a928a]">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#9a8b7e] dark:text-[#d2cdc4]">
               Day detail
             </p>
-            <h3 className="onboarding-serif mt-2 text-xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+            <h3 className="onboarding-serif mt-2 text-xl font-semibold text-[#2c2825] dark:text-[#fafaf8]">
               {longDateLabel(selectedIso)}
             </h3>
             {totalSelected > 0 ? (
-              <p className="mt-1 text-sm text-[#5f7f6a] dark:text-[#9bc4a8]">
+              <p className="mt-1 text-sm text-[#5f7f6a] dark:text-[#c8edd4]">
                 {completedCount} of {totalSelected} complete
               </p>
             ) : (
-              <div className="mt-1 space-y-1 text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
+              <div className="mt-1 space-y-1 text-sm text-[#7a6e66] dark:text-[#ebe7e0]">
                 <p>
                   No tasks yet — add six suggested tasks or type your own.
                 </p>
                 {fromDiagnostic ? (
-                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#d2cdc4]">
                     Suggestions use your latest mini-diagnostic (client-side
                     dummy plan until the server is live).
                   </p>
                 ) : fromQuestionnaire ? (
-                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#d2cdc4]">
                     Six task types per day (weak sections, CARS, Anki, resources,
                     etc.) follow your questionnaire answers.
                   </p>
                 ) : (
-                  <p className="text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#d2cdc4]">
                     Generic study-day template — take the diagnostic or finish the
                     questionnaire for tailored suggestions.
                   </p>
@@ -653,7 +653,7 @@ export function CalendarPage() {
                       className={`text-sm leading-snug ${
                         t.completed
                           ? 'text-[#6b7f6f] line-through dark:text-[#8fb89a] dark:decoration-[#5f7f6a]/50'
-                          : 'text-[#2c2825] dark:text-[#eae8e4]'
+                          : 'text-[#2c2825] dark:text-[#f6f5f3]'
                       }`}
                     >
                       {t.title}
@@ -674,7 +674,7 @@ export function CalendarPage() {
               <button
                 type="button"
                 onClick={addSuggestedTasks}
-                className="mt-5 w-full rounded-xl border border-[#5f7f6a]/40 bg-[#f0f6f2] py-3 text-sm font-semibold text-[#2d4a32] transition hover:bg-[#e4efe6] dark:border-[#5f7f6a]/35 dark:bg-[#243529]/50 dark:text-[#c8e6d0] dark:hover:bg-[#2d4a38]/55"
+                className="mt-5 w-full rounded-xl border border-[#5f7f6a]/40 bg-[#f0f6f2] py-3 text-sm font-semibold text-[#2d4a32] transition hover:bg-[#e4efe6] dark:border-[#5f7f6a]/35 dark:bg-[#243529]/50 dark:text-[#dff5e6] dark:hover:bg-[#2d4a38]/55"
               >
                 {fromDiagnostic
                   ? 'Add suggested tasks from diagnostic (6)'

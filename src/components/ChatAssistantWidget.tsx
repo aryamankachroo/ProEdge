@@ -31,7 +31,7 @@ function renderInlineMarkdown(line: string): ReactNode[] {
   return parts.map((part, j) => {
     if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
       return (
-        <strong key={j} className="font-semibold text-[#2c2825] dark:text-[#f0ebe4]">
+        <strong key={j} className="font-semibold text-[#2c2825] dark:text-[#faf9f7]">
           {part.slice(2, -2)}
         </strong>
       )
@@ -40,7 +40,7 @@ function renderInlineMarkdown(line: string): ReactNode[] {
       return (
         <code
           key={j}
-          className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825] dark:bg-[#3a3836] dark:text-[#eae8e4]"
+          className="rounded bg-[#f5f0eb] px-1 py-0.5 font-mono text-[0.85em] text-[#2c2825] dark:bg-[#3a3836] dark:text-[#f6f5f3]"
         >
           {part.slice(1, -1)}
         </code>
@@ -53,13 +53,13 @@ function renderInlineMarkdown(line: string): ReactNode[] {
 function AssistantFormattedText({ content }: { content: string }) {
   const lines = normalizeAssistantMarkdown(content).split('\n')
   return (
-    <div className="max-w-full text-sm leading-snug text-[#3d3835] dark:text-[#e0ddd8]">
+    <div className="max-w-full text-sm leading-snug text-[#3d3835] dark:text-[#eeeded]">
       {lines.map((line, i) => {
         const bullet = /^(\s*)[-*]\s+(.+)$/.exec(line)
         if (bullet) {
           return (
             <div key={i} className="mb-1 flex gap-2 pl-0.5">
-              <span className="shrink-0 text-[#5f7f6a] dark:text-[#9bc4a8]" aria-hidden>
+              <span className="shrink-0 text-[#5f7f6a] dark:text-[#c8edd4]" aria-hidden>
                 •
               </span>
               <span className="min-w-0 break-words">
@@ -179,17 +179,17 @@ export function ChatAssistantWidget() {
           >
             <div className="flex items-center justify-between border-b border-[#ebe5dc] bg-white/90 px-3 py-2.5 dark:border-[#3d3c38] dark:bg-[#1f1e1c]/95">
               <div>
-                <p className="text-sm font-bold text-[#2c2825] dark:text-[#f5f2ed]">
+                <p className="text-sm font-bold text-[#2c2825] dark:text-[#fafaf8]">
                   Study assistant
                 </p>
-                <p className="text-[10px] text-[#7a6e66] dark:text-[#b8b0a6]">
+                <p className="text-[10px] text-[#7a6e66] dark:text-[#e3dfd8]">
                   {geminiLive ? 'Gemini Flash' : 'Preview — add VITE_GEMINI_API_KEY'}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-1 text-sm font-semibold text-[#6b5e54] hover:bg-[#f5f0eb] dark:text-[#c4bdb4] dark:hover:bg-[#353432]"
+                className="rounded-lg px-2 py-1 text-sm font-semibold text-[#6b5e54] hover:bg-[#f5f0eb] dark:text-[#ebe7e0] dark:hover:bg-[#353432]"
                 aria-label="Close chat"
               >
                 ✕
@@ -210,7 +210,7 @@ export function ChatAssistantWidget() {
                     className={`max-w-[92%] rounded-2xl px-3 py-2 text-sm leading-snug ${
                       row.role === 'user'
                         ? 'bg-[#5f7f6a] text-white'
-                        : 'border border-[#ebe5dc] bg-white text-[#3d3835] dark:border-[#3d3c38] dark:bg-[#2a2927] dark:text-[#e8e6e1]'
+                        : 'border border-[#ebe5dc] bg-white text-[#3d3835] dark:border-[#3d3c38] dark:bg-[#2a2927] dark:text-[#f4f3f0]'
                     }`}
                   >
                     <ChatBubbleContent role={row.role} content={row.content} />
@@ -218,12 +218,12 @@ export function ChatAssistantWidget() {
                 </div>
               ))}
               {loading ? (
-                <p className="text-xs italic text-[#9a8b7e] dark:text-[#8a8278]">
+                <p className="text-xs italic text-[#9a8b7e] dark:text-[#d4cec5]">
                   Thinking…
                 </p>
               ) : null}
               {error ? (
-                <p className="text-xs text-[#b91c1c] dark:text-[#fca5a5]" role="alert">
+                <p className="text-xs text-[#b91c1c] dark:text-[#fecaca]" role="alert">
                   {error}
                 </p>
               ) : null}
@@ -237,7 +237,7 @@ export function ChatAssistantWidget() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
                 placeholder="Ask about study strategy…"
-                className="w-full resize-none rounded-xl border border-[#e8dfd4] bg-[#fffefb] px-3 py-2 text-sm text-[#2c2825] placeholder:text-[#a8988c] focus:border-[#5f7f6a] focus:outline-none focus:ring-1 focus:ring-[#5f7f6a]/30 dark:border-[#454440] dark:bg-[#2a2927] dark:text-[#f0ebe4] dark:placeholder:text-[#8a8278] dark:focus:ring-[#5f7f6a]/45"
+                className="w-full resize-none rounded-xl border border-[#e8dfd4] bg-[#fffefb] px-3 py-2 text-sm text-[#2c2825] placeholder:text-[#a8988c] focus:border-[#5f7f6a] focus:outline-none focus:ring-1 focus:ring-[#5f7f6a]/30 dark:border-[#454440] dark:bg-[#2a2927] dark:text-[#faf9f7] dark:placeholder:text-[#b8b4ad] dark:focus:ring-[#5f7f6a]/45"
                 disabled={loading}
               />
               <button
@@ -248,7 +248,7 @@ export function ChatAssistantWidget() {
               >
                 Send
               </button>
-              <p className="mt-2 px-1 text-[10px] leading-relaxed text-[#9a8b7e] dark:text-[#8a8278]">
+              <p className="mt-2 px-1 text-[10px] leading-relaxed text-[#9a8b7e] dark:text-[#d4cec5]">
                 {geminiLive ? (
                   <>
                     Using Gemini. Optional: set{' '}

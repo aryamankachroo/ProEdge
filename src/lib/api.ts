@@ -20,7 +20,19 @@ class BackendDisabledError extends Error {
   }
 }
 
-// ─── Internal helpers ──────────────────────────────────────────────────────────
+// ─── Internal helpers ─────────────────────────────────────────────────────────-
+
+const TOKEN_STORAGE_KEY = 'proedge_auth_token'
+
+function authHeaders(): HeadersInit {
+  if (typeof localStorage === 'undefined') return {}
+  try {
+    const t = localStorage.getItem(TOKEN_STORAGE_KEY)
+    return t ? { Authorization: `Bearer ${t}` } : {}
+  } catch {
+    return {}
+  }
+}
 
 async function req<T>(path: string, options?: RequestInit): Promise<T> {
   if (!isBackendApiEnabled()) {
@@ -30,6 +42,7 @@ async function req<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`/api${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders(),
       ...(options?.headers ?? {}),
     },
     ...options,
@@ -279,6 +292,7 @@ export async function uploadDiagnosticPdf(file: File): Promise<DiagnosticScoreEn
 
   const res = await fetch('/api/diagnostics/parse-pdf', {
     method: 'POST',
+    headers: authHeaders(),
     body: form,
   })
 

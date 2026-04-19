@@ -65,7 +65,7 @@ export function DiagnosticTestPage() {
           <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
             ProEdge
           </Link>
-          <span className="text-sm font-medium text-[#7a6e66] dark:text-[#a89e94]">
+          <span className="text-sm font-medium text-[#7a6e66] dark:text-[#ddd8d0]">
             Question {index + 1} of {DIAGNOSTIC_TOTAL}
           </span>
         </div>
@@ -78,19 +78,19 @@ export function DiagnosticTestPage() {
       </header>
 
       <main className="mx-auto max-w-3xl px-4 py-8 pb-28 sm:px-8 sm:py-10 sm:pb-32">
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#8a8278]">
+        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#d4cec5]">
           Section {q.sectionNumber} of 4 · {q.sectionShort}
         </p>
-        <h1 className="onboarding-serif mt-2 text-2xl font-semibold leading-tight tracking-tight text-[#1a1816] dark:text-[#f0ebe4] sm:text-[1.65rem]">
+        <h1 className="onboarding-serif mt-2 text-2xl font-semibold leading-tight tracking-tight text-[#1a1816] dark:text-[#faf9f7] sm:text-[1.65rem]">
           {q.sectionTitle}
         </h1>
-        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#a89e94]">
+        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#ddd8d0]">
           Question {q.questionInSection} of {q.sectionQuestionCount} in this
           section
         </p>
 
         <div className="mt-8 rounded-[1.35rem] border border-white/80 bg-white p-6 shadow-[0_16px_48px_-20px_rgba(90,70,55,0.18)] dark:border-[#3d3c38]/90 dark:bg-[#262523] dark:shadow-[0_16px_48px_-20px_rgba(0,0,0,0.45)] sm:p-8">
-          <p className="text-[0.95rem] leading-relaxed text-[#3d3835] dark:text-[#e8e6e1] sm:text-base">
+          <p className="text-[0.95rem] leading-relaxed text-[#3d3835] dark:text-[#f4f3f0] sm:text-base">
             {q.prompt}
           </p>
           <div className="mt-6 flex flex-col gap-3">
@@ -111,7 +111,7 @@ export function DiagnosticTestPage() {
                     className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
                       isOn
                         ? 'border-[#5f7f6a] bg-[#5f7f6a] text-white'
-                        : 'border-[#c9bfb4] bg-white text-[#5c534c] dark:border-[#5c5a56] dark:bg-[#454440] dark:text-[#f5f2ed]'
+                        : 'border-[#c9bfb4] bg-white text-[#5c534c] dark:border-[#5c5a56] dark:bg-[#454440] dark:text-[#fafaf8]'
                     }`}
                   >
                     {(['A', 'B', 'C', 'D'] as const)[i]}
@@ -129,7 +129,7 @@ export function DiagnosticTestPage() {
           <button
             type="button"
             onClick={goBack}
-            className="py-2 text-sm font-semibold text-[#5c534c] hover:text-[#2c2825] dark:text-[#a89e94] dark:hover:text-[#f0ebe4]"
+            className="py-2 text-sm font-semibold text-[#5c534c] hover:text-[#2c2825] dark:text-[#ddd8d0] dark:hover:text-[#faf9f7]"
           >
             Back
           </button>

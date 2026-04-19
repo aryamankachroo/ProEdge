@@ -193,7 +193,7 @@ function DiagnosticsChoiceModal({
         >
           Diagnostics next
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
+        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0]">
           Ten-question preview (four sections), import a score, or go straight to
           your plan from the questionnaire.
         </p>
@@ -207,7 +207,7 @@ function DiagnosticsChoiceModal({
               <p className="text-sm font-semibold text-[#2c2825]">
                 Reading your PDF and analyzing with Gemini…
               </p>
-              <p className="text-xs text-[#7a6e66] dark:text-[#c4bdb4]">Usually under a minute.</p>
+              <p className="text-xs text-[#7a6e66] dark:text-[#ebe7e0]">Usually under a minute.</p>
             </div>
           ) : null}
           <button
@@ -396,7 +396,7 @@ export function OnboardingPage() {
         <header className="onboard-enter-hdr mb-6 flex justify-center lg:mb-8">
           <Link
             to="/"
-            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--pe-focus-ring-offset)] rounded-sm dark:text-[#f0ebe4]"
+            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--pe-focus-ring-offset)] rounded-sm dark:text-[#faf9f7]"
             aria-label="ProEdge home"
           >
             ProEdge
@@ -414,10 +414,10 @@ export function OnboardingPage() {
 
           <div className="onboard-enter-main min-w-0 flex-1">
             <div key={step}>
-            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] dark:text-[#f5f2ed] md:text-3xl lg:text-4xl">
+            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] dark:text-[#fafaf8] md:text-3xl lg:text-4xl">
               {meta.title}
             </h1>
-            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#c9c2ba] md:text-base">
+            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#ebe6df] md:text-base">
               {meta.subtitle}
             </p>
 
@@ -425,7 +425,7 @@ export function OnboardingPage() {
           {step === 0 && (
             <>
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   What should we call you?
                 </p>
                 <label htmlFor="ob-name" className="sr-only">
@@ -442,10 +442,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Where are you right now?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   Tap the option that fits — no wrong answers.
                 </p>
                 <div className="flex flex-col gap-3">
@@ -482,14 +482,14 @@ export function OnboardingPage() {
 
               <SoftPanel>
                 <div className="mb-1 flex items-baseline justify-between gap-3">
-                  <p className="text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                  <p className="text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                     Realistic study hours / day
                   </p>
-                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a] dark:text-[#9bc4a8]">
+                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a] dark:text-[#c8edd4]">
                     {local.hoursPerDay}
                   </span>
                 </div>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   Slide to what you can repeat without burning out.
                 </p>
                 <input
@@ -507,14 +507,14 @@ export function OnboardingPage() {
                   aria-valuenow={local.hoursPerDay}
                   aria-label="Hours available per day"
                 />
-                <div className="mt-2 flex justify-between text-xs text-[#a8988c] dark:text-[#9a928a]">
+                <div className="mt-2 flex justify-between text-xs text-[#a8988c] dark:text-[#d2cdc4]">
                   <span>1 hr</span>
                   <span>12 hr</span>
                 </div>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Study load shape
                 </p>
                 <div className="onboarding-load-shape flex rounded-2xl bg-[#ebe3d9]/80 p-1.5 dark:bg-[#2e2d2b]">
@@ -548,12 +548,12 @@ export function OnboardingPage() {
           {step === 1 && (
             <>
               <SoftPanel>
-                <p className="mb-4 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-4 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Score snapshot
                 </p>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                       Target score
                     </p>
                     <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
@@ -569,7 +569,7 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#fafaf8]">
                         {local.targetScore}
                       </span>
                       <button
@@ -588,7 +588,7 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.targetScore} />
                   </div>
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                       Baseline / last FL
                     </p>
                     <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
@@ -607,7 +607,7 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#fafaf8]">
                         {local.baselineScore}
                       </span>
                       <button
@@ -629,13 +629,13 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.baselineScore} />
                   </div>
                 </div>
-                <p className="mt-4 text-center text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                <p className="mt-4 text-center text-xs text-[#9a8b7e] dark:text-[#d2cdc4]">
                   Scale 472–528 · MCAT total
                 </p>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Exam date
                 </p>
                 <label htmlFor="ob-exam" className="sr-only">
@@ -651,10 +651,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   When can you show up?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   Tap a day to add a to-do. It appears on your calendar like iOS —
                   even &quot;Anki 45m&quot; counts.
                 </p>
@@ -671,10 +671,10 @@ export function OnboardingPage() {
           {step === 2 && (
             <>
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Resources in rotation
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   Select all that apply.
                 </p>
                 <div className="onboarding-setup-pills flex flex-wrap gap-2">
@@ -708,7 +708,7 @@ export function OnboardingPage() {
                   <div className="mt-4">
                     <label
                       htmlFor="ob-resource-other"
-                      className="mb-2 block text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]"
+                      className="mb-2 block text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]"
                     >
                       Add other source
                     </label>
@@ -727,10 +727,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Anki decks
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   We’ll phrase reviews to match your deck names.
                 </p>
                 <div className="onboarding-setup-pills flex flex-wrap gap-2">
@@ -759,10 +759,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#f2f0ec]">
                   Sections that feel shaky
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#e3dfd8]">
                   Honesty here protects your time later.
                 </p>
                 <div className="onboarding-setup-weak-grid grid gap-3 sm:grid-cols-2">
@@ -790,8 +790,8 @@ export function OnboardingPage() {
                 </div>
               </SoftPanel>
 
-              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#9a928a] sm:text-sm">
-                <span className="font-semibold text-[#7a6e66] dark:text-[#c4bdb4]">Disclaimer:</span>{' '}
+              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#d2cdc4] sm:text-sm">
+                <span className="font-semibold text-[#7a6e66] dark:text-[#ebe7e0]">Disclaimer:</span>{' '}
                 After completing the questionnaire, take a diagnostics test — or,
                 if you&apos;ve already taken one, import your diagnostics test
                 score and report.

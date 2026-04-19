@@ -2,13 +2,13 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from 'react'
 import { defaultProfile, type UserProfile } from '../types/profile'
 import { ProfileContext, type ProfileUpdate } from './profile-context'
 import { fetchProfile } from '../lib/api'
+import { useAuth } from './AuthProvider'
 
 const PROFILE_KEY = 'proedge-profile-v1'
 
@@ -43,12 +43,11 @@ function mergeBackend(local: UserProfile, remote: Awaited<ReturnType<typeof fetc
 
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfileState] = useState<UserProfile>(loadLocal)
-  const didHydrate = useRef(false)
+  const { token, ready: authReady } = useAuth()
 
-  // On mount: try to hydrate from backend (non-blocking — local state renders immediately)
+  // After auth hydrates (and whenever the session token changes), merge remote profile when API is enabled.
   useEffect(() => {
-    if (didHydrate.current) return
-    didHydrate.current = true
+    if (!authReady) return
 
     fetchProfile()
       .then((remote) => {
@@ -59,7 +58,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       .catch(() => {
         // Backend unavailable — continue with localStorage only (no crash)
       })
-  }, [])
+  }, [authReady, token])
 
   // Persist to localStorage on every change
   useEffect(() => {

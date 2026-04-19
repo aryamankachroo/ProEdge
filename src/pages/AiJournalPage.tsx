@@ -151,10 +151,10 @@ export function AiJournalPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-4xl">
           AI journal
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0] sm:text-base">
           Track burnout the way it actually shows up for you — physical, mental,
           behavioral, emotional. We never reduce this to a score. Check-ins ask
           about the signals you chose, not generic mood questions. Entries save
@@ -164,10 +164,10 @@ export function AiJournalPage() {
 
         {(needsSetup || manageSignals) && (
           <section className="mt-10 rounded-2xl border border-[#e8dfd4] bg-white/90 p-5 dark:border-[#454440] dark:bg-[#2c2b29]/96 sm:p-6">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#c4bdb4]">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#ebe7e0]">
               {needsSetup ? 'Choose signals to track' : 'Manage signals'}
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#e3dfd8]">
               Pick what you recognize in yourself. Your journal will check in on
               these from day one. Use the dropdowns per category to add; remove
               with the × on each chip.
@@ -180,7 +180,7 @@ export function AiJournalPage() {
                 )
                 return (
                   <div key={cat}>
-                    <label className="text-xs font-bold uppercase tracking-wide text-[#7a6e66] dark:text-[#b8b0a6]">
+                    <label className="text-xs font-bold uppercase tracking-wide text-[#7a6e66] dark:text-[#e3dfd8]">
                       {BURNOUT_CATEGORY_LABELS[cat]}
                     </label>
                     <select
@@ -221,7 +221,7 @@ export function AiJournalPage() {
                 </button>
               ))}
               {trackedDefs.length === 0 ? (
-                <p className="text-sm text-[#9a8b7e] dark:text-[#a89e94]">
+                <p className="text-sm text-[#9a8b7e] dark:text-[#ddd8d0]">
                   No signals yet — add at least one to start journaling.
                 </p>
               ) : null}
@@ -242,13 +242,13 @@ export function AiJournalPage() {
         {!needsSetup && !flowMode ? (
           <>
             <section className="mt-10 rounded-2xl border border-[#d4c4e8] bg-gradient-to-br from-[#f5f0ff] to-[#faf7f3] p-5 dark:border-[#4c3d6b]/50 dark:from-[#2a2438] dark:to-[#2c2b29] sm:p-6">
-              <p className="text-xs font-bold uppercase tracking-wide text-[#6b5a8c] dark:text-[#c4b5e0]">
+              <p className="text-xs font-bold uppercase tracking-wide text-[#6b5a8c] dark:text-[#ebe3fa]">
                 Suggested for right now
               </p>
-              <p className="mt-2 text-base font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+              <p className="mt-2 text-base font-semibold text-[#2c2825] dark:text-[#fafaf8]">
                 {MODE_LABELS[suggestion.mode].title}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-[#5c534c] dark:text-[#c4bdb4]">
+              <p className="mt-1 text-sm leading-relaxed text-[#5c534c] dark:text-[#ebe7e0]">
                 {suggestion.reason}
               </p>
               <button
@@ -261,10 +261,10 @@ export function AiJournalPage() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#c4bdb4]">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#ebe7e0]">
                 All modes
               </h2>
-              <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+              <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
                 Use what fits — you don’t need all three every week.
               </p>
               <ul className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -281,13 +281,13 @@ export function AiJournalPage() {
                       onClick={() => setFlowMode(m)}
                       className="group flex h-full w-full cursor-pointer flex-col rounded-2xl border border-[#ebe5dc] bg-white/95 p-4 text-left transition hover:border-[#5f7f6a]/50 hover:shadow-md dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:hover:border-[#5f7f6a]/45 dark:hover:shadow-[0_8px_28px_-12px_rgba(0,0,0,0.45)]"
                     >
-                      <span className="font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="font-semibold text-[#2c2825] dark:text-[#fafaf8]">
                         {MODE_LABELS[m].title}
                       </span>
-                      <span className="mt-2 flex-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#b8b0a6]">
+                      <span className="mt-2 flex-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#e3dfd8]">
                         {MODE_LABELS[m].blurb}
                       </span>
-                      <span className="mt-3 text-xs font-bold text-[#5f7f6a] group-hover:text-[#2c2825] dark:text-[#9bc4a8] dark:group-hover:text-[#c8e6d0]">
+                      <span className="mt-3 text-xs font-bold text-[#5f7f6a] group-hover:text-[#2c2825] dark:text-[#c8edd4] dark:group-hover:text-[#dff5e6]">
                         Open →
                       </span>
                     </button>
@@ -321,10 +321,10 @@ export function AiJournalPage() {
         ) : null}
 
         <section className="mt-14 border-t border-[#ebe5dc] pt-10 dark:border-[#454440]">
-          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             Pattern notes
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
+          <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0]">
             No burnout index — only notes from your journal text, signal tags,
             rough days, skipped tasks on the calendar, and how they line up in
             time. These lines are rule-based on your device today; an LLM over
@@ -335,7 +335,7 @@ export function AiJournalPage() {
             {patternLines.map((line, i) => (
               <li
                 key={i}
-                className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-sm leading-relaxed text-[#3d3835] dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:text-[#e8e6e1]"
+                className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-sm leading-relaxed text-[#3d3835] dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:text-[#f4f3f0]"
               >
                 {line}
               </li>
@@ -418,10 +418,10 @@ function JournalEntryForm({
     <section className="mt-10 rounded-2xl border border-[#5f7f6a]/30 bg-white/95 p-5 shadow-lg dark:border-[#454440] dark:bg-[#2c2b29]/96 dark:shadow-[0_12px_40px_-16px_rgba(0,0,0,0.45)] sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-[#5f7f6a] dark:text-[#9bc4a8]">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#5f7f6a] dark:text-[#c8edd4]">
             New entry
           </p>
-          <h2 className="onboarding-serif mt-1 text-2xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <h2 className="onboarding-serif mt-1 text-2xl font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             {MODE_LABELS[mode].title}
           </h2>
         </div>
@@ -436,10 +436,10 @@ function JournalEntryForm({
 
       {mode === 'brain-dump' && trackedDefs.length > 0 ? (
         <div className="mt-6">
-          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             Your tracked signals
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#b8b0a6]">
+          <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#e3dfd8]">
             Questions are tied to what you chose — not a generic mood check.
             Answer only lines that fit; even one word helps your history.
           </p>
@@ -450,7 +450,7 @@ function JournalEntryForm({
                 <li key={s.id}>
                   <label
                     htmlFor={key}
-                    className="text-sm font-medium text-[#3d3835] dark:text-[#eae8e4]"
+                    className="text-sm font-medium text-[#3d3835] dark:text-[#f6f5f3]"
                   >
                     {s.label}
                   </label>
@@ -473,12 +473,12 @@ function JournalEntryForm({
 
       {mode !== 'brain-dump' && trackedDefs.length > 0 ? (
         <div className="mt-6">
-          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             {mode === 'weekly-reflection'
               ? 'Which signals showed up at least once this week?'
               : 'Which signals showed up during or after this session?'}
           </p>
-          <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+          <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
             {mode === 'session-debrief'
               ? 'Pick at least one — follow-ups appear for what you check.'
               : 'Check any that applied; add detail below.'}
@@ -493,7 +493,7 @@ function JournalEntryForm({
                     onChange={() => toggleActive(s.id)}
                     className="mt-1 h-4 w-4 rounded border-[#c4b8a8] text-[#5f7f6a] dark:border-[#6b6560]"
                   />
-                  <span className="text-[#3d3835] dark:text-[#eae8e4]">{s.label}</span>
+                  <span className="text-[#3d3835] dark:text-[#f6f5f3]">{s.label}</span>
                 </label>
               </li>
             ))}
@@ -505,7 +505,7 @@ function JournalEntryForm({
         <div className="mt-8">
           <label
             htmlFor="journal-dump"
-            className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]"
+            className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]"
           >
             {trackedDefs.length > 0
               ? 'Anything else on your mind? (optional)'
@@ -520,7 +520,7 @@ function JournalEntryForm({
             className="onboarding-input mt-2 min-h-[8rem] resize-y text-sm"
           />
           {trackedDefs.length > 0 ? (
-            <p className="mt-2 text-xs text-[#9a8b7e] dark:text-[#a89e94]">
+            <p className="mt-2 text-xs text-[#9a8b7e] dark:text-[#ddd8d0]">
               Save needs at least one signal line above or something here.
             </p>
           ) : null}
@@ -529,7 +529,7 @@ function JournalEntryForm({
 
       {mode === 'session-debrief' && activeDefs.length > 0 ? (
         <div className="mt-8 space-y-5">
-          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <p className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             Quick follow-ups for what you checked
           </p>
           {activeDefs.map((s) => {
@@ -562,14 +562,14 @@ function JournalEntryForm({
         <div className="mt-8 space-y-5">
           {activeDefs.length > 0 ? (
             <div>
-              <p className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+              <p className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
                 One line per signal you care about this week
               </p>
               {activeDefs.map((s) => {
                 const key = `wk-${s.id}`
                 return (
                   <div key={s.id} className="mt-4">
-                    <label htmlFor={key} className="text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+                    <label htmlFor={key} className="text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
                       {s.label}
                       {s.weeklyAngle ? ` — ${s.weeklyAngle}` : ''}
                     </label>
@@ -590,7 +590,7 @@ function JournalEntryForm({
           <div>
             <label
               htmlFor="weekly-shift"
-              className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]"
+              className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]"
             >
               What felt different compared to last week?
             </label>
@@ -611,7 +611,7 @@ function JournalEntryForm({
         <div className="mt-6">
           <label
             htmlFor="debrief-extra"
-            className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]"
+            className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]"
           >
             Anything else about the session? (optional)
           </label>
@@ -626,10 +626,10 @@ function JournalEntryForm({
       ) : null}
 
       <div className="mt-10 border-t border-[#ebe5dc] pt-8 dark:border-[#454440]">
-        <p className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+        <p className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
           Overall day tag
         </p>
-        <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#b8b0a6]">
+        <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#e3dfd8]">
           For your timeline only — the prompts above are about your specific
           signals.
         </p>
@@ -673,14 +673,14 @@ function JournalEntryForm({
       </div>
 
       {mode === 'session-debrief' && activeIds.length === 0 ? (
-        <p className="mt-4 text-sm text-[#b45309] dark:text-[#fdba74]" role="status">
+        <p className="mt-4 text-sm text-[#b45309] dark:text-[#ffd9a8]" role="status">
           Choose at least one signal above to save this debrief.
         </p>
       ) : null}
       {mode === 'weekly-reflection' &&
       activeIds.length === 0 &&
       !(responses.weeklyShift ?? '').trim() ? (
-        <p className="mt-4 text-sm text-[#b45309] dark:text-[#fdba74]" role="status">
+        <p className="mt-4 text-sm text-[#b45309] dark:text-[#ffd9a8]" role="status">
           Check a signal or write what felt different vs. last week to save.
         </p>
       ) : null}

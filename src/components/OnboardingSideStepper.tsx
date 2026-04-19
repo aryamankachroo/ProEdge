@@ -67,7 +67,7 @@ export function OnboardingSideStepper({
               )}
               {isUpcoming && (
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#d6cfc4] bg-white text-xs font-semibold text-[#a8988c] dark:border-[#5c5a56] dark:bg-[#2a2927] dark:text-[#c4bdb4] sm:h-10 sm:w-10"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-[#d6cfc4] bg-white text-xs font-semibold text-[#a8988c] dark:border-[#5c5a56] dark:bg-[#2a2927] dark:text-[#ebe7e0] sm:h-10 sm:w-10"
                   aria-hidden
                 >
                   {i + 1}
@@ -95,10 +95,10 @@ export function OnboardingSideStepper({
               <p
                 className={`text-[0.95rem] font-bold leading-snug sm:text-base ${
                   isActive
-                    ? 'text-[#2c2825] dark:text-[#f5f2ed]'
+                    ? 'text-[#2c2825] dark:text-[#fafaf8]'
                     : isComplete
-                      ? 'text-[#3d3835] dark:text-[#e8e4dd]'
-                      : 'text-[#8a7b70] dark:text-[#a89e94]'
+                      ? 'text-[#3d3835] dark:text-[#f2f0ec]'
+                      : 'text-[#8a7b70] dark:text-[#ddd8d0]'
                 }`}
               >
                 {s.title}
@@ -106,8 +106,8 @@ export function OnboardingSideStepper({
               <p
                 className={`mt-1 text-sm leading-relaxed ${
                   isActive
-                    ? 'text-[#6b5f56] dark:text-[#c9c2ba]'
-                    : 'text-[#9a8b7e] dark:text-[#9a928a]'
+                    ? 'text-[#6b5f56] dark:text-[#ebe6df]'
+                    : 'text-[#9a8b7e] dark:text-[#d2cdc4]'
                 }`}
               >
                 {s.description}

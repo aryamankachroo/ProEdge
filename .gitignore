@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local auth store (email/password hashes)
+backend/data/auth-users.json
+
 # Environment files — never commit secrets
 .env
 .env.*

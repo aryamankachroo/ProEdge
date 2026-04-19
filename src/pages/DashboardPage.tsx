@@ -1,4 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { ProfileMenu } from '../components/ProfileMenu'
+import { useAuth } from '../context/AuthProvider'
 import { useEffect, useState } from 'react'
 import {
   DIAGNOSTIC_SECTION_LABELS,
@@ -307,12 +309,17 @@ export function DashboardPage() {
   ]
 
   const displayName = name.trim() || 'there'
+  const { user } = useAuth()
 
   return (
     <div className="onboarding-shell min-h-dvh pb-16">
       <header className="app-shell-header">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <Link to="/" className="app-shell-brand" aria-label="ProEdge home">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">
+          <Link
+            to="/"
+            className="app-shell-brand onboarding-serif shrink-0 text-xl sm:text-[1.35rem]"
+            aria-label="ProEdge home"
+          >
             ProEdge
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-3 text-sm font-semibold text-[#5f7f6a]">
@@ -352,15 +359,16 @@ export function DashboardPage() {
             >
               Retake diagnostic
             </button>
+            {user ? <ProfileMenu variant="shell" /> : null}
           </nav>
         </div>
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-4xl">
           Welcome back, {displayName}
         </h1>
-        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
+        <p className="mt-2 text-sm text-[#7a6e66] dark:text-[#ebe7e0] sm:text-base">
           Here&apos;s your MCAT prep dashboard — goals, diagnostic snapshot, and
           where to focus next.
         </p>
@@ -386,7 +394,7 @@ export function DashboardPage() {
               Target focus
             </span>
           </div>
-          <p className="mt-4 text-xs leading-relaxed text-[#1e3a5f]/75 dark:text-[#94a3b8]">
+          <p className="mt-4 text-xs leading-relaxed text-[#1e3a5f]/75 dark:text-[#c8d0da]">
             Tip: tie each study block to one weak topic from your diagnostic —
             specificity beats vague &quot;review science.&quot;
           </p>
@@ -396,7 +404,7 @@ export function DashboardPage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Goal score
               </span>
               <span className="text-lg text-[#3b82f6]" aria-hidden>
@@ -406,11 +414,11 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#3b82f6]">
               {targetScore >= 472 ? targetScore : 'Not set'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">MCAT target</p>
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">MCAT target</p>
           </div>
           <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Days until exam
               </span>
               <span className="text-lg text-[#3b82f6]" aria-hidden>
@@ -420,13 +428,13 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#3b82f6]">
               {daysLeft !== null && daysLeft > 0 ? daysLeft : 'Not set'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
               {examDate ? `Exam ${examDate}` : 'Add a date in onboarding'}
             </p>
           </div>
           <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Study streak
               </span>
               <span className="text-lg text-[#7c6bcf]" aria-hidden>
@@ -436,7 +444,7 @@ export function DashboardPage() {
             <p className="onboarding-serif mt-2 text-xl font-semibold leading-snug text-[#7c6bcf]">
               {streak ? `${streak.streak} day${streak.streak === 1 ? '' : 's'}` : studyLabel}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
               {streak
                 ? streak.lastStudyDate
                   ? `Last: ${streak.lastStudyDate}`
@@ -446,7 +454,7 @@ export function DashboardPage() {
           </div>
           <div className={dashCardSm}>
             <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Diagnostic accuracy
               </span>
               <span className="text-lg text-[#db2777]" aria-hidden>
@@ -481,10 +489,10 @@ export function DashboardPage() {
         {/* Second row: performance + CTA */}
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <div className={dashCardLg}>
-            <h2 className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+            <h2 className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
               Performance overview
             </h2>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
               Overall accuracy and balance across sections.
             </p>
             {diagnosticSummary ? (
@@ -492,7 +500,7 @@ export function DashboardPage() {
                 <div className="flex flex-col items-center">
                   <div className="relative h-[120px] w-[120px] shrink-0">
                     <DonutRing pctValue={overallPct ?? 0} />
-                    <span className="onboarding-serif absolute inset-0 flex items-center justify-center text-xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
+                    <span className="onboarding-serif absolute inset-0 flex items-center justify-center text-xl font-semibold text-[#1a1816] dark:text-[#fafaf8]">
                       {overallPct}%
                     </span>
                   </div>
@@ -505,7 +513,7 @@ export function DashboardPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-8 rounded-xl border border-dashed border-[#d4c9be] bg-[#faf9f7] p-8 text-center text-sm text-[#7a6e66] dark:border-[#5c5a56] dark:bg-[#1f1e1c] dark:text-[#c4bdb4]">
+              <div className="mt-8 rounded-xl border border-dashed border-[#d4c9be] bg-[#faf9f7] p-8 text-center text-sm text-[#7a6e66] dark:border-[#5c5a56] dark:bg-[#1f1e1c] dark:text-[#ebe7e0]">
                 Run the mini diagnostic to see your donut and radar charts.
                 <button
                   type="button"
@@ -567,15 +575,15 @@ export function DashboardPage() {
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
           <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Total sessions
               </span>
               <span className="text-[#3b82f6]">◇</span>
             </div>
-            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
+            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#fafaf8]">
               {analyticsSummary ? analyticsSummary.study.totalSessions : (diagnosticSummary?.overallTotal ?? 0)}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
               {analyticsSummary
                 ? `${Math.round((analyticsSummary.study.totalHours ?? 0) * 10) / 10} hrs total`
                 : diagnosticSummary
@@ -594,19 +602,19 @@ export function DashboardPage() {
           </div>
           <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Average score
               </span>
               <span className="text-[#5f7f6a]">◇</span>
             </div>
-            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#f5f2ed]">
+            <p className="onboarding-serif mt-2 text-2xl font-semibold text-[#1a1816] dark:text-[#fafaf8]">
               {analyticsSummary?.scores.avgScore
                 ? Math.round(analyticsSummary.scores.avgScore)
                 : overallPct !== null
                   ? `${overallPct}%`
                   : '—'}
             </p>
-            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
               {analyticsSummary?.scores.totalTests
                 ? `Across ${analyticsSummary.scores.totalTests} test${analyticsSummary.scores.totalTests === 1 ? '' : 's'}`
                 : 'Mini diagnostic'}
@@ -623,7 +631,7 @@ export function DashboardPage() {
           </div>
           <div className={dashCardSm}>
             <div className="flex justify-between">
-              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#9a928a]">
+              <span className="text-xs font-semibold uppercase text-[#9a8b7e] dark:text-[#d2cdc4]">
                 Anki cards
               </span>
               <span className="text-[#ea8c55]">◇</span>
@@ -650,10 +658,10 @@ export function DashboardPage() {
 
         {/* Diagnostic breakdown */}
         <section className="mt-10 rounded-2xl border border-[#e8dfd4] bg-[rgba(44,40,37,0.03)] p-6 dark:border-[#454440] dark:bg-[#262523]/80 sm:p-8">
-          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <h2 className="onboarding-serif text-xl font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             Diagnostic results summary
           </h2>
-          <p className="mt-1 text-sm text-[#7a6e66] dark:text-[#c4bdb4]">
+          <p className="mt-1 text-sm text-[#7a6e66] dark:text-[#ebe7e0]">
             {sectionBreakdown
               ? 'Average scores across all your diagnostics.'
               : 'Baseline performance from your last mini diagnostic.'}
@@ -690,7 +698,7 @@ export function DashboardPage() {
                 return (
                   <li key={key}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-medium text-[#2c2825] dark:text-[#eae8e4]">
+                      <span className="font-medium text-[#2c2825] dark:text-[#f6f5f3]">
                         {DIAGNOSTIC_SECTION_LABELS[key]}
                       </span>
                       <span className="text-sm font-semibold text-[#5c534c] dark:text-[#d4ccc4]">
@@ -708,7 +716,7 @@ export function DashboardPage() {
                       />
                     </div>
                     {weak ? (
-                      <p className="mt-2 text-xs text-[#b91c1c] dark:text-[#fca5a5]">
+                      <p className="mt-2 text-xs text-[#b91c1c] dark:text-[#fecaca]">
                         Weak topics: {DIAGNOSTIC_WEAK_HINTS[key]}
                       </p>
                     ) : null}
@@ -717,7 +725,7 @@ export function DashboardPage() {
               })}
             </ul>
           ) : (
-            <p className="mt-6 text-sm text-[#7a6e66] dark:text-[#b8b0a6]">
+            <p className="mt-6 text-sm text-[#7a6e66] dark:text-[#e3dfd8]">
               No diagnostic yet — your section breakdown will appear here.
             </p>
           )}
@@ -733,7 +741,7 @@ export function DashboardPage() {
                   Strongest section
                 </span>
               </div>
-              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#b8b0a6]">Based on accuracy</p>
+              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#e3dfd8]">Based on accuracy</p>
               <p className="onboarding-serif mt-4 text-xl font-semibold text-[#14532d] dark:text-[#bbf7d0]">
                 {DIAGNOSTIC_SECTION_LABELS[best].replace(
                   'Critical Analysis & Reasoning (CARS)',
@@ -746,13 +754,13 @@ export function DashboardPage() {
               </p>
             </div>
             <div className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-6 dark:border-[#6b3a3a]/90 dark:bg-[#2c2b29]/96">
-              <div className="flex items-center gap-2 text-[#b91c1c] dark:text-[#fca5a5]">
+              <div className="flex items-center gap-2 text-[#b91c1c] dark:text-[#fecaca]">
                 <span aria-hidden>↘</span>
                 <span className="text-xs font-bold uppercase tracking-wide">
                   Weakest section
                 </span>
               </div>
-              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#b8b0a6]">
+              <p className="mt-1 text-xs text-[#3d3835]/80 dark:text-[#e3dfd8]">
                 Needs improvement
               </p>
               <p className="onboarding-serif mt-4 text-xl font-semibold text-[#7f1d1d] dark:text-[#fecaca]">
@@ -774,22 +782,22 @@ export function DashboardPage() {
           <div className={`mt-8 ${dashCardSm}`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+                <h3 className="text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
                   Last session takeaway
                 </h3>
-                <p className="mt-1 font-mono text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+                <p className="mt-1 font-mono text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
                   {diagnosticSummary.completedAt.slice(0, 10)} · mini diagnostic
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/diagnostics/results')}
-                className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline dark:text-[#9bc4a8]"
+                className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline dark:text-[#c8edd4]"
               >
                 View results ↗
               </button>
             </div>
-            <p className="mt-3 text-sm text-[#3d3835] dark:text-[#e8e6e1]">
+            <p className="mt-3 text-sm text-[#3d3835] dark:text-[#f4f3f0]">
               Questions: {diagnosticSummary.overallCorrect} /{' '}
               {diagnosticSummary.overallTotal} correct
             </p>

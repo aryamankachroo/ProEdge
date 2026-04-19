@@ -27,8 +27,8 @@ function daysUntilExam(examDateIso: string): number | null {
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-[#ebe3da] py-3.5 last:border-0 dark:border-[#3d3c38]">
-      <span className="text-sm text-[#7a6e66] dark:text-[#a89e94]">{label}</span>
-      <span className="onboarding-serif text-right text-base font-semibold text-[#1a1816] dark:text-[#f0ebe4]">
+      <span className="text-sm text-[#7a6e66] dark:text-[#ddd8d0]">{label}</span>
+      <span className="onboarding-serif text-right text-base font-semibold text-[#1a1816] dark:text-[#faf9f7]">
         {value}
       </span>
     </div>
@@ -45,7 +45,7 @@ function Panel({
   return (
     <section className="rounded-[1.5rem] border border-white/70 bg-white/80 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.12)] backdrop-blur-md dark:border-[#3d3c38]/80 dark:bg-[#262523]/90 dark:shadow-[0_12px_48px_-16px_rgba(0,0,0,0.35)] sm:p-7">
       {title ? (
-        <h2 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#8a8278]">
+        <h2 className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[#9a8b7e] dark:text-[#d4cec5]">
           {title}
         </h2>
       ) : null}
@@ -58,12 +58,12 @@ function PhaseCard({ phase }: { phase: PlanPhase }) {
   return (
     <div className="rounded-xl border border-[#e8dfd4] bg-[#faf7f3] p-4 dark:border-[#454440] dark:bg-[#1f1e1c]">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <span className="font-semibold text-[#2c2825] dark:text-[#f0ebe4]">{phase.name}</span>
-        <span className="text-xs text-[#9a8b7e] dark:text-[#8a8278]">{phase.weeks}</span>
+        <span className="font-semibold text-[#2c2825] dark:text-[#faf9f7]">{phase.name}</span>
+        <span className="text-xs text-[#9a8b7e] dark:text-[#d4cec5]">{phase.weeks}</span>
       </div>
-      <p className="mt-1 text-sm font-medium text-[#5f7f6a] dark:text-[#9bc4a8]">{phase.focus}</p>
+      <p className="mt-1 text-sm font-medium text-[#5f7f6a] dark:text-[#c8edd4]">{phase.focus}</p>
       {phase.description ? (
-        <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#a89e94]">
+        <p className="mt-1 text-xs leading-relaxed text-[#7a6e66] dark:text-[#ddd8d0]">
           {phase.description}
         </p>
       ) : null}
@@ -74,7 +74,7 @@ function PhaseCard({ phase }: { phase: PlanPhase }) {
 function WeekCard({ week }: { week: PlanWeek }) {
   return (
     <div className="rounded-xl border border-[#e8dfd4] bg-white/80 p-4 dark:border-[#454440] dark:bg-[#2a2927]/90">
-      <p className="text-xs font-bold uppercase tracking-wide text-[#9a8b7e] dark:text-[#8a8278]">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d4cec5]">
         Week {week.week}
         {week.theme ? ` · ${week.theme}` : ''}
       </p>
@@ -82,12 +82,12 @@ function WeekCard({ week }: { week: PlanWeek }) {
         <ul className="mt-3 space-y-2">
           {week.days.slice(0, 4).map((day, i) => (
             <li key={i} className="text-sm">
-              <span className="font-medium text-[#3d3835] dark:text-[#e8e6e1]">{day.day}:</span>{' '}
-              <span className="text-[#5a4f47] dark:text-[#c4bdb4]">{day.tasks.join(', ')}</span>
+              <span className="font-medium text-[#3d3835] dark:text-[#f4f3f0]">{day.day}:</span>{' '}
+              <span className="text-[#5a4f47] dark:text-[#ebe7e0]">{day.tasks.join(', ')}</span>
             </li>
           ))}
           {week.days.length > 4 ? (
-            <li className="text-xs text-[#9a8b7e] dark:text-[#8a8278]">
+            <li className="text-xs text-[#9a8b7e] dark:text-[#d4cec5]">
               +{week.days.length - 4} more days…
             </li>
           ) : null}
@@ -237,10 +237,10 @@ export function StudyPlanPage() {
       </header>
 
       <div className="mx-auto max-w-2xl px-4 py-8 sm:px-8 sm:py-10">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f0ebe4] sm:text-[2rem]">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#faf9f7] sm:text-[2rem]">
           Your study plan
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#a89e94]">
+        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ddd8d0]">
           From your questionnaire: goals, schedule, and sections you want to
           shore up.
         </p>
@@ -268,11 +268,11 @@ export function StudyPlanPage() {
           </Panel>
 
           <Panel title="Topics to prioritize">
-            <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#a89e94]">
+            <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#ddd8d0]">
               Aim more content time at the sections you marked as shaky.
             </p>
             {weakSections.length === 0 ? (
-              <p className="mt-4 text-sm text-[#9a8b7e] dark:text-[#8a8278]">No sections selected.</p>
+              <p className="mt-4 text-sm text-[#9a8b7e] dark:text-[#d4cec5]">No sections selected.</p>
             ) : (
               <ul className="mt-4 space-y-3">
                 {weakSections.map((s) => (
@@ -280,8 +280,8 @@ export function StudyPlanPage() {
                     key={s}
                     className="flex items-baseline justify-between gap-4 text-sm"
                   >
-                    <span className="font-medium text-[#3d3835] dark:text-[#e8e6e1]">{s}</span>
-                    <span className="text-[#5f7f6a] dark:text-[#9bc4a8]">
+                    <span className="font-medium text-[#3d3835] dark:text-[#f4f3f0]">{s}</span>
+                    <span className="text-[#5f7f6a] dark:text-[#c8edd4]">
                       ~{share}% of section time
                     </span>
                   </li>
@@ -295,20 +295,20 @@ export function StudyPlanPage() {
             {aiPlan ? (
               <div className="mt-2 space-y-4">
                 {generatedAt ? (
-                  <p className="text-xs text-[#9a8b7e] dark:text-[#8a8278]">
+                  <p className="text-xs text-[#9a8b7e] dark:text-[#d4cec5]">
                     Generated {new Date(generatedAt).toLocaleDateString()}
                   </p>
                 ) : null}
 
                 {aiPlan.overview ? (
-                  <p className="text-sm leading-relaxed text-[#3d3835] dark:text-[#e8e6e1]">
+                  <p className="text-sm leading-relaxed text-[#3d3835] dark:text-[#f4f3f0]">
                     {aiPlan.overview}
                   </p>
                 ) : null}
 
                 {phases.length > 0 ? (
                   <div>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#8a8278]">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d4cec5]">
                       Study phases
                     </p>
                     <div className="space-y-3">
@@ -321,7 +321,7 @@ export function StudyPlanPage() {
 
                 {weeks.length > 0 ? (
                   <div>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#8a8278]">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d4cec5]">
                       Weekly schedule (first {Math.min(weeks.length, 4)} weeks)
                     </p>
                     <div className="space-y-3">
@@ -329,7 +329,7 @@ export function StudyPlanPage() {
                         <WeekCard key={i} week={week} />
                       ))}
                       {weeks.length > 4 ? (
-                        <p className="text-xs text-[#9a8b7e] dark:text-[#8a8278]">
+                        <p className="text-xs text-[#9a8b7e] dark:text-[#d4cec5]">
                           +{weeks.length - 4} more weeks in your full plan.
                         </p>
                       ) : null}
@@ -339,13 +339,13 @@ export function StudyPlanPage() {
 
                 {tips.length > 0 ? (
                   <div>
-                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#8a8278]">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#d4cec5]">
                       Tips
                     </p>
                     <ul className="space-y-2">
                       {tips.map((tip, i) => (
-                        <li key={i} className="flex gap-2 text-sm text-[#3d3835] dark:text-[#e8e6e1]">
-                          <span className="mt-0.5 text-[#5f7f6a] dark:text-[#9bc4a8]">•</span>
+                        <li key={i} className="flex gap-2 text-sm text-[#3d3835] dark:text-[#f4f3f0]">
+                          <span className="mt-0.5 text-[#5f7f6a] dark:text-[#c8edd4]">•</span>
                           {tip}
                         </li>
                       ))}
@@ -357,19 +357,19 @@ export function StudyPlanPage() {
                   type="button"
                   onClick={handleGeneratePlan}
                   disabled={planLoading}
-                  className="mt-2 w-full rounded-full border border-[#d4c9be] bg-white px-5 py-2.5 text-sm font-semibold text-[#2c2825] transition hover:bg-[#faf7f3] disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#454440] dark:bg-[#2a2927] dark:text-[#f0ebe4] dark:hover:bg-[#353432]"
+                  className="mt-2 w-full rounded-full border border-[#d4c9be] bg-white px-5 py-2.5 text-sm font-semibold text-[#2c2825] transition hover:bg-[#faf7f3] disabled:cursor-not-allowed disabled:opacity-50 dark:border-[#454440] dark:bg-[#2a2927] dark:text-[#faf9f7] dark:hover:bg-[#353432]"
                 >
                   {planLoading ? 'Regenerating…' : 'Regenerate plan'}
                 </button>
               </div>
             ) : (
               <div className="mt-4">
-                <p className="text-sm leading-relaxed text-[#7a6e66] dark:text-[#a89e94]">
+                <p className="text-sm leading-relaxed text-[#7a6e66] dark:text-[#ddd8d0]">
                   Let Gemini build a week-by-week plan from your questionnaire:
                   goals, daily hours, exam date, study days, weak sections,
                   resources, and Anki decks (and your mini-diagnostic if you took
                   it). Uses{' '}
-                  <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px] dark:bg-[#3a3836] dark:text-[#eae8e4]">
+                  <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px] dark:bg-[#3a3836] dark:text-[#f6f5f3]">
                     VITE_GEMINI_API_KEY
                   </code>{' '}
                   in the browser for demos.
@@ -388,7 +388,7 @@ export function StudyPlanPage() {
                   {planLoading ? 'Generating your plan…' : 'Generate AI study plan'}
                 </button>
                 {planLoading ? (
-                  <p className="mt-2 text-center text-xs text-[#9a8b7e] dark:text-[#8a8278]">
+                  <p className="mt-2 text-center text-xs text-[#9a8b7e] dark:text-[#d4cec5]">
                     This takes about 10–15 seconds — Gemini is mapping your full
                     schedule.
                   </p>
@@ -399,7 +399,7 @@ export function StudyPlanPage() {
         </div>
 
         {weeksLeft !== null ? (
-          <p className="mx-auto mt-8 max-w-md text-center text-sm leading-relaxed text-[#7a6e66] dark:text-[#a89e94]">
+          <p className="mx-auto mt-8 max-w-md text-center text-sm leading-relaxed text-[#7a6e66] dark:text-[#ddd8d0]">
             About {weeksLeft} week{weeksLeft === 1 ? '' : 's'} until test day —
             steady weekly hours beat last-minute cramming.
           </p>

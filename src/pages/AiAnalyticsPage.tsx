@@ -160,13 +160,13 @@ export function AiAnalyticsPage() {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#f5f2ed] sm:text-4xl">
+        <h1 className="onboarding-serif text-3xl font-semibold tracking-tight text-[#2c2825] dark:text-[#fafaf8] sm:text-4xl">
           AI analytics
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4] sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#7a6e66] dark:text-[#ebe7e0] sm:text-base">
           Import a <strong>practice MCAT</strong> or score-report PDF. Text is
           extracted in the browser; with{' '}
-          <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px] dark:bg-[#383633] dark:text-[#e8e6e1]">
+          <code className="rounded bg-[#ebe5dc] px-1 py-0.5 text-[13px] dark:bg-[#383633] dark:text-[#f4f3f0]">
             VITE_GEMINI_API_KEY
           </code>{' '}
           we use <strong>Gemini</strong> to read section scores and strengths /
@@ -199,18 +199,18 @@ export function AiAnalyticsPage() {
               : 'border-[#d4c9be] bg-white/80 hover:border-[#b8a99a] dark:border-[#5c5a56] dark:bg-[#2c2b29]/96 dark:hover:border-[#7a7268]'
           } disabled:cursor-not-allowed disabled:opacity-50`}
         >
-          <PdfIcon className="text-[#5f7f6a] dark:text-[#9bc4a8]" />
-          <span className="mt-4 text-sm font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+          <PdfIcon className="text-[#5f7f6a] dark:text-[#c8edd4]" />
+          <span className="mt-4 text-sm font-semibold text-[#2c2825] dark:text-[#fafaf8]">
             {loading ? 'Analyzing PDF…' : 'Drop a report PDF here or click to browse'}
           </span>
-          <span className="mt-2 text-center text-xs text-[#7a6e66] dark:text-[#b8b0a6]">
+          <span className="mt-2 text-center text-xs text-[#7a6e66] dark:text-[#e3dfd8]">
             Works best with text-based exports (AAMC, Blueprint, UWorld summaries,
             etc.)
           </span>
         </button>
 
         {error ? (
-          <p className="mt-4 max-w-xl text-sm text-[#b91c1c] dark:text-[#fca5a5]" role="alert">
+          <p className="mt-4 max-w-xl text-sm text-[#b91c1c] dark:text-[#fecaca]" role="alert">
             {error}
           </p>
         ) : null}
@@ -219,7 +219,7 @@ export function AiAnalyticsPage() {
           <div className="mt-12 space-y-8">
             <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[#ebe5dc] pb-4 dark:border-[#454440]">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#c4bdb4]">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#9a8b7e] dark:text-[#ebe7e0]">
                   Last analysis
                   {snapshot.engine === 'gemini_v1' ? (
                     <span className="ml-2 rounded-full bg-[#e8f0fe] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#1a73e8] dark:bg-[#1e3a5f] dark:text-[#93c5fd]">
@@ -231,9 +231,9 @@ export function AiAnalyticsPage() {
                     </span>
                   ) : null}
                 </p>
-                <p className="mt-1 text-sm text-[#3d3835] dark:text-[#eae8e4]">
+                <p className="mt-1 text-sm text-[#3d3835] dark:text-[#f6f5f3]">
                   <span className="font-medium">{snapshot.sourceFileName}</span>
-                  <span className="text-[#7a6e66] dark:text-[#b8b0a6]">
+                  <span className="text-[#7a6e66] dark:text-[#e3dfd8]">
                     {' '}
                     ·{' '}
                     {new Date(snapshot.analyzedAt).toLocaleString(undefined, {
@@ -270,14 +270,14 @@ export function AiAnalyticsPage() {
                     className="rounded-xl border border-[#ebe5dc] bg-white/90 px-4 py-3 dark:border-[#454440] dark:bg-[#2c2b29]/96"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-semibold text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="font-semibold text-[#2c2825] dark:text-[#fafaf8]">
                         {row.label}
                       </span>
-                      <span className="onboarding-serif text-lg tabular-nums text-[#5f7f6a] dark:text-[#9bc4a8]">
+                      <span className="onboarding-serif text-lg tabular-nums text-[#5f7f6a] dark:text-[#c8edd4]">
                         {row.scaledScore ?? '—'}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#c4bdb4]">{row.detail}</p>
+                    <p className="mt-1 text-xs text-[#7a6e66] dark:text-[#ebe7e0]">{row.detail}</p>
                   </li>
                 ))}
               </ul>
@@ -292,7 +292,7 @@ export function AiAnalyticsPage() {
                   {snapshot.strengths.map((s) => (
                     <li key={s.title}>
                       <p className="font-semibold text-[#14532d] dark:text-[#bbf7d0]">{s.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#e8e6e1]">
+                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#f4f3f0]">
                         {s.description}
                       </p>
                     </li>
@@ -300,14 +300,14 @@ export function AiAnalyticsPage() {
                 </ul>
               </section>
               <section className="rounded-2xl border border-[#fecaca] bg-[#fff5f5] p-5 dark:border-[#6b3a3a]/90 dark:bg-[#2c2b29]/96 sm:p-6">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c] dark:text-[#fca5a5]">
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-[#b91c1c] dark:text-[#fecaca]">
                   Topics to tighten
                 </h2>
                 <ul className="mt-4 space-y-4">
                   {snapshot.weaknesses.map((s) => (
                     <li key={s.title}>
                       <p className="font-semibold text-[#7f1d1d] dark:text-[#fecaca]">{s.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#e8e6e1]">
+                      <p className="mt-1 text-sm leading-relaxed text-[#3d3835] dark:text-[#f4f3f0]">
                         {s.description}
                       </p>
                     </li>
@@ -317,17 +317,17 @@ export function AiAnalyticsPage() {
             </div>
 
             <details className="rounded-xl border border-[#e8dfd4] bg-[#faf9f7] p-4 text-sm dark:border-[#454440] dark:bg-[#2c2b29]/96">
-              <summary className="cursor-pointer font-semibold text-[#5c534c] dark:text-[#c4bdb4]">
+              <summary className="cursor-pointer font-semibold text-[#5c534c] dark:text-[#ebe7e0]">
                 Extracted text preview (debug)
               </summary>
-              <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-relaxed text-[#7a6e66] dark:text-[#9a928a]">
+              <p className="mt-3 whitespace-pre-wrap break-words text-xs leading-relaxed text-[#7a6e66] dark:text-[#d2cdc4]">
                 {snapshot.excerpt}
                 {snapshot.excerpt.length >= 720 ? '…' : ''}
               </p>
             </details>
           </div>
         ) : (
-          <p className="mt-10 text-sm text-[#9a8b7e] dark:text-[#a89e94]">
+          <p className="mt-10 text-sm text-[#9a8b7e] dark:text-[#ddd8d0]">
             No report analyzed yet — upload a PDF to generate your first insight
             sheet.
           </p>

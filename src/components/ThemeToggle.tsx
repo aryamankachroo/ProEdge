@@ -13,7 +13,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={cycle}
-      className="fixed bottom-6 left-6 z-[10001] flex h-11 w-11 items-center justify-center rounded-full border border-[#e8dfd4] bg-white/95 text-[#2c2825] shadow-[0_8px_30px_-8px_rgba(44,40,37,0.25)] backdrop-blur-md transition hover:bg-[#faf7f3] dark:border-[#3d3c38] dark:bg-[#2a2927]/95 dark:text-[#f0ebe4] dark:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.45)] dark:hover:bg-[#353432]"
+      className="fixed bottom-6 left-6 z-[10001] flex h-11 w-11 items-center justify-center rounded-full border border-[#e8dfd4] bg-white/95 text-[#2c2825] shadow-[0_8px_30px_-8px_rgba(44,40,37,0.25)] backdrop-blur-md transition hover:bg-[#faf7f3] dark:border-[#3d3c38] dark:bg-[#2a2927]/95 dark:text-[#faf9f7] dark:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.45)] dark:hover:bg-[#353432]"
       aria-label={`Theme: ${hint}. Click to cycle light, dark, or system.`}
       title={`Theme: ${hint}`}
     >

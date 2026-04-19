@@ -30,14 +30,15 @@
 
 html.dark {
   --pe-app-bg: #1a1918;
-  --pe-app-fg: #e8e6e1;
+  /* Primary body copy — brighter for readability on charcoal */
+  --pe-app-fg: #f4f3f0;
   --pe-shell-1: #1c1b19;
   --pe-shell-2: #232220;
   --pe-shell-3: #1a1917;
   --pe-input-border: #40403c;
   --pe-input-bg: rgba(38, 37, 35, 0.92);
-  --pe-input-fg: #e8e6e1;
-  --pe-placeholder: #8a8580;
+  --pe-input-fg: #f4f3f0;
+  --pe-placeholder: #bcb9b4;
   --pe-range-track: #3a3936;
   --pe-range-thumb-ring: #2a2927;
   /* Dark text so light-surface pills (white/sage) stay readable; scope light labels below. */
@@ -496,11 +497,11 @@ html.dark .onboarding-shell button.onboarding-chip-terra-on {
   html.dark .landing-logo-word {
     background: linear-gradient(
       120deg,
-      #f8f4ef 0%,
-      #e8e4dd 35%,
-      #d4cfc6 50%,
-      #e8e4dd 65%,
-      #f8f4ef 100%
+      #fdfcfa 0%,
+      #f4f1ec 35%,
+      #e8e4dd 50%,
+      #f4f1ec 65%,
+      #fdfcfa 100%
     );
     background-size: 220% auto;
     -webkit-background-clip: text;
@@ -527,7 +528,7 @@ html.dark .onboarding-shell button.onboarding-chip-terra-on {
   }
 
   html.dark .landing-logo-word {
-    color: #f0ebe4;
+    color: #faf8f5;
     background: none;
     -webkit-background-clip: unset;
     background-clip: unset;
@@ -662,7 +663,37 @@ a.app-shell-brand:focus-visible {
 }
 
 html.dark a.app-shell-brand {
-  color: #f5f2ed;
+  color: #faf9f7;
+}
+
+a.landing-top-nav-link {
+  color: #5f7f6a;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease;
+}
+
+a.landing-top-nav-link:hover {
+  color: #2c2825;
+}
+
+html.dark a.landing-top-nav-link {
+  color: #d0e5d6;
+}
+
+html.dark a.landing-top-nav-link:hover {
+  color: #fafdf9;
+}
+
+a.landing-top-nav-link:focus {
+  outline: none;
+}
+
+a.landing-top-nav-link:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px rgba(95, 127, 106, 0.45),
+    0 0 0 4px var(--pe-focus-ring-offset);
 }
 
 .onboarding-shell button.shell-nav-btn {
@@ -715,13 +746,13 @@ html.dark a.app-shell-brand {
 }
 
 html.dark .onboarding-shell button.shell-nav-btn {
-  color: #9bc4a8 !important;
+  color: #d4f0df !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   html.dark .onboarding-shell button.shell-nav-btn:hover {
     transform: translateY(-1px);
-    color: #f5f2ed !important;
+    color: #fafcf9 !important;
     border-color: #454440;
     background-color: rgba(255, 255, 255, 0.08);
     box-shadow:
@@ -756,6 +787,19 @@ html.dark .onboarding-shell button.shell-nav-btn:focus-visible {
 }
 
 html.dark .shell-nav-btn-active {
-  color: #f5f2ed !important;
+  color: #fafcf9 !important;
   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Profile dropdown trigger — overrides shell-nav-btn sage !important so label + icon stay white */
+html.dark .onboarding-shell button.profile-menu-trigger.shell-nav-btn {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.dark .onboarding-shell button.profile-menu-trigger.shell-nav-btn:hover {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+  }
 }
