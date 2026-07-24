@@ -5,7 +5,7 @@ import {
   type ChangeEvent,
   type ReactNode,
 } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { OnboardingMonthCalendar } from '../components/OnboardingMonthCalendar'
 import { OnboardingSideStepper } from '../components/OnboardingSideStepper'
 import { useProfile } from '../context/useProfile'
@@ -16,8 +16,6 @@ import {
   type UserProfile,
 } from '../types/profile'
 import { saveProfile } from '../lib/api'
-import { analyzeDiagnosticPdfText } from '../lib/geminiDiagnosticReport'
-import { extractPdfPlainText } from '../utils/mcatPdfScore'
 
 const STUDY_STATUSES: StudyStatus[] = [
   'full-time-student',
@@ -76,7 +74,7 @@ function McatScoreTrack({ value }: { value: number }) {
   )
   return (
     <div
-      className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#e8dfd4] dark:bg-[#3a3936]"
+      className="mt-3 h-2 w-full overflow-hidden rounded-full bg-[#e8dfd4]"
       aria-hidden
     >
       <div
@@ -96,7 +94,7 @@ function SoftPanel({
 }) {
   return (
     <section
-      className={`rounded-[1.75rem] border border-white/70 bg-white/65 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md dark:border-[#3d3c38]/75 dark:bg-[#262523]/90 dark:shadow-[0_12px_48px_-16px_rgba(0,0,0,0.4)] md:p-7 ${className}`}
+      className={`rounded-2xl border border-white/40 bg-white/25 p-6 shadow-[0_8px_32px_rgba(31,38,135,0.15)] backdrop-blur-xl md:p-7 ${className}`}
     >
       {children}
     </section>
@@ -148,7 +146,6 @@ function DiagnosticsChoiceModal({
   onChooseImport,
   onChooseSkipStudyPlan,
   importFileError,
-  importLoading,
 }: {
   open: boolean
   onClose: () => void
@@ -156,7 +153,6 @@ function DiagnosticsChoiceModal({
   onChooseImport: () => void
   onChooseSkipStudyPlan: () => void
   importFileError: string
-  importLoading: boolean
 }) {
   useEffect(() => {
     if (!open) return
@@ -193,52 +189,36 @@ function DiagnosticsChoiceModal({
         >
           Diagnostics next
         </h2>
-        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66] dark:text-[#c4bdb4]">
+        <p className="mt-2 text-sm leading-relaxed text-[#7a6e66]">
           Ten-question preview (four sections), import a score, or go straight to
           your plan from the questionnaire.
         </p>
-        <div className="relative mt-6 flex flex-col gap-3">
-          {importLoading ? (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-2xl bg-[#faf7f3]/95 px-4 py-8 text-center backdrop-blur-sm">
-              <span
-                className="h-10 w-10 animate-spin rounded-full border-2 border-[#5f7f6a] border-t-transparent"
-                aria-hidden
-              />
-              <p className="text-sm font-semibold text-[#2c2825]">
-                Reading your PDF and analyzing with Gemini…
-              </p>
-              <p className="text-xs text-[#7a6e66] dark:text-[#c4bdb4]">Usually under a minute.</p>
-            </div>
-          ) : null}
+        <div className="mt-6 flex flex-col gap-3">
           <button
             type="button"
-            disabled={importLoading}
             onClick={onChooseTake}
-            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-5 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a] disabled:opacity-40"
+            className="onboarding-diagnostics-modal-primary w-full rounded-full bg-[#2c2825] px-5 py-3 text-sm font-semibold shadow-sm transition hover:bg-[#1f1c1a]"
           >
             Take a diagnostics test
           </button>
           <button
             type="button"
-            disabled={importLoading}
             onClick={onChooseImport}
-            className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white disabled:opacity-40"
+            className="w-full rounded-full border border-[#d4c9be] bg-white/80 px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-white"
           >
             Import diagnostics test score
           </button>
           <button
             type="button"
-            disabled={importLoading}
             onClick={onChooseSkipStudyPlan}
-            className="w-full rounded-full border border-[#b8d4be] bg-[#e8f2ea] px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#ddece0] disabled:opacity-40"
+            className="w-full rounded-full border border-[#b8d4be] bg-[#e8f2ea] px-5 py-3 text-sm font-semibold text-[#2c2825] shadow-sm transition hover:bg-[#ddece0]"
           >
             Skip to study plan
           </button>
           <button
             type="button"
-            disabled={importLoading}
             onClick={onClose}
-            className="onboarding-diagnostics-modal-muted mt-1 py-2 text-center text-sm font-semibold underline-offset-4 hover:underline disabled:opacity-40"
+            className="onboarding-diagnostics-modal-muted mt-1 py-2 text-center text-sm font-semibold underline-offset-4 hover:underline"
           >
             Not now — stay on this step
           </button>
@@ -260,7 +240,6 @@ export function OnboardingPage() {
   const [local, setLocal] = useState<UserProfile>(profile)
   const [diagnosticsChoiceOpen, setDiagnosticsChoiceOpen] = useState(false)
   const [importPdfError, setImportPdfError] = useState('')
-  const [diagnosticImportLoading, setDiagnosticImportLoading] = useState(false)
   const diagnosticPdfInputRef = useRef<HTMLInputElement>(null)
 
   const update = (p: Partial<UserProfile>) =>
@@ -312,7 +291,7 @@ export function OnboardingPage() {
     el?.click()
   }
 
-  const onDiagnosticPdfSelected = async (e: ChangeEvent<HTMLInputElement>) => {
+  const onDiagnosticPdfSelected = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const isPdf =
@@ -323,29 +302,9 @@ export function OnboardingPage() {
       e.target.value = ''
       return
     }
-    setDiagnosticImportLoading(true)
-    setImportPdfError('')
-    try {
-      const text = await extractPdfPlainText(file)
-      const report = await analyzeDiagnosticPdfText(text, file.name)
-      const extra: Partial<UserProfile> = {
-        diagnosticReportPdfName: file.name,
-        importedDiagnosticReport: report,
-      }
-      if (report.totalScore != null) {
-        extra.baselineScore = report.totalScore
-      }
-      commitProfileAndNavigate('/diagnostics?flow=import', extra)
-    } catch (err) {
-      setImportPdfError(
-        err instanceof Error ?
-          err.message
-        : 'Could not analyze that PDF. Check your Gemini key and try again.',
-      )
-    } finally {
-      setDiagnosticImportLoading(false)
-      e.target.value = ''
-    }
+    commitProfileAndNavigate('/diagnostics?flow=import', {
+      diagnosticReportPdfName: file.name,
+    })
   }
 
   const goBack = () => {
@@ -356,7 +315,7 @@ export function OnboardingPage() {
   const meta = STEP_META[step]
 
   return (
-    <div className="onboarding-shell relative min-h-dvh">
+    <div className="onboarding-shell relative min-h-dvh !bg-gradient-to-br from-[#c5d9f5] via-[#f0e6f5] to-[#ffe8d6]">
       <input
         ref={diagnosticPdfInputRef}
         type="file"
@@ -369,7 +328,6 @@ export function OnboardingPage() {
       <DiagnosticsChoiceModal
         open={diagnosticsChoiceOpen}
         importFileError={importPdfError}
-        importLoading={diagnosticImportLoading}
         onClose={() => {
           setImportPdfError('')
           setDiagnosticsChoiceOpen(false)
@@ -383,7 +341,7 @@ export function OnboardingPage() {
         onChooseSkipStudyPlan={() => commitProfileAndNavigate('/study-plan')}
       />
       <div
-        className="onboard-enter-orbs pointer-events-none absolute inset-0 overflow-hidden"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
         aria-hidden
       >
         <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-[#e8b4a2]/40 blur-[80px]" />
@@ -393,18 +351,14 @@ export function OnboardingPage() {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col px-5 pb-36 pt-5 md:px-8 md:pb-16 md:pt-8 lg:px-10">
-        <header className="onboard-enter-hdr mb-6 flex justify-center lg:mb-8">
-          <Link
-            to="/"
-            className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--pe-focus-ring-offset)] rounded-sm dark:text-[#f0ebe4]"
-            aria-label="ProEdge home"
-          >
+        <header className="mb-6 flex justify-center lg:mb-8">
+          <span className="onboarding-serif text-lg font-semibold tracking-tight text-[#4a423c]">
             ProEdge
-          </Link>
+          </span>
         </header>
 
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12 xl:gap-16">
-          <aside className="onboard-enter-aside shrink-0 lg:sticky lg:top-8 lg:w-72 xl:w-80">
+          <aside className="shrink-0 lg:sticky lg:top-8 lg:w-72 xl:w-80">
             <OnboardingSideStepper
               steps={STEPPER_STEPS}
               currentStep={step}
@@ -412,20 +366,19 @@ export function OnboardingPage() {
             />
           </aside>
 
-          <div className="onboard-enter-main min-w-0 flex-1">
-            <div key={step}>
-            <h1 className="onboard-step-in-1 onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] dark:text-[#f5f2ed] md:text-3xl lg:text-4xl">
+          <div className="min-w-0 flex-1">
+            <h1 className="onboarding-serif mb-3 text-left text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl lg:text-4xl">
               {meta.title}
             </h1>
-            <p className="onboard-step-in-2 mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] dark:text-[#c9c2ba] md:text-base">
+            <p className="mb-10 max-w-xl text-left text-[0.95rem] leading-relaxed text-[#6b5f56] md:text-base">
               {meta.subtitle}
             </p>
 
-            <div className="onboard-step-in-3 flex flex-col gap-6">
+            <div className="flex flex-col gap-6">
           {step === 0 && (
             <>
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
                   What should we call you?
                 </p>
                 <label htmlFor="ob-name" className="sr-only">
@@ -442,10 +395,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
                   Where are you right now?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   Tap the option that fits — no wrong answers.
                 </p>
                 <div className="flex flex-col gap-3">
@@ -456,21 +409,21 @@ export function OnboardingPage() {
                         key={s}
                         type="button"
                         onClick={() => update({ studyStatus: s })}
-                        className={`onboarding-study-status-option flex w-full items-center rounded-2xl border-2 px-5 py-4 text-left text-[0.95rem] font-semibold transition-all duration-200 ${
+                        className={`flex w-full items-center rounded-2xl border-2 px-5 py-4 text-left text-[0.95rem] font-semibold transition-all duration-200 ${
                           on
-                            ? 'onboarding-study-status-option--selected border-[#5f7f6a] bg-[#f0f5f1] text-[#2d3f32] shadow-[0_4px_20px_-8px_rgba(95,127,106,0.35)] dark:border-[#55524e] dark:bg-[#383633] dark:shadow-[0_4px_20px_-8px_rgba(0,0,0,0.35)]'
-                            : 'border-transparent bg-white/90 text-[#4a423c] shadow-sm hover:border-[#e8dfd4] hover:shadow-md dark:border-[#3e3d3b] dark:bg-[#2c2b29] dark:shadow-none dark:hover:border-[#4e4c48] dark:hover:shadow-[0_2px_14px_-6px_rgba(0,0,0,0.35)]'
+                            ? 'border-[#5f7f6a] bg-[#f0f5f1] text-[#2d3f32] shadow-[0_4px_20px_-8px_rgba(95,127,106,0.35)]'
+                            : 'border-transparent bg-white/90 text-[#4a423c] shadow-sm hover:border-[#e8dfd4] hover:shadow-md'
                         }`}
                       >
                         <span
                           className={`mr-4 flex h-5 w-5 shrink-0 rounded-full border-2 ${
                             on
-                              ? 'border-[#5f7f6a] bg-[#5f7f6a] dark:border-[#7a8f80] dark:bg-[#5f7f6a]'
-                              : 'border-[#d4c8bc] bg-white dark:border-[#5c5a56] dark:bg-[#252422]'
+                              ? 'border-[#5f7f6a] bg-[#5f7f6a]'
+                              : 'border-[#d4c8bc] bg-white'
                           }`}
                         >
                           {on ? (
-                            <span className="m-auto block h-1.5 w-1.5 rounded-full bg-white dark:bg-[#f5f2ed]" />
+                            <span className="m-auto block h-1.5 w-1.5 rounded-full bg-white" />
                           ) : null}
                         </span>
                         {STUDY_STATUS_LABELS[s]}
@@ -482,14 +435,14 @@ export function OnboardingPage() {
 
               <SoftPanel>
                 <div className="mb-1 flex items-baseline justify-between gap-3">
-                  <p className="text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                  <p className="text-sm font-semibold text-[#5a4f47]">
                     Realistic study hours / day
                   </p>
-                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a] dark:text-[#9bc4a8]">
+                  <span className="onboarding-serif text-2xl font-semibold text-[#5f7f6a]">
                     {local.hoursPerDay}
                   </span>
                 </div>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   Slide to what you can repeat without burning out.
                 </p>
                 <input
@@ -507,22 +460,22 @@ export function OnboardingPage() {
                   aria-valuenow={local.hoursPerDay}
                   aria-label="Hours available per day"
                 />
-                <div className="mt-2 flex justify-between text-xs text-[#a8988c] dark:text-[#9a928a]">
+                <div className="mt-2 flex justify-between text-xs text-[#a8988c]">
                   <span>1 hr</span>
                   <span>12 hr</span>
                 </div>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
                   Study load shape
                 </p>
-                <div className="onboarding-load-shape flex rounded-2xl bg-[#ebe3d9]/80 p-1.5 dark:bg-[#2e2d2b]">
+                <div className="flex rounded-2xl bg-[#ebe3d9]/80 p-1.5">
                   <button
                     type="button"
                     className={`flex-1 rounded-xl py-3.5 text-sm font-semibold transition-all ${
                       local.fullTimeStudying
-                        ? 'bg-white shadow-md dark:bg-[#383633] dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.45)]'
+                        ? 'bg-white shadow-md'
                         : 'onboarding-segment-muted'
                     }`}
                     onClick={() => update({ fullTimeStudying: true })}
@@ -533,7 +486,7 @@ export function OnboardingPage() {
                     type="button"
                     className={`flex-1 rounded-xl py-3.5 text-sm font-semibold transition-all ${
                       !local.fullTimeStudying
-                        ? 'bg-white shadow-md dark:bg-[#383633] dark:shadow-[0_2px_10px_-4px_rgba(0,0,0,0.45)]'
+                        ? 'bg-white shadow-md'
                         : 'onboarding-segment-muted'
                     }`}
                     onClick={() => update({ fullTimeStudying: false })}
@@ -548,18 +501,18 @@ export function OnboardingPage() {
           {step === 1 && (
             <>
               <SoftPanel>
-                <p className="mb-4 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-4 text-sm font-semibold text-[#5a4f47]">
                   Score snapshot
                 </p>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e]">
                       Target score
                     </p>
-                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
+                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2">
                       <button
                         type="button"
-                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
                         onClick={() =>
                           update({
                             targetScore: Math.max(472, local.targetScore - 1),
@@ -569,12 +522,12 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825]">
                         {local.targetScore}
                       </span>
                       <button
                         type="button"
-                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
                         onClick={() =>
                           update({
                             targetScore: Math.min(528, local.targetScore + 1),
@@ -588,13 +541,13 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.targetScore} />
                   </div>
                   <div>
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e] dark:text-[#9a928a]">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-[#9a8b7e]">
                       Baseline / last FL
                     </p>
-                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2 dark:bg-[#1f1e1c]">
+                    <div className="flex items-center justify-between gap-2 rounded-2xl bg-[#faf7f3] px-2 py-2">
                       <button
                         type="button"
-                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
                         onClick={() =>
                           update({
                             baselineScore: Math.max(
@@ -607,12 +560,12 @@ export function OnboardingPage() {
                       >
                         −
                       </button>
-                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825] dark:text-[#f5f2ed]">
+                      <span className="onboarding-serif text-3xl font-semibold tabular-nums text-[#2c2825]">
                         {local.baselineScore}
                       </span>
                       <button
                         type="button"
-                        className="onboarding-score-step flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5] dark:bg-[#353432] dark:hover:bg-[#454440]"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg font-medium text-[#5a4f47] shadow-sm hover:bg-[#f0ebe5]"
                         onClick={() =>
                           update({
                             baselineScore: Math.min(
@@ -629,13 +582,13 @@ export function OnboardingPage() {
                     <McatScoreTrack value={local.baselineScore} />
                   </div>
                 </div>
-                <p className="mt-4 text-center text-xs text-[#9a8b7e] dark:text-[#9a928a]">
+                <p className="mt-4 text-center text-xs text-[#9a8b7e]">
                   Scale 472–528 · MCAT total
                 </p>
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-3 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-3 text-sm font-semibold text-[#5a4f47]">
                   Exam date
                 </p>
                 <label htmlFor="ob-exam" className="sr-only">
@@ -651,10 +604,10 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
                   When can you show up?
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   Tap a day to add a to-do. It appears on your calendar like iOS —
                   even &quot;Anki 45m&quot; counts.
                 </p>
@@ -671,13 +624,13 @@ export function OnboardingPage() {
           {step === 2 && (
             <>
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
                   Resources in rotation
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   Select all that apply.
                 </p>
-                <div className="onboarding-setup-pills flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {RESOURCE_OPTIONS.map((r) => {
                     const on = local.resources.includes(r)
                     return (
@@ -708,7 +661,7 @@ export function OnboardingPage() {
                   <div className="mt-4">
                     <label
                       htmlFor="ob-resource-other"
-                      className="mb-2 block text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]"
+                      className="mb-2 block text-sm font-semibold text-[#5a4f47]"
                     >
                       Add other source
                     </label>
@@ -727,13 +680,13 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
                   Anki decks
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   We’ll phrase reviews to match your deck names.
                 </p>
-                <div className="onboarding-setup-pills flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {ANKI_OPTIONS.map((r) => {
                     const on = local.ankiDecks.includes(r)
                     return (
@@ -759,13 +712,13 @@ export function OnboardingPage() {
               </SoftPanel>
 
               <SoftPanel>
-                <p className="mb-1 text-sm font-semibold text-[#5a4f47] dark:text-[#e8e4dd]">
+                <p className="mb-1 text-sm font-semibold text-[#5a4f47]">
                   Sections that feel shaky
                 </p>
-                <p className="mb-4 text-sm text-[#8a7b70] dark:text-[#b8b0a6]">
+                <p className="mb-4 text-sm text-[#8a7b70]">
                   Honesty here protects your time later.
                 </p>
-                <div className="onboarding-setup-weak-grid grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-2">
                   {WEAK_OPTIONS.map((r) => {
                     const on = local.weakSections.includes(r)
                     return (
@@ -790,8 +743,8 @@ export function OnboardingPage() {
                 </div>
               </SoftPanel>
 
-              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] dark:text-[#9a928a] sm:text-sm">
-                <span className="font-semibold text-[#7a6e66] dark:text-[#c4bdb4]">Disclaimer:</span>{' '}
+              <p className="mt-1 max-w-xl text-xs leading-relaxed text-[#9a8b7e] sm:text-sm">
+                <span className="font-semibold text-[#7a6e66]">Disclaimer:</span>{' '}
                 After completing the questionnaire, take a diagnostics test — or,
                 if you&apos;ve already taken one, import your diagnostics test
                 score and report.
@@ -799,11 +752,10 @@ export function OnboardingPage() {
             </>
           )}
             </div>
-            </div>
           </div>
         </div>
 
-        <div className="onboard-enter-bar fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg dark:border-[#3a3836]/90 dark:bg-[#1f1f1d]/92 md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none dark:md:bg-transparent">
+        <div className="fixed bottom-0 left-0 right-0 z-20 border-t border-[#e8dfd4]/80 bg-[#faf7f3]/85 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom,0px))] backdrop-blur-lg md:static md:mt-12 md:border-0 md:bg-transparent md:p-0 md:pb-0 md:backdrop-blur-none">
           <div className="mx-auto flex max-w-6xl justify-end px-0 lg:px-10">
             <div className="flex items-center gap-5 sm:gap-7">
               <button

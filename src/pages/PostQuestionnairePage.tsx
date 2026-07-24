@@ -5,7 +5,8 @@ import {
   type DragEvent,
   type ReactNode,
 } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { AppShell } from '../components/AppShell'
 import { useProfile } from '../context/useProfile'
 import { extractMcatTotalFromPdfFile } from '../utils/mcatPdfScore'
 import { saveManualScore, uploadDiagnosticPdf } from '../lib/api'
@@ -41,7 +42,7 @@ function SoftPanel({
 }) {
   return (
     <section
-      className={`rounded-[1.75rem] border border-white/70 bg-white/65 p-6 shadow-[0_12px_48px_-16px_rgba(90,70,55,0.14)] backdrop-blur-md md:p-7 ${className}`}
+      className={`rounded-2xl border border-white/40 bg-white/25 p-6 shadow-[0_8px_32px_rgba(31,38,135,0.15)] backdrop-blur-xl md:p-7 ${className}`}
     >
       {children}
     </section>
@@ -141,27 +142,8 @@ export function PostQuestionnairePage() {
   })()
 
   return (
-    <div className="onboarding-shell relative min-h-dvh">
-      <div
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-        aria-hidden
-      >
-        <div className="absolute -right-24 -top-28 h-80 w-80 rounded-full bg-[#e8b4a2]/40 blur-[80px]" />
-        <div className="absolute -left-20 top-[28%] h-72 w-72 rounded-full bg-[#a8c5b4]/45 blur-[72px]" />
-        <div className="absolute bottom-24 right-[-5%] h-56 w-56 rounded-full bg-[#f0d4c4]/50 blur-3xl" />
-      </div>
-
-      <div className="relative z-10 mx-auto flex min-h-dvh max-w-2xl flex-col px-5 pb-28 pt-8 md:px-8 md:pb-16 md:pt-10">
-        <header className="mb-2">
-          <Link
-            to="/"
-            className="onboarding-serif inline-block text-lg font-semibold tracking-tight text-[#4a423c] no-underline hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5f7f6a] focus-visible:ring-offset-2 rounded-sm"
-            aria-label="ProEdge home"
-          >
-            ProEdge
-          </Link>
-        </header>
-
+    <AppShell active="diagnostic">
+      <div className="mx-auto flex max-w-2xl flex-col px-5 pb-28 pt-8 md:px-8 md:pb-16 md:pt-10">
         <h1 className="onboarding-serif mb-3 text-[1.65rem] font-semibold leading-[1.2] text-[#2c2825] md:text-3xl">
           Score from your report
         </h1>
@@ -314,12 +296,12 @@ export function PostQuestionnairePage() {
 
         <button
           type="button"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/dashboard')}
           className="mt-10 self-start text-sm font-semibold text-[#9a8b7e] hover:text-[#6b5f56]"
         >
-          ← Home
+          ← Dashboard
         </button>
       </div>
-    </div>
+    </AppShell>
   )
 }

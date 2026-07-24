@@ -1,5 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from './context/AuthProvider'
 import { ProfileProvider } from './context/ProfileProvider'
+import { useAuth } from './context/useAuth'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { AiAnalyticsPage } from './pages/AiAnalyticsPage'
 import { AiJournalPage } from './pages/AiJournalPage'
 import { CalendarPage } from './pages/CalendarPage'
@@ -11,6 +14,7 @@ import { DiagnosticResultsPage } from './pages/DiagnosticResultsPage'
 import { DiagnosticTestPage } from './pages/DiagnosticTestPage'
 import { DiagnosticsPage } from './pages/DiagnosticsPage'
 import { LandingPage } from './pages/LandingPage'
+import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { PostQuestionnairePage } from './pages/PostQuestionnairePage'
 import { StudyPlanPage } from './pages/StudyPlanPage'
@@ -21,32 +25,132 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/onboarding" element={<OnboardingPage />} />
-      <Route path="/post-questionnaire" element={<PostQuestionnairePage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
-      <Route path="/practice/cars" element={<CarsPracticePage />} />
-      <Route path="/calendar" element={<CalendarPage />} />
-      <Route path="/analytics" element={<AiAnalyticsPage />} />
-      <Route path="/journal" element={<AiJournalPage />} />
-      <Route path="/study-plan" element={<StudyPlanPage />} />
-      <Route path="/diagnostics/test" element={<DiagnosticTestPage />} />
-      <Route path="/diagnostics/results" element={<DiagnosticResultsPage />} />
-      <Route path="/diagnostics" element={<DiagnosticsPage />} />
-      <Route path="/diagnostic/exam" element={<DiagnosticExamPage />} />
-      <Route path="/diagnostic" element={<DiagnosticPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute>
+            <OnboardingPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/post-questionnaire"
+        element={
+          <ProtectedRoute>
+            <PostQuestionnairePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/practice/cars"
+        element={
+          <ProtectedRoute>
+            <CarsPracticePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <ProtectedRoute>
+            <CalendarPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <AiAnalyticsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/journal"
+        element={
+          <ProtectedRoute>
+            <AiJournalPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/study-plan"
+        element={
+          <ProtectedRoute>
+            <StudyPlanPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diagnostics/test"
+        element={
+          <ProtectedRoute>
+            <DiagnosticTestPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diagnostics/results"
+        element={
+          <ProtectedRoute>
+            <DiagnosticResultsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diagnostics"
+        element={
+          <ProtectedRoute>
+            <DiagnosticsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diagnostic/exam"
+        element={
+          <ProtectedRoute>
+            <DiagnosticExamPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diagnostic"
+        element={
+          <ProtectedRoute>
+            <DiagnosticPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
 
+function AuthenticatedChat() {
+  const { isAuthenticated } = useAuth()
+  if (!isAuthenticated) return null
+  return <ChatAssistantWidget />
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <ProfileProvider>
-        <AppRoutes />
-        <ThemeToggle />
-        <ChatAssistantWidget />
-      </ProfileProvider>
+      <AuthProvider>
+        <ProfileProvider>
+          <AppRoutes />
+          <ThemeToggle />
+          <AuthenticatedChat />
+        </ProfileProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }
