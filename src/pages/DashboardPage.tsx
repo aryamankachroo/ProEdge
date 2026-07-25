@@ -707,7 +707,7 @@ export function DashboardPage() {
               </div>
               <button
                 type="button"
-                onClick={() => navigate('/diagnostics/test')}
+                onClick={() => navigate('/diagnostics/results')}
                 className="text-sm font-semibold text-[#5f7f6a] underline-offset-4 hover:underline"
               >
                 View results ↗
